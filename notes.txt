@@ -1,0 +1,8 @@
+DataBase: https://supabase.com/
+password: @database2025@
+
+
+library: https://www.prisma.io/
+
+
+Sincronizar banco: npx prisma migrate dev --name init
