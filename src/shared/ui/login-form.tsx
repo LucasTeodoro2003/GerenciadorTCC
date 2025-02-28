@@ -4,37 +4,17 @@ import { Button } from "@/shared/ui/components/button";
 import { Card, CardContent } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
-import { FormEvent, useState } from "react";
-import { json } from "stream/consumers";
-import prisma from "../lib/prisma";
+import { onSubmit } from "../lib/formUser";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function onSubmit(data: FormData) {
-    "use server";
-
-    const email = data.get("email")
-    if (email) {
-
-      const id = await prisma.user.create({
-        data: {
-          email: email,
-        },
-      });
-    }
-  }
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {error && <div style={{ color: "red" }}>{error}</div>}
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={onSubmit}>
+          <form className="p-6 md:p-8" action={onSubmit}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -44,7 +24,13 @@ export function LoginForm({
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Email" required />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  required
+                />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -56,12 +42,11 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
                 Login
               </Button>
-              {isLoading ? "Loading..." : "Submit"}
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or continue with
