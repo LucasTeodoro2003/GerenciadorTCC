@@ -9,7 +9,7 @@ export async function onSubmit(data: FormData) {
     console.log("Senha recebido:", password);
     
     
-    if (email === "string" && password === "string") {
+    if (typeof email === "string" && typeof password === "string") {
         await prisma.user.create({
             data: { email, password }
       });
