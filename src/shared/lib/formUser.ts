@@ -1,4 +1,5 @@
 "use server"
+import { redirect } from "next/navigation";
 import prisma from "./prisma";
 
 export async function onSubmit(data: FormData) {
@@ -14,6 +15,7 @@ export async function onSubmit(data: FormData) {
             data: { email, password }
       });
       console.log("Usuário criado no banco de dados!");
+      redirect("/dashboard")
     }
   }
   
