@@ -1,6 +1,6 @@
 "use server"
-import prisma from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
+import { prisma } from "./prisma";
 
 export async function onSubmit(data: FormData) {
   const email = data.get("email");
