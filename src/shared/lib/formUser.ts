@@ -1,5 +1,6 @@
+"use server"
+import prisma from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
-import prisma from "./prisma";
 
 export async function onSubmit(data: FormData) {
   const email = data.get("email");
@@ -7,14 +8,18 @@ export async function onSubmit(data: FormData) {
 
   console.log("Email recebido:", email);
   console.log("Senha recebida:", password);
-  
-  if (typeof email === "string" && typeof password === "string" && password.trim() !== "") {
-      await prisma.user.create({
-          data: { email, password }
-      });
-      console.log("Usuário criado no banco de dados!");
-      redirect("/dashboard");
+
+  if (
+    typeof email === "string" &&
+    typeof password === "string" &&
+    password.trim() !== ""
+  ) {
+    await prisma.user.create({
+      data: { email, password },
+    });
+    console.log("Usuário criado no banco de dados!");
+    redirect("/dashboard")
   } else {
-      console.log("Email ou senha inválidos.");
+    console.log("Email ou senha inválidos.");
   }
 }
