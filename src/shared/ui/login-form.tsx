@@ -4,17 +4,18 @@ import { Button } from "@/shared/ui/components/button";
 import { Card, CardContent } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
-import { onSubmit } from "../lib/formUser";
+import { sendgridAction } from "../../app/(auth)/sendEmail/signInResend";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" action={onSubmit}>
+          <form className="p-6 md:p-8" action={sendgridAction}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
