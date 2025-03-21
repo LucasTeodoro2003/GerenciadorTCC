@@ -1,4 +1,5 @@
-import { AppSidebar } from "@/shared/ui/app-sidebar"
+import { auth } from "@/shared/lib/auth";
+import { AppSidebar } from "@/shared/ui/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,15 +7,19 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/shared/ui/components/breadcrumb"
-import { Separator } from "@/shared/ui/components/separator"
+} from "@/shared/ui/components/breadcrumb";
+import { Separator } from "@/shared/ui/components/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/shared/ui/components/sidebar"
+} from "@/shared/ui/components/sidebar";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  if (!session) redirect("/login");
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -48,5 +53,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

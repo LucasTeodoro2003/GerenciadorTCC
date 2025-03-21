@@ -1,9 +1,5 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import ForwardEmail from "next-auth/providers/forwardemail"
-import { prisma } from "./prisma";
+import GitHub from "next-auth/providers/github"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [ForwardEmail],
+export const { handlers, auth, signIn, signOut } = NextAuth({ providers: [GitHub],
 });

@@ -4,6 +4,8 @@ password: @database2025@
 
 library: https://www.prisma.io/
 ui: https://ui.shadcn.com/
+youtube = https://www.youtube.com/watch?v=0NTUIdUljwM
+
 
 
 Sincronizar banco: npx prisma migrate dev --name init
