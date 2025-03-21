@@ -1,9 +1,10 @@
-"use client";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/components/button";
 import { Card, CardContent } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
+import { executeActionDB } from "../lib/executeActionDB";
+import { signIn } from "../lib/auth";
 
 export function LoginForm({
   className,
@@ -13,7 +14,17 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" >
+          <form
+            className="p-6 md:p-8"
+            action={async (formData: FormData) => {
+              "use server";
+              await executeActionDB({
+                actionFn: async () => {
+                  await signIn("credentials", formData);
+                },
+              });
+            }}
+          >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -82,10 +93,7 @@ export function LoginForm({
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a
-                  href="/createUser"
-                  className="underline underline-offset-4"
-                >
+                <a href="/createUser" className="underline underline-offset-4">
                   Sign up
                 </a>
               </div>

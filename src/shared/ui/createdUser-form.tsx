@@ -10,6 +10,8 @@ import {
 import { Input } from "./components/input";
 import { Label } from "./components/label";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
+import { signUp } from "../lib/actions";
+import { redirect } from "next/navigation";
 
 export function CreatedUser({
   className,
@@ -25,7 +27,15 @@ export function CreatedUser({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            action={async (formData: FormData) => {
+              "use server";
+              const res = await signUp(formData);
+              if (res.success) {
+                redirect("/login");
+              }
+            }}
+          >
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
