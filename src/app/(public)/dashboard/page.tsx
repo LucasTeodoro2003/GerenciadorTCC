@@ -1,4 +1,5 @@
 import { auth } from "@/shared/lib/auth";
+import db from "@/shared/lib/prisma";
 import { AppSidebar } from "@/shared/ui/app-sidebar";
 import {
   Breadcrumb,
@@ -19,6 +20,7 @@ import { redirect } from "next/navigation";
 export default async function Page() {
   const session = await auth();
   if (!session) redirect("/login");
+  const users = await db.user.findMany();
 
   return (
     <SidebarProvider>
@@ -33,6 +35,11 @@ export default async function Page() {
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
                     Building Your Application
+                    {users.map((user) => (
+                      <li key={user.id} className="mb-2">
+                        {user.name}
+                      </li>
+                    ))}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />

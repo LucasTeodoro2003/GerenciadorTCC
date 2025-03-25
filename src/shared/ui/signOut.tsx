@@ -1,19 +1,8 @@
-"use client";
-import { Button } from "./components/button";
-import { signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { signOut as signOutFn } from "next-auth/react";
 
-export default function SignOut() {
-  const handleSignOut = async() => {
-    await signOut();
-  };
+export default async function signOut() {
+  await signOutFn();
 
-  return (
-    <Button
-      onClick={handleSignOut}
-      variant="outline"
-      className="bg-slate-800 hover:bg-red-400"
-    >
-      SAIR
-    </Button>
-  );
+  redirect("/login");
 }
