@@ -4,7 +4,6 @@ import { AppSidebar } from "@/shared/ui/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -19,8 +18,17 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth();
+  const userId = session?.user?.id;
   if (!session) redirect("/login");
-  const users = await db.user.findMany();
+
+  const user = await db.user.findUnique({
+    where: { id: userId },
+  });
+
+  const firtsname = user?.name?.split(" ")[0];
+  console.log(firtsname);
+
+  // localStorage.setItem("user", JSON.stringify(user));
 
   return (
     <SidebarProvider>
@@ -32,19 +40,9 @@ export default async function Page() {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                    {users.map((user) => (
-                      <li key={user.id} className="mb-2">
-                        {user.name}
-                      </li>
-                    ))}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>Seja Bem Vindo, {firtsname}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
