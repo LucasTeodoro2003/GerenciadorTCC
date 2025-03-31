@@ -97,9 +97,9 @@ export function LoginForm({
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="/createUser" className="underline underline-offset-4">
-                  Sign up
+                Não têm uma conta?{" "}
+                <a href="/createUser" className="underline underline-offset-4 hover:text-yellow-500">
+                  Cadastre-se aqui
                 </a>
               </div>
             </div>
@@ -114,8 +114,7 @@ export function LoginForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+       Alvorada Estetica Automotiva
       </div>
     </div>
   );
