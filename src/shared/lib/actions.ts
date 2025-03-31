@@ -11,7 +11,8 @@ const signUp = async (formData: FormData) => {
             await db.user.create({
                 data:{
                     email: validateData.email.toLocaleLowerCase(),
-                    password: validateData.password 
+                    password: validateData.password,
+                    permission: 3 //Usuario Normal 3 - Usuario Funcionario 2 - Usuario Administrador 1
                 }
             })
         }

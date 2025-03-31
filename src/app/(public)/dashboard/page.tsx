@@ -19,11 +19,13 @@ import { redirect } from "next/navigation";
 export default async function Page() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!session) redirect("/login");
-
   const user = await db.user.findUnique({
     where: { id: userId },
   });
+  const permission = user?.permission;
+  console.log("A permissao é: ", permission)
+
+  if (!session || permission != 1) redirect("/login");
 
   const firtsname = user?.name?.split(" ")[0];
   console.log(firtsname);
