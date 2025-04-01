@@ -10,7 +10,7 @@ import {
 import { Input } from "./components/input";
 import { Label } from "./components/label";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
-import { signUp } from "../lib/actions";
+import { signUp } from "../lib/actionsCreateuser";
 import { redirect } from "next/navigation";
 
 export function CreatedUser({

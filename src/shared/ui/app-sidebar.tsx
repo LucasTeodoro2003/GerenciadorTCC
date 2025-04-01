@@ -8,10 +8,10 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
-  Map,
   PieChart,
   Settings2,
   SquareTerminal,
+  UserCog2,
 } from "lucide-react"
 
 import { NavMain } from "@/shared/ui/nav-main"
@@ -151,9 +151,9 @@ const data = {
       icon: PieChart,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Usuarios",
+      url: "/users",
+      icon: UserCog2,
     },
   ],
 }

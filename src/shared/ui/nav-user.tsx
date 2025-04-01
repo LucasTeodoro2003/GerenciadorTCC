@@ -31,16 +31,12 @@ import {
 } from "@/shared/ui/components/sidebar";
 import signOut from "./signOut";
 import { User } from "@prisma/client";
-import { redirect } from "next/navigation";
 
 export function NavUser({
   user,
 }: {user: User}
 ) {
   const { isMobile } = useSidebar();
-
-  console.log("imagem aqui:", user.image)
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>

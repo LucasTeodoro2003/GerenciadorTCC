@@ -16,13 +16,15 @@ import {
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
 import { useState } from "react";
+import PageUsers from "../users/page_client";
 
 interface PageClientProps {
   user: User;
   firtsname: string;
+  users: User[];
 }
 
-export default function PageClient({ firtsname, user }: PageClientProps) {
+export default function PageClient({ firtsname, user, users }: PageClientProps) {
   const [error, setError] = useState(null);
 
   return (
@@ -46,6 +48,7 @@ export default function PageClient({ firtsname, user }: PageClientProps) {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">
             <div className="aspect-video rounded-xl bg-muted/50" />
+            <PageUsers users={users}/>
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>
