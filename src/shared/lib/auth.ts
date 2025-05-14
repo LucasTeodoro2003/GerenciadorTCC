@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import db from "./prisma";
@@ -28,11 +28,11 @@ export const { handlers, auth, signIn } = NextAuth({
           },
         });
         if (!user || !user.password) {
-          throw new Error();
+          throw new CredentialsSignin("Usuário não encontrado");
         }
         const valid = bcrypt.compareSync(validateCredentials.password, user.password)
         if (!valid) {
-          throw new Error();
+          throw new CredentialsSignin("Senha Incorreta");
         }
         return user;
       },

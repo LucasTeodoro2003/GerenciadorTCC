@@ -1,23 +1,36 @@
+"use client";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/components/button";
 import { Card, CardContent } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
-import { loginAction } from "@/features/actions/loginAction";
+import { loginAction } from "@/features/actions/login/loginAction";
+import { LoginErrorMessage } from "@/features/actions/login/errorMensagens";
+import { Suspense, useEffect } from "react";
+import { useFormStatus } from "react-dom";
+import { useRouter } from "next/router";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  function SumitButton() {
+    const { pending } = useFormStatus();
+
+    return (
+      <Button type="submit" className="w-full" disabled={pending}>
+        {pending ? "Carregando..." : "Login"}
+      </Button>
+    );
+  }
+
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form
-            className="p-6 md:p-8"
-            action={loginAction}
-          >
+          <form className="p-6 md:p-8" action={loginAction}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -47,9 +60,12 @@ export function LoginForm({
                 </div>
                 <Input id="password" name="password" type="password" required />
               </div>
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
+              <SumitButton />
+              <div className="text-center">
+                <Suspense>
+                  <LoginErrorMessage />
+                </Suspense>
+              </div>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or continue with
@@ -90,7 +106,10 @@ export function LoginForm({
               </div>
               <div className="text-center text-sm">
                 Não têm uma conta?{" "}
-                <a href="/createUser" className="underline underline-offset-4 hover:text-yellow-500">
+                <a
+                  href="/createUser"
+                  className="underline underline-offset-4 hover:text-yellow-500"
+                >
                   Cadastre-se aqui
                 </a>
               </div>
@@ -106,7 +125,7 @@ export function LoginForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-       Alvorada Estetica Automotiva
+        Alvorada Estetica Automotiva
       </div>
     </div>
   );
