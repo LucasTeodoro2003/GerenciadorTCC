@@ -3,9 +3,8 @@ import { Button } from "@/shared/ui/components/button";
 import { Card, CardContent } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
-import { executeActionDB } from "../lib/executeActionDB";
-import { signIn } from "../lib/auth";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
+import { loginAction } from "@/features/actions/loginAction";
 
 export function LoginForm({
   className,
@@ -17,14 +16,7 @@ export function LoginForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-6 md:p-8"
-            action={async (formData: FormData) => {
-              "use server";
-              await executeActionDB({
-                actionFn: async () => {
-                  await signIn("credentials", formData);
-                },
-              });
-            }}
+            action={loginAction}
           >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">

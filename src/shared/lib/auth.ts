@@ -2,10 +2,11 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import db from "./prisma";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { schema } from "./schema";
 import { v4 as uuid } from "uuid";
 import { encode } from "@auth/core/jwt";
+import bcrypt from "bcryptjs";
 
 const adapter = PrismaAdapter(db);
 
@@ -24,11 +25,14 @@ export const { handlers, auth, signIn } = NextAuth({
         const user = await db.user.findFirst({
           where: {
             email: validateCredentials.email,
-            password: validateCredentials.password,
           },
         });
-        if (!user) {
-          throw new Error("Credenciais Invalidas!");
+        if (!user || !user.password) {
+          throw new Error();
+        }
+        const valid = bcrypt.compareSync(validateCredentials.password, user.password)
+        if (!valid) {
+          throw new Error();
         }
         return user;
       },
@@ -47,7 +51,7 @@ export const { handlers, auth, signIn } = NextAuth({
       if (params.token?.credentials) {
         const sessionToken = uuid();
         if (!params.token.sub) {
-          throw new Error("No user ID found in token");
+          throw new Error("Sem usuário encontrado");
         }
         const createdSession = await adapter?.createSession?.({
           sessionToken: sessionToken,
@@ -56,7 +60,7 @@ export const { handlers, auth, signIn } = NextAuth({
         });
 
         if (!createdSession) {
-          throw new Error("Failed to create session");
+          throw new Error("Erro ao criar Sessão");
         }
         return sessionToken;
       }
