@@ -1,5 +1,6 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials";
 import db from "./prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -14,6 +15,7 @@ export const { handlers, auth, signIn } = NextAuth({
   adapter: adapter,
   providers: [
     GitHub,
+    Google,
     Credentials({
       credentials: {
         email: {},
@@ -28,11 +30,11 @@ export const { handlers, auth, signIn } = NextAuth({
           },
         });
         if (!user || !user.password) {
-          throw new CredentialsSignin("Usuário não encontrado");
+          throw new CredentialsSignin("Usuário não encontrado!");
         }
         const valid = bcrypt.compareSync(validateCredentials.password, user.password)
         if (!valid) {
-          throw new CredentialsSignin("Senha Incorreta");
+          throw new CredentialsSignin("Senha incorreta!");
         }
         return user;
       },
@@ -51,16 +53,16 @@ export const { handlers, auth, signIn } = NextAuth({
       if (params.token?.credentials) {
         const sessionToken = uuid();
         if (!params.token.sub) {
-          throw new Error("Sem usuário encontrado");
+          throw new Error("No user ID found in token");
         }
         const createdSession = await adapter?.createSession?.({
           sessionToken: sessionToken,
           userId: params.token.sub,
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          expires: new Date(Date.now() + 10 * 60 * 1000)
         });
 
         if (!createdSession) {
-          throw new Error("Erro ao criar Sessão");
+          throw new Error("Erro ao criar sessão");
         }
         return sessionToken;
       }
