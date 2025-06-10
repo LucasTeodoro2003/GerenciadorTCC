@@ -15,8 +15,7 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
-import { useState } from "react";
-import PageUsers from "../users/page_client";
+import TableUser from "../users/page_client";
 
 interface PageClientProps {
   user: User;
@@ -24,12 +23,15 @@ interface PageClientProps {
   users: User[];
 }
 
-export default function PageClient({ firtsname, user, users }: PageClientProps) {
-  const [error, setError] = useState(null);
+export default function PageClient({
+  firtsname,
+  user,
+  users,
+}: PageClientProps) {
 
   return (
     <SidebarProvider>
-      <AppSidebar user={user}/>
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -45,14 +47,15 @@ export default function PageClient({ firtsname, user, users }: PageClientProps) 
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+            <div className="aspect-video rounded-xl bg-muted/50 pt-3 px-2">
+              <TableUser users={users}/>
+            </div>
             <div className="aspect-video rounded-xl bg-muted/50" />
-            <PageUsers users={users}/>
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="rounded-xl bg-muted/50 col-span-2" />
           </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+          <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>

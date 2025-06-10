@@ -7,9 +7,8 @@ import { Label } from "@/shared/ui/components/label";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
 import { loginAction } from "@/features/actions/login/loginAction";
 import { LoginErrorMessage } from "@/features/actions/login/errorMensagens";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { useFormStatus } from "react-dom";
-import { useRouter } from "next/router";
 import { SignUpGoogle } from "@/app/api/auth/callback/google";
 
 export function LoginForm({
