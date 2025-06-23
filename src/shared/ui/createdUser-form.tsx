@@ -9,9 +9,9 @@ import {
 } from "./components/card";
 import { Input } from "./components/input";
 import { Label } from "./components/label";
-import { SignUpGitHub } from "@/app/api/auth/callback/github";
 import { signUp } from "../lib/actionsCreateuser";
 import { redirect } from "next/navigation";
+import { HomeIcon } from "lucide-react";
 
 export function CreatedUser({
   className,
@@ -19,6 +19,9 @@ export function CreatedUser({
 }: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="flex items-center justify-center text-center">
+      <a href="/login"><HomeIcon /></a>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Criar Conta</CardTitle>

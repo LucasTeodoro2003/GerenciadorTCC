@@ -152,7 +152,7 @@ const data = {
     },
     {
       name: "Usuarios",
-      url: "/users",
+      url: "/resetUser",
       icon: UserCog2,
     },
   ],
