@@ -49,10 +49,11 @@ export default function PageClient({
         </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
           <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-            <div className="aspect-video rounded-xl bg-muted/50 pt-3 px-2">
-              <TableUser users={users}/>
+            <div className="flex flex-col rounded-xl bg-muted/50 pt-3 px-2 min-h-[400px] overflow-x-auto">
+              <TableUser users={users} />
             </div>
-            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="flex flex-col rounded-xl bg-muted/50 pt-3 px-2 min-h-[400px] overflow-x-auto">
+            </div>
             <div className="rounded-xl bg-muted/50 col-span-2" />
           </div>
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
