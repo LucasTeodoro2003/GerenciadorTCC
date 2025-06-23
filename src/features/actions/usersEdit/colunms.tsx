@@ -38,7 +38,9 @@ function getPermission(type: Usertable["typeUser"]): number {
   return 2;
 }
 
-export function getColumns(router: ReturnType<typeof useRouter>): ColumnDef<Usertable>[] {
+export function getColumns(
+  router: ReturnType<typeof useRouter>
+): ColumnDef<Usertable>[] {
   return [
     {
       accessorKey: "name",
@@ -63,45 +65,37 @@ export function getColumns(router: ReturnType<typeof useRouter>): ColumnDef<User
       header: "Função",
       cell({ row }) {
         const typeUserSelect = row.original;
-        const [open, setOpen] = useState(false);
+        const [confirmOpen, setConfirmOpen] = useState(false);
+        const [loadingOpen, setLoadingOpen] = useState(false);
         const [pending, setPending] = useState(false);
-        const [nextPermission, setNextPermission] = useState<number | null>(null);
-        const [showLoading, setShowLoading] = useState(false);
-        const [minTimeDone, setMinTimeDone] = useState(false);
+        const [nextPermission, setNextPermission] = useState<number | null>(
+          null
+        );
 
-        useEffect(() => {
-          let timer: NodeJS.Timeout;
-          if (showLoading) {
-            setMinTimeDone(false);
-            timer = setTimeout(() => setMinTimeDone(true), 10000);
-          }
-          return () => clearTimeout(timer);
-        }, [showLoading]);
-
-        useEffect(() => {
-          if (pending && showLoading && minTimeDone) {
-            setShowLoading(false);
-            setPending(false);
-            setOpen(false);
-          }
-        }, [pending, showLoading, minTimeDone]);
+        const handleSelect = (val: string) => {
+          setNextPermission(Number(val));
+          setConfirmOpen(true);
+        };
 
         const handleConfirm = async () => {
-          if (nextPermission == null) return;
+          setConfirmOpen(false);
+          setLoadingOpen(true);
           setPending(true);
-          setShowLoading(true);
+          if (nextPermission == null) return;
           await updateUserTable(typeUserSelect.id, nextPermission);
           await router.refresh();
+          setTimeout(() => {
+            setLoadingOpen(false);
+            setPending(false);
+            setNextPermission(null);
+          }, 3500);
         };
 
         return (
           <>
             <Select
               defaultValue={getPermission(typeUserSelect.typeUser).toString()}
-              onValueChange={(val) => {
-                setNextPermission(Number(val));
-                setOpen(true);
-              }}
+              onValueChange={handleSelect}
               disabled={pending}
             >
               <SelectTrigger className="w-max">
@@ -113,55 +107,62 @@ export function getColumns(router: ReturnType<typeof useRouter>): ColumnDef<User
                 <SelectItem value="1">Administrador</SelectItem>
               </SelectContent>
             </Select>
-            <AlertDialog open={open} onOpenChange={v => !pending && setOpen(v)}>
+
+            <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
               <AlertDialogContent>
-                {showLoading ? (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <svg className="animate-spin h-8 w-8 mb-4 text-primary" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                      />
-                    </svg>
-                    <span className="text-lg font-medium">Atualizando...</span>
-                  </div>
-                ) : (
-                  <>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Tem certeza que deseja alterar a função?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta ação irá alterar a permissão do usuário. Tem certeza que deseja continuar?
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel
-                        onClick={() => {
-                          setOpen(false);
-                          setNextPermission(null);
-                        }}
-                        disabled={pending}
-                      >
-                        Cancelar
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleConfirm}
-                        disabled={pending}
-                      >
-                        Confirmar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </>
-                )}
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Tem certeza que deseja alterar a função?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação irá alterar a permissão do usuário. Tem certeza
+                    que deseja continuar?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel
+                    onClick={() => {
+                      setConfirmOpen(false);
+                      setNextPermission(null);
+                    }}
+                    disabled={pending}
+                  >
+                    Cancelar
+                  </AlertDialogCancel>
+                  <AlertDialogAction onClick={handleConfirm} disabled={pending}>
+                    Confirmar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={loadingOpen}>
+              <AlertDialogContent>
+                <AlertDialogTitle className="sr-only">
+                  Atualizando usuário
+                </AlertDialogTitle>
+                <div className="flex flex-col items-center justify-center py-8">
+                  <svg
+                    className="animate-spin h-8 w-8 mb-4 text-primary"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                  </svg>
+                  <span className="text-lg font-medium">Atualizando...</span>
+                </div>
               </AlertDialogContent>
             </AlertDialog>
           </>
