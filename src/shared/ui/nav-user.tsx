@@ -31,12 +31,18 @@ import {
 } from "@/shared/ui/components/sidebar";
 import signOut from "./signOut";
 import { User } from "@prisma/client";
+import { Button } from "./components/button";
+import ResetPasswordModal from "@/features/actions/Modal/users/resetPasswordUser";
+import { useState } from "react";
+import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
 
 export function NavUser({
-  user,
-}: {user: User}
+  user, users
+}: {user: User, users:User[]}
 ) {
   const { isMobile } = useSidebar();
+  const [openResetPassword, setopenResetPassword] = useState(false)
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -77,9 +83,10 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem onClick={()=>{setopenResetPassword(true)}}>
+                  <ResetPasswordModal onOpenChange={setopenResetPassword} open={openResetPassword} users={users}/>
+                  <ManageAccountsSharpIcon/>
+                  Resetar Senha do Usuario
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

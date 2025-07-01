@@ -39,7 +39,7 @@ export function LoginForm({
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Seja Bem-Vindo</h1>
                 <p className="text-balance text-muted-foreground">
-                  Conecte-se para acesso ao serviço
+                  Conecte-se para acesso aos serviços
                 </p>
               </div>
               <div className="grid gap-2">

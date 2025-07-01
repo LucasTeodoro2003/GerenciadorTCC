@@ -2,20 +2,12 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  PieChart,
+  Home,
   Settings2,
-  SquareTerminal,
-  UserCog2,
 } from "lucide-react"
-
 import { NavMain } from "@/shared/ui/nav-main"
-import { NavProjects } from "@/shared/ui/nav-projects"
 import { NavUser } from "@/shared/ui/nav-user"
 import { TeamSwitcher } from "@/shared/ui/team-switcher"
 import {
@@ -25,156 +17,167 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/shared/ui/components/sidebar"
-import { auth } from "../lib/auth"
 import { User } from "@prisma/client"
+import { LogoLavaJato } from "../../../public/lavajato";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "usuario.png",
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: User,
+  users: User[]
+}
+
+export function AppSidebar({user, users, ...props }: AppSidebarProps) {
+
+const dataUser = {
+  user:{
+    name: user.name,
+    email: user.email,
+    avatar: user.image
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      name: "Alvorada Estética Automotiva",
+      logo: LogoLavaJato,
+      plan: "Empresa"
     },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
+  ]
+}
+
+  // This is sample data.
+const data = {
+  // user: {
+  //   name: "shadcn",
+  //   email: "m@example.com",
+  //   avatar: "usuario.png",
+  // },
+  // teams: [
+  //   {
+  //     name: "Acme Inc",
+  //     logo: GalleryVerticalEnd,
+  //     plan: "Enterprise",
+  //   },
+  //   {
+  //     name: "Acme Corp.",
+  //     logo: AudioWaveform,
+  //     plan: "Startup",
+  //   },
+  //   {
+  //     name: "Evil Corp.",
+  //     logo: Command,
+  //     plan: "Free",
+  //   },
+  // ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Pagina Inicial",
+      page: "#",
+      icon: Home,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Home",
+          page: "",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Tabela Usuários",
+          page: "table",
         },
         {
           title: "Settings",
-          url: "#",
+          page: "#",
         },
       ],
     },
     {
       title: "Models",
-      url: "#",
+      page: "#",
       icon: Bot,
       items: [
         {
           title: "Genesis",
-          url: "#",
+          page: "#",
         },
         {
           title: "Explorer",
-          url: "#",
+          page: "#",
         },
         {
           title: "Quantum",
-          url: "#",
+          page: "#",
         },
       ],
     },
     {
       title: "Documentation",
-      url: "#",
+      page: "#",
       icon: BookOpen,
       items: [
         {
           title: "Introduction",
-          url: "#",
+          page: "#",
         },
         {
           title: "Get Started",
-          url: "#",
+          page: "#",
         },
         {
           title: "Tutorials",
-          url: "#",
+          page: "#",
         },
         {
           title: "Changelog",
-          url: "#",
+          page: "#",
         },
       ],
     },
     {
       title: "Settings",
-      url: "#",
+      page: "#",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "#",
+          page: "#",
         },
         {
           title: "Team",
-          url: "#",
+          page: "#",
         },
         {
           title: "Billing",
-          url: "#",
+          page: "#",
         },
         {
           title: "Limits",
-          url: "#",
+          page: "#",
         },
       ],
     },
   ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Usuarios",
-      url: "/resetUser",
-      icon: UserCog2,
-    },
-  ],
+  // projects: [
+  //   {
+  //     name: "Design Engineering",
+  //     page: "#",
+  //     icon: Frame,
+  //   },
+  //   {
+  //     name: "Sales & Marketing",
+  //     page: "#",
+  //     icon: PieChart,
+  //   },
+  // ],
 }
-
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User
-}
-
-export function AppSidebar({user, ...props }: AppSidebarProps) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={data.navMain}/>
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} users={users}/>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

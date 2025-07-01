@@ -3,7 +3,7 @@ import db from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import PageClient from "./page_client";
 
-export default async function Page() {
+export default async function Page({searchParams: {}}) {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -16,7 +16,6 @@ export default async function Page() {
   });
 
   const users = await db.user.findMany();
-  console.log(users)
 
 
   if (!user || user.permission === 3) {
