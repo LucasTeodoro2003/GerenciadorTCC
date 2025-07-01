@@ -3,7 +3,7 @@ import db from "@/shared/lib/prisma";
 import { redirect } from "next/navigation";
 import PageClient from "./page_client";
 
-export default async function Page({searchParams: {}}) {
+export default async function Page() {
   const session = await auth();
   const userId = session?.user?.id;
 
