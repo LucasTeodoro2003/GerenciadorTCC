@@ -24,6 +24,7 @@ import {
 } from "next/navigation";
 import Button from "@mui/material/Button";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 
 interface PageClientProps {
   user: User;
@@ -36,7 +37,6 @@ export default function PageClient({
   user,
   users,
 }: PageClientProps) {
-  
   const searchParams = useSearchParams();
   // const pathname = usePathname();
   // const router = useRouter();
@@ -97,11 +97,10 @@ export default function PageClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-        </header>
+            <div className="ml-auto mr-2"><ThemeToggleV2 /></div>
+                    </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
-
           {/* GERENCIAMENTO DAS PAGINAS */}
-
 
           {/* */}
           {/* DASHBOARD INICIAL */}
@@ -126,8 +125,6 @@ export default function PageClient({
           </AnimatePresence>
           {/* DASHBOARD INICIAL */}
           {/* */}
-
-
 
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
