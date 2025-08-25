@@ -29,12 +29,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/shared/ui/components/sidebar";
-import signOut from "./signOut";
 import { User } from "@prisma/client";
 import { Button } from "./components/button";
 import ResetPasswordModal from "@/features/actions/Modal/users/resetPasswordUser";
 import { useState } from "react";
 import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
+import signOutFunction from "./signOut";
 
 export function NavUser({
   user, users
@@ -105,7 +105,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={signOut} className="hover:cursor-pointer">
+            <DropdownMenuItem onClick={signOutFunction} className="hover:cursor-pointer">
               <LogOut />
               Sair
             </DropdownMenuItem>

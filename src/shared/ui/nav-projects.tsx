@@ -24,7 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/shared/ui/components/sidebar";
-import signOut from "./signOut";
+import signOutFunction from "./signOut";
 
 export function NavProjects({
   projects,
@@ -81,7 +81,7 @@ export function NavProjects({
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span onClick={signOut}>CLICK SAIR</span>
+            <span onClick={signOutFunction}>CLICK SAIR</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
