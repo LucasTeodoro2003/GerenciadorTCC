@@ -35,6 +35,7 @@ import ResetPasswordModal from "@/features/actions/Modal/users/resetPasswordUser
 import { useState } from "react";
 import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
 import signOutFunction from "./signOut";
+import { signOut } from "next-auth/react";
 
 export function NavUser({
   user, users
@@ -105,7 +106,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={signOutFunction} className="hover:cursor-pointer">
+            <DropdownMenuItem onClick={()=>signOut()} className="hover:cursor-pointer">
               <LogOut />
               Sair
             </DropdownMenuItem>
