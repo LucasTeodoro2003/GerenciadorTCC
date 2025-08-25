@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { Calendar } from "../../components/calendar";
 
 interface CalendarPageProps {
+  disabledDates?: Date[];
 }
 
-export default function CalendarPage({}: CalendarPageProps) {
+export default function CalendarPage({disabledDates}: CalendarPageProps) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [isClient, setIsClient] = useState(false);
   
@@ -39,13 +40,18 @@ export default function CalendarPage({}: CalendarPageProps) {
     return null;
   }
 
+  console.log("Testando: ",disabledDates)
+
   return (
-    <div>
+    <div className="w-full px-2">
+
+
       <Calendar
         mode="single"
         selected={date}
         onSelect={handleDateSelect}
-        className="rounded-lg border"
+        modifiers={{disabled: disabledDates}}
+        className="rounded-lg border w-full max-w-full"
       />
       <div className="mt-4 text-sm text-gray-500">
         Data selecionada: {formatDate(date)}
