@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import { SkeletonHome, SkeletonTable } from "@/shared/ui/skeletonCards";
+import ModalClient from "@/features/actions/firstAcess/modalAcess";
 
 interface PageClientProps {
   user: User;
@@ -57,7 +58,7 @@ export default function PageClient({
   //   console.log("Removendo");
   //   return "";
   // }
-
+  const firtsAcess = !user.emailVerified; 
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
   console.log("Aqui", showHome);
@@ -120,6 +121,8 @@ export default function PageClient({
 
           {/* */}
           {/* DASHBOARD INICIAL */}
+
+            <ModalClient openModal={firtsAcess} user={user} />
 
           {activeSkeletonTable && !showTable && (
             <div className="w-full h-screen p-4">
