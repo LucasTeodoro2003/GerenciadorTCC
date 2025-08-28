@@ -5,7 +5,6 @@ import {
   BookOpen,
   Bot,
   Home,
-  Settings2,
 } from "lucide-react"
 import { NavMain } from "@/shared/ui/nav-main"
 import { NavUser } from "@/shared/ui/nav-user"
@@ -22,10 +21,11 @@ import { LogoLavaJato } from "../../../public/lavajato";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User,
-  users: User[]
+  users: User[],
+  onSetSkeleton: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeleton, ...props }: AppSidebarProps) {
 
 const dataUser = {
   user:{
@@ -78,22 +78,22 @@ const data = {
           page: "",
         },
         {
-          title: "Tabela Usuários",
+          title: "Tabela Usuários?",
           page: "table",
         },
         {
-          title: "Settings",
+          title: "Settings?",
           page: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Usuarios",
       page: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "Tabela Usuários",
           page: "#",
         },
         {
@@ -129,29 +129,29 @@ const data = {
         },
       ],
     },
-    {
-      title: "Settings",
-      page: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          page: "#",
-        },
-        {
-          title: "Team",
-          page: "#",
-        },
-        {
-          title: "Billing",
-          page: "#",
-        },
-        {
-          title: "Limits",
-          page: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Settings",
+    //   page: "#",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Team",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Billing",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Limits",
+    //       page: "#",
+    //     },
+    //   ],
+    // },
   ],
   // projects: [
   //   {
@@ -173,7 +173,7 @@ const data = {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain}/>
+        <NavMain items={data.navMain} onSetSkeleton={onSetSkeleton}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>

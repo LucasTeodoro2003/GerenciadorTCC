@@ -18,9 +18,11 @@ import {
   SidebarMenuSubItem,
 } from "@/shared/ui/components/sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export function NavMain({
   items,
+  onSetSkeleton,
 }: {
   items: {
     title: string;
@@ -32,13 +34,20 @@ export function NavMain({
       page: string;
     }[];
   }[];
+  onSetSkeleton?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
+  const [active, setActive] = useState()
 
   function handleSearch(term: string) {
     console.log(term)
+    
+    console.log("ERA PRA FUNCIONAR")
+    if (term === "table" && onSetSkeleton) {
+      onSetSkeleton(true);
+    }
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("page", term);
@@ -50,7 +59,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Itens</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

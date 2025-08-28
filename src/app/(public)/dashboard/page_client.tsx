@@ -16,15 +16,11 @@ import {
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
 import TableUser from "../users/page_client";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import Button from "@mui/material/Button";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
+import { useState } from "react";
+import { SkeletonCard } from "@/shared/ui/skeletonTable";
 
 interface PageClientProps {
   user: User;
@@ -63,10 +59,15 @@ export default function PageClient({
   // }
 
   const showTable = searchParams.get("page") === "table";
+  const [activeSkeleton, setactiveSkeleton] = useState(false);
+
+  const handleSetSkeleton = (isActive: any) => {
+    setactiveSkeleton(isActive);
+  };
 
   return (
     <SidebarProvider>
-      <AppSidebar user={user} users={users} />
+      <AppSidebar user={user} users={users} onSetSkeleton={handleSetSkeleton} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -97,13 +98,33 @@ export default function PageClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-            <div className="ml-auto mr-2"><ThemeToggleV2 /></div>
-                    </header>
+          <div className="ml-auto mr-2">
+            <ThemeToggleV2 />
+          </div>
+        </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
           {/* GERENCIAMENTO DAS PAGINAS */}
 
           {/* */}
           {/* DASHBOARD INICIAL */}
+
+          {activeSkeleton && !showTable && (
+            <div className="w-full h-screen p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+                <div className="flex flex-col rounded-xl bg-muted/50 p-4 h-full overflow-x-auto">
+                  <SkeletonCard />
+                </div>
+                <div className="flex flex-col rounded-xl bg-muted/50 p-4 h-full overflow-x-auto">
+                  <SkeletonCard />
+                </div>
+                <div className="rounded-xl bg-muted/50 col-span-1 md:col-span-2 p-4 h-full">
+                  <SkeletonCard />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSkeleton}
           <AnimatePresence mode="wait">
             {showTable && (
               <motion.div
@@ -112,6 +133,9 @@ export default function PageClient({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -40 }}
                 transition={{ duration: 0.35 }}
+                onAnimationComplete={() => {
+                  setactiveSkeleton(false);
+                }}
               >
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2">
                   <div className="flex flex-col rounded-xl bg-muted/50 pt-3 px-2 min-h-[400px] overflow-x-auto">
