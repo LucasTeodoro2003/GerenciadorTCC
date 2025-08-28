@@ -18,11 +18,11 @@ import {
   SidebarMenuSubItem,
 } from "@/shared/ui/components/sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 export function NavMain({
   items,
-  onSetSkeleton,
+  onSetSkeletonTable,
+  onSetSkeletonHome,
 }: {
   items: {
     title: string;
@@ -34,20 +34,29 @@ export function NavMain({
       page: string;
     }[];
   }[];
-  onSetSkeleton?: (isActive: boolean) => void;
+  onSetSkeletonTable?: (isActive: boolean) => void;
+  onSetSkeletonHome?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
-  const [active, setActive] = useState()
 
   function handleSearch(term: string) {
     console.log(term)
     
     console.log("ERA PRA FUNCIONAR")
-    if (term === "table" && onSetSkeleton) {
-      onSetSkeleton(true);
-    }
+
+  if (term === "table" && onSetSkeletonTable) {
+    onSetSkeletonTable(true);
+    if (onSetSkeletonHome) onSetSkeletonHome(false);
+  }
+
+  if (term === "" && onSetSkeletonHome) {
+    onSetSkeletonHome(true);
+    if (onSetSkeletonTable) onSetSkeletonTable(false);
+  }
+
+
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("page", term);

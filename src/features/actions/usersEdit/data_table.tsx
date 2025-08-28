@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 4,
+    pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -74,9 +74,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="rounded-xl border p-1">
-        <div className="flex items-center gap-x-2">
+     <div className="h-full flex flex-col">
+      <div className="rounded-xl border p-1 flex flex-col flex-1">
+        <div className="flex items-center gap-x-2 mb-2">
           <Input
             placeholder="Pesquisar..."
             className="hover:border hover:border-zinc-50 "
@@ -98,6 +98,7 @@ export function DataTable<TData, TValue>({
             </SelectContent>
           </Select>
         </div>
+        <div className="flex-1 overflow-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -146,6 +147,7 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        </div>
         <div className="flex items-center justify-between px-2">
           <div className="flex w-[100px] items-center justify-start text-sm font-medium">
             Página {table.getState().pagination.pageIndex + 1} de{" "}

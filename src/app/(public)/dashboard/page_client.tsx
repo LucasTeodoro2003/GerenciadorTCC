@@ -20,7 +20,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
-import { SkeletonCard } from "@/shared/ui/skeletonTable";
+import { SkeletonHome, SkeletonTable } from "@/shared/ui/skeletonCards";
 
 interface PageClientProps {
   user: User;
@@ -59,15 +59,28 @@ export default function PageClient({
   // }
 
   const showTable = searchParams.get("page") === "table";
-  const [activeSkeleton, setactiveSkeleton] = useState(false);
+  const showHome = searchParams.toString() === "";
+  console.log("Aqui", showHome);
 
-  const handleSetSkeleton = (isActive: any) => {
-    setactiveSkeleton(isActive);
+  const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
+  const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
+
+  const handleSetSkeletonTable = (isActive: any) => {
+    setactiveSkeletonTable(isActive);
+  };
+
+  const handleSetSkeletonHome = (isActive: any) => {
+    setactiveSkeletonHome(isActive);
   };
 
   return (
     <SidebarProvider>
-      <AppSidebar user={user} users={users} onSetSkeleton={handleSetSkeleton} />
+      <AppSidebar
+        user={user}
+        users={users}
+        onSetSkeletonTable={handleSetSkeletonTable}
+        onSetSkeletonHome={handleSetSkeletonHome}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -108,49 +121,37 @@ export default function PageClient({
           {/* */}
           {/* DASHBOARD INICIAL */}
 
-          {activeSkeleton && !showTable && (
+          {activeSkeletonTable && !showTable && (
             <div className="w-full h-screen p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-                <div className="flex flex-col rounded-xl bg-muted/50 p-4 h-full overflow-x-auto">
-                  <SkeletonCard />
-                </div>
-                <div className="flex flex-col rounded-xl bg-muted/50 p-4 h-full overflow-x-auto">
-                  <SkeletonCard />
-                </div>
-                <div className="rounded-xl bg-muted/50 col-span-1 md:col-span-2 p-4 h-full">
-                  <SkeletonCard />
-                </div>
-              </div>
+              <SkeletonTable />
             </div>
           )}
 
-          {activeSkeleton}
-          <AnimatePresence mode="wait">
-            {showTable && (
-              <motion.div
-                key="table-content"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -40 }}
-                transition={{ duration: 0.35 }}
-                onAnimationComplete={() => {
-                  setactiveSkeleton(false);
-                }}
-              >
-                <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-                  <div className="flex flex-col rounded-xl bg-muted/50 pt-3 px-2 min-h-[400px] overflow-x-auto">
-                    <TableUser users={users} />
-                  </div>
-                  <div className="flex flex-col rounded-xl bg-muted/50 pt-3 px-2 min-h-[400px] overflow-x-auto"></div>
-                  <div className="rounded-xl bg-muted/50 col-span-2" />
+          {activeSkeletonHome && !showHome && (
+            <div className="w-full h-screen p-4">
+              <SkeletonHome />
+            </div>
+          )}
+
+          {showTable && (
+            <motion.div
+              key="table-content"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              onAnimationComplete={() => {
+                setactiveSkeletonTable(false);
+              }}
+            >
+              <div className="flex flex-col w-full h-screen rounded-xl bg-muted/50 p-4 overflow-hidden">
+                <div className="w-full h-full overflow-auto">
+                  <TableUser users={users} />
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
           {/* DASHBOARD INICIAL */}
           {/* */}
-
-          <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>

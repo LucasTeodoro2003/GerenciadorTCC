@@ -45,7 +45,7 @@ export function getColumns(
     {
       accessorKey: "name",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Nome" />
       ),
     },
     {
@@ -143,7 +143,7 @@ export function getColumns(
                 </AlertDialogTitle>
                 <div className="flex flex-col items-center justify-center py-8">
                   <svg
-                    className="animate-spin h-8 w-8 mb-4 text-primary"
+                    className="animate-spin h-5 w-8 mb-4 text-primary"
                     viewBox="0 0 24 24"
                   >
                     <circle

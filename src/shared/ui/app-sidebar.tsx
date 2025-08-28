@@ -22,10 +22,11 @@ import { LogoLavaJato } from "../../../public/lavajato";
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User,
   users: User[],
-  onSetSkeleton: (isActive: boolean) => void;
+  onSetSkeletonTable: (isActive: boolean) => void;
+  onSetSkeletonHome: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeleton, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, ...props }: AppSidebarProps) {
 
 const dataUser = {
   user:{
@@ -78,8 +79,8 @@ const data = {
           page: "",
         },
         {
-          title: "Tabela Usuários?",
-          page: "table",
+          title: "Despesas",
+          page: "#",
         },
         {
           title: "Settings?",
@@ -94,7 +95,7 @@ const data = {
       items: [
         {
           title: "Tabela Usuários",
-          page: "#",
+          page: "table",
         },
         {
           title: "Explorer",
@@ -173,7 +174,7 @@ const data = {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeleton={onSetSkeleton}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
