@@ -20,8 +20,13 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
-import { SkeletonHome, SkeletonTable } from "@/shared/ui/skeletonCards";
+import {
+  SkeletonHome,
+  SkeletonMessage,
+  SkeletonTable,
+} from "@/shared/ui/skeletonCards";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
+import PageMessage from "../messageUsers/page";
 
 interface PageClientProps {
   user: User;
@@ -58,13 +63,15 @@ export default function PageClient({
   //   console.log("Removendo");
   //   return "";
   // }
-  const firtsAcess = !user.emailVerified; 
+  const firtsAcess = !user.emailVerified;
+
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
-  console.log("Aqui", showHome);
+  const showMessage = searchParams.get("page") === "message";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
+  const [activeSkeletonMessage, setactiveSkeletonMessage] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
@@ -74,6 +81,10 @@ export default function PageClient({
     setactiveSkeletonHome(isActive);
   };
 
+  const handleSetSkeletonMessage = (isActive: any) => {
+    setactiveSkeletonMessage(isActive);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -81,6 +92,7 @@ export default function PageClient({
         users={users}
         onSetSkeletonTable={handleSetSkeletonTable}
         onSetSkeletonHome={handleSetSkeletonHome}
+        onSetSkeletonMessage={handleSetSkeletonMessage}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -122,7 +134,7 @@ export default function PageClient({
           {/* */}
           {/* DASHBOARD INICIAL */}
 
-            <ModalClient openModal={firtsAcess} user={user} />
+          <ModalClient openModal={firtsAcess} user={user} />
 
           {activeSkeletonTable && !showTable && (
             <div className="w-full h-screen p-4">
@@ -133,6 +145,12 @@ export default function PageClient({
           {activeSkeletonHome && !showHome && (
             <div className="w-full h-screen p-4">
               <SkeletonHome />
+            </div>
+          )}
+
+          {activeSkeletonMessage && !showMessage && (
+            <div className="w-full h-screen p-4">
+              <SkeletonMessage />
             </div>
           )}
 
@@ -153,6 +171,8 @@ export default function PageClient({
               </div>
             </motion.div>
           )}
+
+          {showMessage && <PageMessage />}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

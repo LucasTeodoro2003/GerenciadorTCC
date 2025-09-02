@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import {
-  BookOpen,
   Bot,
   Home,
+  MessageCircleMoreIcon,
 } from "lucide-react"
 import { NavMain } from "@/shared/ui/nav-main"
 import { NavUser } from "@/shared/ui/nav-user"
@@ -24,9 +24,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   users: User[],
   onSetSkeletonTable: (isActive: boolean) => void;
   onSetSkeletonHome: (isActive: boolean) => void;
+  onSetSkeletonMessage: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage, ...props }: AppSidebarProps) {
 
 const dataUser = {
   user:{
@@ -108,13 +109,13 @@ const data = {
       ],
     },
     {
-      title: "Documentation",
+      title: "Mensagens",
       page: "#",
-      icon: BookOpen,
+      icon: MessageCircleMoreIcon,
       items: [
         {
-          title: "Introduction",
-          page: "#",
+          title: "Editar Mensagens",
+          page: "message",
         },
         {
           title: "Get Started",
@@ -174,7 +175,7 @@ const data = {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>

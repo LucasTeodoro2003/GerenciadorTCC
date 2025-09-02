@@ -23,6 +23,7 @@ export function NavMain({
   items,
   onSetSkeletonTable,
   onSetSkeletonHome,
+  onSetSkeletonMessage,
 }: {
   items: {
     title: string;
@@ -36,26 +37,32 @@ export function NavMain({
   }[];
   onSetSkeletonTable?: (isActive: boolean) => void;
   onSetSkeletonHome?: (isActive: boolean) => void;
+  onSetSkeletonMessage?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
 
   function handleSearch(term: string) {
-    console.log(term)
-    
-    console.log("ERA PRA FUNCIONAR")
+    //VERIFICAR QUAL PAGINA CARREGA O SKELETON \\
 
-  if (term === "table" && onSetSkeletonTable) {
-    onSetSkeletonTable(true);
-    if (onSetSkeletonHome) onSetSkeletonHome(false);
-  }
+    if (term === "table" && onSetSkeletonTable) {
+      onSetSkeletonTable(true);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+    }
 
-  if (term === "" && onSetSkeletonHome) {
-    onSetSkeletonHome(true);
-    if (onSetSkeletonTable) onSetSkeletonTable(false);
-  }
+    if (term === "" && onSetSkeletonHome) {
+      onSetSkeletonHome(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+    }
 
+    if (term === "message" && onSetSkeletonMessage) {
+      onSetSkeletonMessage(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+    }
 
     const params = new URLSearchParams(searchParams);
     if (term) {
@@ -90,7 +97,8 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a className="hover:cursor-pointer"
+                        <a
+                          className="hover:cursor-pointer"
                           onClick={() => {
                             handleSearch(subItem.page);
                           }}

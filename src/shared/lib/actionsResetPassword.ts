@@ -1,7 +1,6 @@
 "use server";
 
 import db from "@/shared/lib/prisma";
-import { schema } from "./schema";
 import bcrypt from "bcryptjs";
 
 export async function resetUser(userId: string) {
