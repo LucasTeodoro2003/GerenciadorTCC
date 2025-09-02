@@ -1,3 +1,6 @@
+"use client"
+
+import { TableMessage } from "@/features/actions/userMessage/tableMessage";
 import { Button } from "@/shared/ui/components/button";
 import { Input } from "@/shared/ui/components/input";
 import { Toaster } from "@/shared/ui/components/sonner";
@@ -14,6 +17,7 @@ export default function PageMessage() {
     }
     
   return (
+    <>
     <div className="flex w-full items-center gap-2">
       <Input type="email" placeholder="Mensagem à ser enviada" value={message} onChange={(e) => {setMessage(e.target.value);console.log(message)}} className="border-gray-300"/>
       <Button type="submit" variant="outline" className="bg-transparent rounded-full w-12 h-12 p-0 flex items-center justify-center" onClick={()=> Test(message)}>
@@ -21,6 +25,10 @@ export default function PageMessage() {
       </Button>
       <Toaster richColors position="top-center"/>
     </div>
+    <div>
+      <TableMessage/>
+    </div>
+    </>
   );
 }
 
