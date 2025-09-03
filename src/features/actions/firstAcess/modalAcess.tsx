@@ -50,7 +50,7 @@ export default function ModalClient({
             <div className="flex items-center justify-between">
               <DialogTitle>Primeiro Acesso</DialogTitle>
               <img
-                src={user.image || ""}
+                src={user.image || "usuario.png"}
                 alt={user.id}
                 className="w-12 h-12 rounded-full"
               />

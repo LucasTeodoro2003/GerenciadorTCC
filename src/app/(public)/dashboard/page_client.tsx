@@ -172,7 +172,7 @@ export default function PageClient({
             </motion.div>
           )}
 
-          {showMessage && <PageMessage />}
+          {showMessage && <PageMessage user={user} users={users}/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>
