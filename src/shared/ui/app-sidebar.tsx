@@ -25,9 +25,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonTable: (isActive: boolean) => void;
   onSetSkeletonHome: (isActive: boolean) => void;
   onSetSkeletonMessage: (isActive: boolean) => void;
+  onSetSkeletonExpenses: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage, onSetSkeletonExpenses, ...props }: AppSidebarProps) {
 
 const dataUser = {
   user:{
@@ -81,7 +82,7 @@ const data = {
         },
         {
           title: "Despesas",
-          page: "#",
+          page: "despesas",
         },
         {
           title: "Settings?",
@@ -175,7 +176,7 @@ const data = {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpenses={onSetSkeletonExpenses}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>

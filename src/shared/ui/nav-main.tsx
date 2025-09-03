@@ -24,6 +24,7 @@ export function NavMain({
   onSetSkeletonTable,
   onSetSkeletonHome,
   onSetSkeletonMessage,
+  onSetSkeletonExpenses,
 }: {
   items: {
     title: string;
@@ -38,6 +39,7 @@ export function NavMain({
   onSetSkeletonTable?: (isActive: boolean) => void;
   onSetSkeletonHome?: (isActive: boolean) => void;
   onSetSkeletonMessage?: (isActive: boolean) => void;
+  onSetSkeletonExpenses?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -50,18 +52,28 @@ export function NavMain({
       onSetSkeletonTable(true);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpenses) onSetSkeletonExpenses(false);
     }
 
     if (term === "" && onSetSkeletonHome) {
       onSetSkeletonHome(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpenses) onSetSkeletonExpenses(false);
     }
 
     if (term === "message" && onSetSkeletonMessage) {
       onSetSkeletonMessage(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonExpenses) onSetSkeletonExpenses(false);
+    }
+
+    if (term === "despesas" && onSetSkeletonExpenses) {
+      onSetSkeletonExpenses(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
     }
 
     const params = new URLSearchParams(searchParams);

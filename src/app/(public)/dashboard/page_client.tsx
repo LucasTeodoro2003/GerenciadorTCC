@@ -27,6 +27,7 @@ import {
 } from "@/shared/ui/skeletonCards";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../messageUsers/pageMessage";
+import ExpensesPage from "../despesas/page_client";
 
 interface PageClientProps {
   user: User;
@@ -68,10 +69,12 @@ export default function PageClient({
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
   const showMessage = searchParams.get("page") === "message";
+  const showExpenses = searchParams.get("page") === "despesas";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
   const [activeSkeletonMessage, setactiveSkeletonMessage] = useState(false);
+  const [activeSkeletonExpenses, setactiveSkeletonExpenses] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
@@ -85,6 +88,10 @@ export default function PageClient({
     setactiveSkeletonMessage(isActive);
   };
 
+  const handleSetSkeletonExpenses = (isActive: any) => {
+    setactiveSkeletonExpenses(isActive);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -93,6 +100,7 @@ export default function PageClient({
         onSetSkeletonTable={handleSetSkeletonTable}
         onSetSkeletonHome={handleSetSkeletonHome}
         onSetSkeletonMessage={handleSetSkeletonMessage}
+        onSetSkeletonExpenses={handleSetSkeletonExpenses}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -154,6 +162,12 @@ export default function PageClient({
             </div>
           )}
 
+          {activeSkeletonExpenses && !showExpenses && (
+            <div className="w-full h-screen p-4">
+              <SkeletonTable />
+            </div>
+          )}
+
           {showTable && (
             <motion.div
               key="table-content"
@@ -173,6 +187,25 @@ export default function PageClient({
           )}
 
           {showMessage && <PageMessage user={user} users={users} />}
+
+          {showExpenses && (
+            <motion.div
+              key="expenses-content"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              onAnimationComplete={() => {
+                setactiveSkeletonExpenses(false);
+              }}
+            >
+              <div className="flex flex-col w-full h-screen rounded-xl bg-muted/50 p-4 overflow-hidden">
+                <div className="w-full h-full overflow-auto">
+                  <ExpensesPage />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>
