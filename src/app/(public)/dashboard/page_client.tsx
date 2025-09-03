@@ -26,7 +26,7 @@ import {
   SkeletonTable,
 } from "@/shared/ui/skeletonCards";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
-import PageMessage from "../messageUsers/page";
+import PageMessage from "../messageUsers/pageMessage";
 
 interface PageClientProps {
   user: User;
@@ -172,7 +172,7 @@ export default function PageClient({
             </motion.div>
           )}
 
-          {showMessage && <PageMessage user={user} users={users}/>}
+          {showMessage && <PageMessage user={user} users={users} />}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

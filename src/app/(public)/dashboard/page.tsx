@@ -18,6 +18,14 @@ export default async function Page() {
   const users = await db.user.findMany();
 
 
+  // const account = await db.account.findMany({include:{
+  //   user: true
+  // }})
+
+  // console.log("MAIS UM TESTE", account.filter(user=>user.user.name).map(user=>user.user.name))
+
+
+
   if (!user || user.permission === 3) {
     redirect("/noAcess");
   }
