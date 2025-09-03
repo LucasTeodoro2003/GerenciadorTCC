@@ -15,18 +15,20 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
-import TableUser from "../users/page_client";
+import TableUser from "../../../features/actions/users/page_client";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import {
+  SkeletonExpense,
   SkeletonHome,
   SkeletonMessage,
   SkeletonTable,
 } from "@/shared/ui/skeletonCards";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
-import PageMessage from "../messageUsers/pageMessage";
+import PageMessage from "../../../features/actions/messageUsers/pageMessage";
+import PageExpensive from "@/features/actions/expensesEnterprise/expenses";
 
 interface PageClientProps {
   user: User;
@@ -68,10 +70,12 @@ export default function PageClient({
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
   const showMessage = searchParams.get("page") === "message";
+  const showExpense = searchParams.get("page") === "expense";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
   const [activeSkeletonMessage, setactiveSkeletonMessage] = useState(false);
+  const [activeSkeletonExpense, setactiveSkeletonExpense] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
@@ -85,6 +89,10 @@ export default function PageClient({
     setactiveSkeletonMessage(isActive);
   };
 
+  const handleSetSkeletonExpense = (isActive: any) => {
+    setactiveSkeletonExpense(isActive);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -93,6 +101,8 @@ export default function PageClient({
         onSetSkeletonTable={handleSetSkeletonTable}
         onSetSkeletonHome={handleSetSkeletonHome}
         onSetSkeletonMessage={handleSetSkeletonMessage}
+        onSetSkeletonExpense={handleSetSkeletonExpense}
+
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -154,6 +164,12 @@ export default function PageClient({
             </div>
           )}
 
+          {activeSkeletonExpense && !showExpense && (
+            <div className="w-full h-screen p-4">
+              <SkeletonExpense />
+            </div>
+          )}
+
           {showTable && (
             <motion.div
               key="table-content"
@@ -173,6 +189,7 @@ export default function PageClient({
           )}
 
           {showMessage && <PageMessage user={user} users={users} />}
+          {showExpense && <PageExpensive/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

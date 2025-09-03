@@ -25,9 +25,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonTable: (isActive: boolean) => void;
   onSetSkeletonHome: (isActive: boolean) => void;
   onSetSkeletonMessage: (isActive: boolean) => void;
+  onSetSkeletonExpense: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, ...props }: AppSidebarProps) {
 
 const dataUser = {
   user:{
@@ -71,7 +72,7 @@ const data = {
   navMain: [
     {
       title: "Pagina Inicial",
-      page: "#",
+      page: "",
       icon: Home,
       isActive: true,
       items: [
@@ -81,7 +82,7 @@ const data = {
         },
         {
           title: "Despesas",
-          page: "#",
+          page: "expense",
         },
         {
           title: "Settings?",
@@ -90,17 +91,17 @@ const data = {
       ],
     },
     {
-      title: "Usuarios",
+      title: "Clientes",
       page: "#",
       icon: Bot,
       items: [
         {
-          title: "Tabela Usuários",
+          title: "Editar Usuários",
           page: "table",
         },
         {
-          title: "Explorer",
-          page: "#",
+          title: "Mensagens Automáticas",
+          page: "message",
         },
         {
           title: "Quantum",
@@ -114,8 +115,8 @@ const data = {
       icon: MessageCircleMoreIcon,
       items: [
         {
-          title: "Editar Mensagens",
-          page: "message",
+          title: "sei la",
+          page: "#",
         },
         {
           title: "Get Started",
@@ -175,7 +176,7 @@ const data = {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>

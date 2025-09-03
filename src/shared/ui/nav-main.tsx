@@ -24,6 +24,7 @@ export function NavMain({
   onSetSkeletonTable,
   onSetSkeletonHome,
   onSetSkeletonMessage,
+  onSetSkeletonExpense,
 }: {
   items: {
     title: string;
@@ -38,6 +39,7 @@ export function NavMain({
   onSetSkeletonTable?: (isActive: boolean) => void;
   onSetSkeletonHome?: (isActive: boolean) => void;
   onSetSkeletonMessage?: (isActive: boolean) => void;
+  onSetSkeletonExpense?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -56,12 +58,21 @@ export function NavMain({
       onSetSkeletonHome(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
     }
 
     if (term === "message" && onSetSkeletonMessage) {
       onSetSkeletonMessage(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+    }
+
+    if (term === "expense" && onSetSkeletonExpense) {
+      onSetSkeletonExpense(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
     }
 
     const params = new URLSearchParams(searchParams);
