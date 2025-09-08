@@ -7,7 +7,7 @@ export async function createExpense(userId: string, formData: FormData) {
   try {
     await db.expense.create({
       data: {
-        amount: formData.get("amount")?.toString() || "",
+        amount: parseFloat(formData.get("amount")?.toString() || ""),
         date: formData.get("date")?.toString() || "",
         description: formData.get("description")?.toString() || "",
         status: formData.get("status")?.toString() || "",
