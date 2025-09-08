@@ -6,18 +6,18 @@ import { revalidatePath } from "next/cache";
 export async function createExpense(userId: string, formData: FormData) {
   try {
     await db.expense.create({
-        data: {
-            amount: formData.get("amout")?.toString() || "",
-            date: formData.get("date")?.toString() || new Date(),
-            description: formData.get("description")?.toString() || "",
-            status: formData.get("status")?.toString() || "",
-            category: formData.get("category")?.toString() || "",
-            userId: userId,
-            paymentMethod: formData.get("paymentMethod")?.toString() || "",
-            
-            createdAt: new Date(),
-            updatedAt: new Date(),            
-        }
+      data: {
+        amount: formData.get("amount")?.toString() || "",
+        date: formData.get("date")?.toString() || "",
+        description: formData.get("description")?.toString() || "",
+        status: formData.get("status")?.toString() || "",
+        category: formData.get("category")?.toString() || "",
+        userId: userId,
+        paymentMethod: formData.get("paymentMethod")?.toString() || "",
+
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     });
     revalidatePath("/dashboard");
   } catch (error) {

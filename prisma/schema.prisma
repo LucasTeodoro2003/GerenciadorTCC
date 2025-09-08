@@ -29,8 +29,8 @@ model Expense {
   id            String    @id @default(cuid())
   userId        String
   description   String
-  amount        Int
-  date          DateTime
+  amount        Decimal
+  date          String
   category      String
   paymentMethod String?
   status        String
