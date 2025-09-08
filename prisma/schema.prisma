@@ -18,10 +18,26 @@ model User {
   accounts      Account[]
   sessions      Session[]
   vehicle       Vehicle[]
+  expense       Expense[]
   permission    Int       @default(3)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Expense {
+  id            String    @id @default(cuid())
+  userId        String
+  description   String
+  amount        Int
+  date          DateTime
+  category      String
+  paymentMethod String?
+  status        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Vehicle {

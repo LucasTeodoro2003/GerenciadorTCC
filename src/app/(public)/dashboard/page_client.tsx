@@ -14,7 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
-import { User } from "@prisma/client";
+import { Expense, User } from "@prisma/client";
 import TableUser from "../../../features/actions/users/page_client";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,20 +28,23 @@ import {
 } from "@/shared/ui/skeletonCards";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../../../features/actions/messageUsers/pageMessage";
-import PageExpensive from "@/features/actions/expensesEnterprise/expenses";
+import TableExpense from "@/features/actions/expense/page_client";
 
 interface PageClientProps {
   user: User;
   firtsname: string;
   users: User[];
+  expense: Expense[]
 }
 
 export default function PageClient({
   firtsname,
   user,
   users,
+  expense
 }: PageClientProps) {
   const searchParams = useSearchParams();
+
   // const pathname = usePathname();
   // const router = useRouter();
   // const { replace } = useRouter();
@@ -189,7 +192,7 @@ export default function PageClient({
           )}
 
           {showMessage && <PageMessage user={user} users={users} />}
-          {showExpense && <PageExpensive/>}
+          {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

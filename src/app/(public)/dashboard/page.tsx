@@ -17,14 +17,11 @@ export default async function Page() {
 
   const users = await db.user.findMany();
 
-
   // const account = await db.account.findMany({include:{
   //   user: true
   // }})
 
   // console.log("MAIS UM TESTE", account.filter(user=>user.user.name).map(user=>user.user.name))
-
-
 
   if (!user || user.permission === 3) {
     redirect("/noAcess");
@@ -32,6 +29,9 @@ export default async function Page() {
 
   const firstname = user.name?.split(" ")[0] ?? "Sem Nome";
 
-  return <PageClient firtsname={firstname} user={user} users={users}/>;
-}
+  const expense = await db.expense.findMany({
+    where: { userId: userId },
+  });
 
+  return <PageClient firtsname={firstname} user={user} users={users} expense={expense}/>;
+}
