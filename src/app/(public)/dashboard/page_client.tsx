@@ -44,6 +44,7 @@ export default function PageClient({
   expense
 }: PageClientProps) {
   const searchParams = useSearchParams();
+  const permissionUser = user.permission
 
   // const pathname = usePathname();
   // const router = useRouter();

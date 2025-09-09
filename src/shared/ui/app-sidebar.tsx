@@ -29,6 +29,9 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, ...props }: AppSidebarProps) {
+const permissionUser = user.permission;
+const dataUserPage = permissionUser === 1;
+console.log(dataUserPage)
 
 const dataUser = {
   user:{
@@ -46,7 +49,129 @@ const dataUser = {
 }
 
   // This is sample data.
-const data = {
+const data = !dataUserPage ? {
+  // user: {
+  //   name: "shadcn",
+  //   email: "m@example.com",
+  //   avatar: "usuario.png",
+  // },
+  // teams: [
+  //   {
+  //     name: "Acme Inc",
+  //     logo: GalleryVerticalEnd,
+  //     plan: "Enterprise",
+  //   },
+  //   {
+  //     name: "Acme Corp.",
+  //     logo: AudioWaveform,
+  //     plan: "Startup",
+  //   },
+  //   {
+  //     name: "Evil Corp.",
+  //     logo: Command,
+  //     plan: "Free",
+  //   },
+  // ],
+  navMain: [
+    {
+      title: "Pagina Inicial",
+      page: "",
+      icon: Home,
+      isActive: true,
+      items: [
+        {
+          title: "Home",
+          page: "",
+        },
+        // {
+        //   title: "Despesas",
+        //   page: "expense",
+        // },
+        // {
+        //   title: "Settings?",
+        //   page: "#",
+        // },
+      ],
+    },
+    {
+      title: "Clientes",
+      page: "#",
+      icon: Bot,
+      items: [
+        // {
+        //   title: "Editar Usuários",
+        //   page: "table",
+        // },
+        // {
+        //   title: "Mensagens Automáticas",
+        //   page: "message",
+        // },
+        {
+          title: "Quantum",
+          page: "#",
+        },
+      ],
+    },
+    {
+      title: "Mensagens",
+      page: "#",
+      icon: MessageCircleMoreIcon,
+      items: [
+        {
+          title: "sei la",
+          page: "#",
+        },
+        // {
+        //   title: "Get Started",
+        //   page: "#",
+        // },
+        // {
+        //   title: "Tutorials",
+        //   page: "#",
+        // },
+        // {
+        //   title: "Changelog",
+        //   page: "#",
+        // },
+      ],
+    },
+    // {
+    //   title: "Settings",
+    //   page: "#",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Team",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Billing",
+    //       page: "#",
+    //     },
+    //     {
+    //       title: "Limits",
+    //       page: "#",
+    //     },
+    //   ],
+    // },
+  ],
+  // projects: [
+  //   {
+  //     name: "Design Engineering",
+  //     page: "#",
+  //     icon: Frame,
+  //   },
+  //   {
+  //     name: "Sales & Marketing",
+  //     page: "#",
+  //     icon: PieChart,
+  //   },
+  // ],
+}:{
   // user: {
   //   name: "shadcn",
   //   email: "m@example.com",
