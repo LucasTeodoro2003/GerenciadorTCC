@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/shared/ui/components/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/shared/ui/components/dialog";
 import { Button } from "@/shared/ui/components/button";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
@@ -14,26 +20,22 @@ import {
   SelectValue,
 } from "@/shared/ui/components/select";
 import { ExpenseTable } from "@/features/actions/expense/colunms";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { updateExpense } from "@/shared/lib/actionUpdateExpense";
 
 interface EditExpenseModalProps {
   expense: ExpenseTable | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (expense: ExpenseTable) => Promise<void>;
 }
 
 export function EditExpenseModal({
   expense,
   open,
   onOpenChange,
-  onSave,
 }: EditExpenseModalProps) {
   const [formData, setFormData] = useState<Partial<ExpenseTable>>({});
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Carregar dados da despesa quando o modal abrir
+
   useEffect(() => {
     if (expense) {
       setFormData({
@@ -47,35 +49,43 @@ export function EditExpenseModal({
       });
     }
   }, [expense]);
-  
-  // Manipuladores de eventos de formulário
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: parseFloat(value) || 0 }));
   };
-  
+
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value) {
-      setFormData((prev) => ({ ...prev, date: new Date(value) }));
+      setFormData((prev) => ({ ...prev, date: e.target.value }));
     }
   };
-  
+
   const handleSubmit = async () => {
     if (!expense || !formData) return;
-    
     setIsLoading(true);
+
     try {
-      await onSave(formData as ExpenseTable);
+      const formDate = new FormData();
+      formDate.append("description", formData.description || "");
+      formDate.append("amount", String(formData.amount || 0));
+      formDate.append("date", formData.date || "");
+      formDate.append("category", formData.category || "");
+      formDate.append("paymentMethod", formData.paymentMethod || "");
+      formDate.append("status", formData.status || "");
+      await updateExpense(expense.id, formDate);
       onOpenChange(false);
     } catch (error) {
       console.error("Erro ao salvar despesa:", error);
@@ -83,16 +93,16 @@ export function EditExpenseModal({
       setIsLoading(false);
     }
   };
-  
+
   if (!expense) return null;
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Editar Despesa</DialogTitle>
         </DialogHeader>
-        
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">
@@ -106,7 +116,7 @@ export function EditExpenseModal({
               className="col-span-3"
             />
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="amount" className="text-right">
               Valor (R$)
@@ -121,7 +131,7 @@ export function EditExpenseModal({
               className="col-span-3"
             />
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="date" className="text-right">
               Data
@@ -130,18 +140,18 @@ export function EditExpenseModal({
               id="date"
               name="date"
               type="date"
-              value={formData.date ? format(new Date(formData.date), "yyyy-MM-dd") : ""}
+              value={(formData.date as string) || ""}
               onChange={handleDateChange}
               className="col-span-3"
             />
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="category" className="text-right">
               Categoria
             </Label>
-            <Select 
-              value={formData.category} 
+            <Select
+              value={formData.category}
               onValueChange={(value) => handleSelectChange("category", value)}
             >
               <SelectTrigger className="col-span-3">
@@ -162,35 +172,41 @@ export function EditExpenseModal({
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="paymentMethod" className="text-right">
               Método de Pagamento
             </Label>
-            <Select 
-              value={formData.paymentMethod} 
-              onValueChange={(value) => handleSelectChange("paymentMethod", value)}
+            <Select
+              value={formData.paymentMethod}
+              onValueChange={(value) =>
+                handleSelectChange("paymentMethod", value)
+              }
             >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione um método" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Transferência">Transferência</SelectItem>
-                <SelectItem value="Débito Automático">Débito Automático</SelectItem>
-                <SelectItem value="Cartão de Crédito">Cartão de Crédito</SelectItem>
+                <SelectItem value="Débito Automático">
+                  Débito Automático
+                </SelectItem>
+                <SelectItem value="Cartão de Crédito">
+                  Cartão de Crédito
+                </SelectItem>
                 <SelectItem value="Dinheiro">Dinheiro</SelectItem>
                 <SelectItem value="Pix">Pix</SelectItem>
                 <SelectItem value="Boleto">Boleto</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="status" className="text-right">
               Status
             </Label>
-            <Select 
-              value={formData.status} 
+            <Select
+              value={formData.status}
               onValueChange={(value) => handleSelectChange("status", value)}
             >
               <SelectTrigger className="col-span-3">
@@ -204,19 +220,16 @@ export function EditExpenseModal({
             </Select>
           </div>
         </div>
-        
+
         <DialogFooter>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
             Cancelar
           </Button>
-          <Button 
-            onClick={handleSubmit}
-            disabled={isLoading}
-          >
+          <Button onClick={handleSubmit} disabled={isLoading}>
             {isLoading ? "Salvando..." : "Salvar alterações"}
           </Button>
         </DialogFooter>

@@ -18,30 +18,18 @@ import { Button } from "@/shared/ui/components/button";
 import { Edit, Trash2 } from "lucide-react";
 import { Badge } from "@/shared/ui/components/badge";
 import { EditExpenseModal } from "@/features/actions/Modal/expense/expenseEdity";
+import { deleteExpense } from "@/shared/lib/actionDeleteExpense";
 
 export type ExpenseTable = {
   id: string;
   description: string;
   amount: number;
-  date: Date;
+  date: string;
   category: string;
   paymentMethod: string;
   status: "Pago" | "Pendente" | "Atrasado";
 };
 
-// Função simulada para excluir despesas - substitua pela implementação real
-const deleteExpense = async (id: string) => {
-  // Chamada à API para excluir despesa
-  console.log(`Excluindo despesa com id: ${id}`);
-  return Promise.resolve();
-};
-
-// Função simulada para atualizar despesa - substitua pela implementação real
-const updateExpense = async (expense: ExpenseTable) => {
-  // Chamada à API para atualizar despesa
-  console.log(`Atualizando despesa:`, expense);
-  return Promise.resolve(expense);
-};
 
 export function getColumns(
   router: ReturnType<typeof useRouter>
@@ -73,8 +61,9 @@ export function getColumns(
         <DataTableColumnHeader column={column} title="Data" />
       ),
       cell: ({ row }) => {
-        const date = row.getValue("date") as Date;
-        return <div>{date.toLocaleDateString("pt-BR")}</div>;
+        const dateStr = row.getValue("date") as string;
+        const [year, month, day] = dateStr.split("-");
+        return <div>{`${day}/${month}/${year}`}</div>;
       },
     },
     {
@@ -96,7 +85,7 @@ export function getColumns(
       ),
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
-        
+
         return (
           <Badge
             variant={
@@ -139,33 +128,13 @@ export function getColumns(
           setConfirmOpen(false);
           setLoadingOpen(true);
           setPending(true);
-
-          await deleteExpense(expense.id);
+          await deleteExpense(expense.id)
           await router.refresh();
 
           setTimeout(() => {
             setLoadingOpen(false);
             setPending(false);
           }, 1500);
-        };
-        
-        const handleSaveExpense = async (updatedExpense: ExpenseTable) => {
-          setLoadingOpen(true);
-          setPending(true);
-          
-          try {
-            await updateExpense(updatedExpense);
-            await router.refresh();
-            
-            setTimeout(() => {
-              setLoadingOpen(false);
-              setPending(false);
-            }, 1500);
-          } catch (error) {
-            console.error("Erro ao atualizar despesa:", error);
-            setLoadingOpen(false);
-            setPending(false);
-          }
         };
 
         return (
@@ -181,7 +150,7 @@ export function getColumns(
               <Edit className="h-4 w-4" />
               <span className="sr-only">Editar despesa</span>
             </Button>
-            
+
             <Button
               variant="destructive"
               size="icon"
@@ -201,7 +170,8 @@ export function getColumns(
                     Tem certeza que deseja excluir esta despesa?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Esta ação não pode ser desfeita. A despesa será permanentemente excluída do sistema.
+                    Esta ação não pode ser desfeita. A despesa será
+                    permanentemente excluída do sistema.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -213,7 +183,10 @@ export function getColumns(
                   >
                     Cancelar
                   </AlertDialogCancel>
-                  <AlertDialogAction onClick={handleConfirmDelete} disabled={pending}>
+                  <AlertDialogAction
+                    onClick={handleConfirmDelete}
+                    disabled={pending}
+                  >
                     Excluir
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -245,19 +218,16 @@ export function getColumns(
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  <span className="text-lg font-medium">
-                    Processando...
-                  </span>
+                  <span className="text-lg font-medium">Processando...</span>
                 </div>
               </AlertDialogContent>
             </AlertDialog>
-            
+
             {/* Modal de Edição */}
             <EditExpenseModal
               expense={expense}
               open={editModalOpen}
               onOpenChange={setEditModalOpen}
-              onSave={handleSaveExpense}
             />
           </div>
         );

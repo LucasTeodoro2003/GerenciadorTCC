@@ -5,16 +5,15 @@ import { motion } from "framer-motion";
 import { FaSun, FaMoon } from "react-icons/fa";
 import { useTheme } from "next-themes";
 
-// Substitua as cores abaixo pelas cores do seu projeto se necessário.
 const COLORS = {
-  darkBg: "#23272a",         // Exemplo: fundo do toggle no modo escuro
-  lightBg: "#f3f4f6",        // Exemplo: fundo do toggle no modo claro
-  border: "#a1a1aa",         // Exemplo: cor da borda
-  sun: "#ffd600",            // Exemplo: cor do sol (ícone claro)
-  moon: "#64748b",           // Exemplo: cor da lua (ícone escuro)
-  knobDark: "#0f172a",       // Exemplo: cor do botão no modo escuro
-  knobLight: "#ffeccf",      // Exemplo: cor do botão no modo claro
-  shadow: "#d1d5db",         // Exemplo: shadow
+  darkBg: "#23272a",        
+  lightBg: "#f3f4f6",       
+  border: "#a1a1aa",        
+  sun: "#ffd600",
+  moon: "#64748b",
+  knobDark: "#0f172a",
+  knobLight: "#ffeccf",
+  shadow: "#d1d5db", 
 };
 
 export default function ThemeToggleV2() {
@@ -30,11 +29,6 @@ export default function ThemeToggleV2() {
     setTheme(checked ? "light" : "dark");
     setChecked((prev) => !prev);
   }
-
-  // 5% menor: 5.13em -> 4.873em, 2.565em -> 2.436em, 1.539em -> 1.462em, 1.744em -> 1.656em,
-  // 3.078em -> 2.924em, 2.821em -> 2.680em, 0.410em -> 0.389em, 0.513em -> 0.487em, 0.359em -> 0.341em, 2.77em -> 2.631em
-  // Borda segue border-[1.2px]
-  // Shadow reduzido: 4.104px -> 3px, 12.312px -> 7px
 
   return (
     <div className="flex items-center justify-center h-full">

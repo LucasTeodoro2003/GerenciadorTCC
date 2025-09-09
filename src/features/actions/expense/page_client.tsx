@@ -39,13 +39,12 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
   const [tableData, setTableData] = useState<ExpenseTable[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Processar dados da tabela usando useEffect corretamente
   useEffect(() => {
     const processedData = expenses.map((expense) => ({
       id: expense.id,
       description: expense.description ?? "",
       amount: decimalToNumber(expense.amount),
-      date: expense.date ? new Date(expense.date) : new Date(),
+      date: expense.date ?? new Date().toString(),
       category: expense.category ?? "Outros",
       paymentMethod: expense.paymentMethod ?? "Dinheiro",
       status: getStatusLabel(expense.status),
@@ -54,15 +53,13 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
     setTableData(processedData);
   }, [expenses]);
   
-  // Manipulador para criar nova despesa usando server action
   const handleCreateExpense = async (expenseData: Omit<ExpenseTable, "id">) => {
     try {
       setIsSubmitting(true);
       
-      // Criar FormData para enviar ao servidor
       const formData = new FormData();
       formData.append("amount", expenseData.amount.toString());
-      formData.append("date", expenseData.date.toISOString());
+      formData.append("date", expenseData.date.toString());
       formData.append("description", expenseData.description);
       formData.append("status", expenseData.status);
       formData.append("category", expenseData.category);
@@ -93,7 +90,7 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Total de Despesas</h3>
           <p className="text-2xl font-bold">
             {new Intl.NumberFormat("pt-BR", {
@@ -105,7 +102,7 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
           </p>
         </div>
         
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Despesas Pagas</h3>
           <p className="text-2xl font-bold text-green-600">
             {new Intl.NumberFormat("pt-BR", {
@@ -119,7 +116,7 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
           </p>
         </div>
         
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Despesas Pendentes</h3>
           <p className="text-2xl font-bold text-amber-600">
             {new Intl.NumberFormat("pt-BR", {

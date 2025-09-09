@@ -50,13 +50,10 @@ export function DataTable<TData, TValue>({
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   
-  // Lista de categorias únicas para os botões de filtro
   const uniqueCategories = [...new Set(data.map((item: any) => item.category))].sort();
   
-  // Aplicar filtro de status
   const handleStatusFilter = (status: string | null) => {
     if (status === statusFilter) {
-      // Se clicar no mesmo status, remove o filtro
       setStatusFilter(null);
       table.getColumn("status")?.setFilterValue(undefined);
     } else {
@@ -65,10 +62,8 @@ export function DataTable<TData, TValue>({
     }
   };
   
-  // Aplicar filtro de categoria
   const handleCategoryFilter = (category: string | null) => {
     if (category === categoryFilter) {
-      // Se clicar na mesma categoria, remove o filtro
       setCategoryFilter(null);
       table.getColumn("category")?.setFilterValue(undefined);
     } else {
@@ -96,7 +91,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="rounded-xl border p-1 flex flex-col flex-1">
+      <div className="rounded-xl border p-1 flex flex-col">
         <div className="space-y-4 mb-4">
           {/* Filtros de Status */}
           <div className="flex flex-wrap items-center gap-2">
@@ -178,7 +173,7 @@ export function DataTable<TData, TValue>({
           )}
         </div>
         
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-auto">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

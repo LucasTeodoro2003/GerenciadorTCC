@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/shared/ui/components/select";
 import { ExpenseTable } from "@/features/actions/expense/colunms";
-import { format } from "date-fns";
 
 interface CreateExpenseModalProps {
   open: boolean;
@@ -38,7 +37,7 @@ export function CreateExpenseModal({
   const [formData, setFormData] = useState<Partial<ExpenseTable>>({
     description: "",
     amount: 0,
-    date: new Date(),
+    date: new Date().toISOString().split("T")[0] as string,
     category: "Outros",
     paymentMethod: "Dinheiro",
     status: "Pendente",
@@ -64,7 +63,7 @@ export function CreateExpenseModal({
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value) {
-      setFormData((prev) => ({ ...prev, date: new Date(value) }));
+      setFormData((prev) => ({ ...prev, date: e.target.value }));
     }
   };
 
@@ -80,7 +79,7 @@ export function CreateExpenseModal({
       setFormData({
         description: "",
         amount: 0,
-        date: new Date(),
+        date: new Date().toISOString().split("T")[0],
         category: "Outros",
         paymentMethod: "Dinheiro",
         status: "Pendente",
@@ -102,7 +101,7 @@ export function CreateExpenseModal({
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-2 items-center gap-4">
             <Label htmlFor="description" className="text-right">
               Descrição *
             </Label>
@@ -133,20 +132,15 @@ export function CreateExpenseModal({
               required
             />
           </div>
-
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="date" className="text-right">
               Data *
             </Label>
             <Input
               id="date"
-              name="date"
+              name="date" 
               type="date"
-              value={
-                formData.date
-                  ? format(new Date(formData.date), "yyyy-MM-dd")
-                  : ""
-              }
+              value={formData.date as string|| ""}
               onChange={handleDateChange}
               className="col-span-3"
               required
