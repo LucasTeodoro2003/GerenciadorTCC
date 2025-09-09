@@ -43,6 +43,7 @@ export function SkeletonMessage() {
   return (
     <div className="flex flex-col space-y-3 w-full h-full">
       <Skeleton className="h-[70px] w-full rounded-xl" />
+      <div className="space-y-2">
       </div>
     </div>
   )
