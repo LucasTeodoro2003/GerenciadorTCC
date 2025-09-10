@@ -21,6 +21,9 @@ import {
 } from "@/shared/ui/components/select";
 import { ExpenseTable } from "@/features/actions/expense/colunms";
 import { updateExpense } from "@/shared/lib/actionUpdateExpense";
+import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface EditExpenseModalProps {
   expense: ExpenseTable | null;
@@ -35,6 +38,7 @@ export function EditExpenseModal({
 }: EditExpenseModalProps) {
   const [formData, setFormData] = useState<Partial<ExpenseTable>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (expense) {
@@ -73,26 +77,33 @@ export function EditExpenseModal({
     }
   };
 
-  const handleSubmit = async () => {
-    if (!expense || !formData) return;
-    setIsLoading(true);
+ const handleSubmit = async () => {
+  if (!expense || !formData) return;
+  
+  setIsLoading(true);
 
-    try {
-      const formDate = new FormData();
-      formDate.append("description", formData.description || "");
-      formDate.append("amount", String(formData.amount || 0));
-      formDate.append("date", formData.date || "");
-      formDate.append("category", formData.category || "");
-      formDate.append("paymentMethod", formData.paymentMethod || "");
-      formDate.append("status", formData.status || "");
-      await updateExpense(expense.id, formDate);
+  try {
+    const formDate = new FormData();
+    formDate.append("description", formData.description || "");
+    formDate.append("amount", String(formData.amount || 0));
+    formDate.append("date", formData.date || "");
+    formDate.append("category", formData.category || "");
+    formDate.append("paymentMethod", formData.paymentMethod || "");
+    formDate.append("status", formData.status || "");
+    
+    await updateExpense(expense.id, formDate);
+    
+    setTimeout(()=>{
+      router.refresh();
       onOpenChange(false);
-    } catch (error) {
-      console.error("Erro ao salvar despesa:", error);
-    } finally {
       setIsLoading(false);
-    }
-  };
+    }, 4000)
+    
+  } catch (error) {
+    console.error("Erro ao salvar despesa:", error);
+    setIsLoading(false);
+  }
+};
 
   if (!expense) return null;
 
@@ -161,9 +172,9 @@ export function EditExpenseModal({
                 <SelectItem value="Aluguel">Aluguel</SelectItem>
                 <SelectItem value="Utilidades">Utilidades</SelectItem>
                 <SelectItem value="Salários">Salários</SelectItem>
-                <SelectItem value="Suprimentos">Suprimentos</SelectItem>
+                <SelectItem value="Concertos">Concertos</SelectItem>
                 <SelectItem value="Manutenção">Manutenção</SelectItem>
-                <SelectItem value="Software">Software</SelectItem>
+                <SelectItem value="Produtos">Produtos</SelectItem>
                 <SelectItem value="Impostos">Impostos</SelectItem>
                 <SelectItem value="Seguros">Seguros</SelectItem>
                 <SelectItem value="Serviços">Serviços</SelectItem>

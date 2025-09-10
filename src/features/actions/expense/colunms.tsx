@@ -129,12 +129,11 @@ export function getColumns(
           setLoadingOpen(true);
           setPending(true);
           await deleteExpense(expense.id)
-          await router.refresh();
-
           setTimeout(() => {
+            router.refresh();
             setLoadingOpen(false);
             setPending(false);
-          }, 1500);
+          }, 4000);
         };
 
         return (

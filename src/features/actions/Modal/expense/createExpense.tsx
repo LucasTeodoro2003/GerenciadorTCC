@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +42,19 @@ export function CreateExpenseModal({
     paymentMethod: "Dinheiro",
     status: "Pendente",
   });
-  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!open && !isSubmitting) {
+      setFormData({
+        description: "",
+        amount: 0,
+        date: new Date().toISOString().split("T")[0],
+        category: "Outros",
+        paymentMethod: "Dinheiro",
+        status: "Pendente",
+      });
+    }
+  }, [open, isSubmitting]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -73,23 +85,10 @@ export function CreateExpenseModal({
       return;
     }
 
-    setIsLoading(true);
     try {
       await onSave(formData as Omit<ExpenseTable, "id">);
-      setFormData({
-        description: "",
-        amount: 0,
-        date: new Date().toISOString().split("T")[0],
-        category: "Outros",
-        paymentMethod: "Dinheiro",
-        status: "Pendente",
-      });
-
-      onOpenChange(false);
     } catch (error) {
       console.error("Erro ao criar despesa:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -113,6 +112,7 @@ export function CreateExpenseModal({
               className="col-span-3"
               placeholder="Descreva a despesa"
               required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -130,6 +130,7 @@ export function CreateExpenseModal({
               className="col-span-3"
               placeholder="0,00"
               required
+              disabled={isSubmitting}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -138,12 +139,13 @@ export function CreateExpenseModal({
             </Label>
             <Input
               id="date"
-              name="date" 
+              name="date"
               type="date"
-              value={formData.date as string|| ""}
+              value={(formData.date as string) || ""}
               onChange={handleDateChange}
               className="col-span-3"
               required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -154,6 +156,7 @@ export function CreateExpenseModal({
             <Select
               value={formData.category}
               onValueChange={(value) => handleSelectChange("category", value)}
+              disabled={isSubmitting}
             >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione uma categoria" />
@@ -162,9 +165,9 @@ export function CreateExpenseModal({
                 <SelectItem value="Aluguel">Aluguel</SelectItem>
                 <SelectItem value="Utilidades">Utilidades</SelectItem>
                 <SelectItem value="Salários">Salários</SelectItem>
-                <SelectItem value="Suprimentos">Suprimentos</SelectItem>
+                <SelectItem value="Concertos">Concertos</SelectItem>
                 <SelectItem value="Manutenção">Manutenção</SelectItem>
-                <SelectItem value="Software">Software</SelectItem>
+                <SelectItem value="Produtos">Produtos</SelectItem>
                 <SelectItem value="Impostos">Impostos</SelectItem>
                 <SelectItem value="Seguros">Seguros</SelectItem>
                 <SelectItem value="Serviços">Serviços</SelectItem>
@@ -183,6 +186,7 @@ export function CreateExpenseModal({
               onValueChange={(value) =>
                 handleSelectChange("paymentMethod", value)
               }
+              disabled={isSubmitting}
             >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione um método" />
@@ -209,6 +213,7 @@ export function CreateExpenseModal({
             <Select
               value={formData.status}
               onValueChange={(value) => handleSelectChange("status", value)}
+              disabled={isSubmitting}
             >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione um status" />
@@ -224,7 +229,7 @@ export function CreateExpenseModal({
 
         <DialogFooter>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Salvando..." : "Criar despesa"}
+            {isSubmitting ? "Salvando despesa..." : "Criar despesa"}
           </Button>
         </DialogFooter>
       </DialogContent>

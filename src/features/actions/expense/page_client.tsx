@@ -67,11 +67,15 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
       const userId = user.id
       
       await createExpense(userId || "", formData);
-      router.refresh();
-      setCreateModalOpen(false);
+      
+      setTimeout(() => {
+        router.refresh();
+        setCreateModalOpen(false);
+        setIsSubmitting(false);
+      }, 5000);
+      
     } catch (error) {
       console.error("Erro ao criar despesa:", error);
-    } finally {
       setIsSubmitting(false);
     }
   };
