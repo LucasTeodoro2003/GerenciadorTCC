@@ -14,7 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
-import { Expense, User } from "@prisma/client";
+import { Expense, Prisma, User } from "@prisma/client";
 import TableUser from "../../../features/actions/users/page_client";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,11 +31,13 @@ import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
 
 interface PageClientProps {
-  user: User;
+  user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
   firtsname: string;
   users: User[];
   expense: Expense[]
 }
+
+
 
 export default function PageClient({
   firtsname,
@@ -69,7 +71,6 @@ export default function PageClient({
   //   return "";
   // }
   const firtsAcess = !user.emailVerified;
-  console.log(user.enterpriseId)
 
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";

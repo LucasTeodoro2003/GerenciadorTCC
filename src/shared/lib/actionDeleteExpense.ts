@@ -4,7 +4,6 @@ import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function deleteExpense(idforDelete: string) {
-    console.log("RODOU: ", idforDelete)
   try {
     await db.expense.delete({
         where: {id: idforDelete}

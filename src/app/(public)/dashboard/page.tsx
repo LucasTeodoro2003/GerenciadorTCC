@@ -15,13 +15,10 @@ export default async function Page() {
     where: { id: userId },
     include:{
       enterprise:{
-        select:{
-          name: true,
-          image: true
-        }
       }
     }
   });
+
 
   const users = await db.user.findMany();
 

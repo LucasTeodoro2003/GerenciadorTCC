@@ -16,12 +16,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/shared/ui/components/sidebar"
-import { User } from "@prisma/client"
+import { Prisma, User } from "@prisma/client"
 import { LogoLavaJato } from "../../../public/lavajato";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User,
-  users: User[],
+  user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;  users: User[],
   onSetSkeletonTable: (isActive: boolean) => void;
   onSetSkeletonHome: (isActive: boolean) => void;
   onSetSkeletonMessage: (isActive: boolean) => void;
@@ -31,6 +30,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
+const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
 
 const dataUser = {
   user:{
@@ -40,9 +40,9 @@ const dataUser = {
   },
   teams: [
     {
-      name: "Alvorada Estética Automotiva",
-      logo: LogoLavaJato,
-      plan: "Empresa"
+      name: firtNameEnterprise || "",
+      logo: user.enterprise?.image || "user.png",
+      plan: (user.enterprise?.name.split(" ").slice(1,3).join(" ")) || ""
     },
   ]
 }
