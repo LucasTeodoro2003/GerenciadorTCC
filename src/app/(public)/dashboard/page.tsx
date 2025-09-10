@@ -35,7 +35,7 @@ export default async function Page() {
   const firstname = user.name?.split(" ")[0] ?? "Sem Nome";
 
   const expense = await db.expense.findMany({where:
-    user.permission === 3 ? {userId: userId} : {},
+    user.permission != 1 ? {userId: userId} : {},
     include:{
       user: {
         select:{
