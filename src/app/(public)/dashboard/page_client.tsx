@@ -33,7 +33,7 @@ import TableExpense from "@/features/actions/expense/page_client";
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
   firtsname: string;
-  users: User[];
+  users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
   expense: Expense[]
 }
 

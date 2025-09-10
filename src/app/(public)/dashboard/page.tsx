@@ -18,7 +18,17 @@ export default async function Page() {
     },
   });
 
-  const users = await db.user.findMany();
+
+  const usersWithServices = await db.user.findMany({
+    include: {
+      vehicle: {
+        include: {
+          serviceVehicle: {
+          }
+        },
+      },
+    },
+  });
 
   // const account = await db.account.findMany({include:{
   //   user: true
@@ -56,7 +66,7 @@ export default async function Page() {
     <PageClient
       firtsname={firstname}
       user={user}
-      users={users}
+      users={usersWithServices}
       expense={expense}
     />
   );

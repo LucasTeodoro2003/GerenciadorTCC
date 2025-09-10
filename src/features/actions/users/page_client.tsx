@@ -1,12 +1,12 @@
 "use client";
 
 import { DataTable } from "@/features/actions/usersEdit/data_table";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { getColumns, Usertable } from "@/features/actions/usersEdit/colunms";
 import { useRouter } from "next/navigation";
 
 interface TableUserProps {
-  users: User[];
+  users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
 }
 
 function getTypeUser(permission: number | null | undefined): "Administrador" | "Funcionario" | "Cliente" {
@@ -19,12 +19,14 @@ function getTypeUser(permission: number | null | undefined): "Administrador" | "
 export default function TableUser({ users }: TableUserProps) {
   const router = useRouter();
 
+  console.log("AQUI: ", users.map((u)=>u.vehicle.length))
+
   const data: Usertable[] = users.map((user) => ({
     id: user.id,
     name: user.name ?? "",
     email: user.email ?? "",
     typeUser: getTypeUser(user.permission),
-    numServices: 1,
+    numVehicles: user.vehicle?.length || 0,
   }));
 
   return <DataTable columns={getColumns(router)} data={data} />;

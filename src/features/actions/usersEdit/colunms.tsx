@@ -31,7 +31,7 @@ export type Usertable = {
   name: string;
   email: string;
   typeUser: "Funcionario" | "Administrador" | "Cliente";
-  numServices: number;
+  numVehicles: number;
 };
 
 function getPermission(type: Usertable["typeUser"]): number {
@@ -58,9 +58,9 @@ export function getColumns(
       ),
     },
     {
-      accessorKey: "numServices",
+      accessorKey: "numVehicles",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Nº Serviços" />
+        <DataTableColumnHeader column={column} title="Nº Veículos" />
       ),
     },
     {
