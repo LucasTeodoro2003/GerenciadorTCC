@@ -82,10 +82,10 @@ const data = !dataUserPage ? {
           title: "Home",
           page: "",
         },
-        // {
-        //   title: "Despesas",
-        //   page: "expense",
-        // },
+        {
+          title: "Despesas",
+          page: "expense",
+        },
         // {
         //   title: "Settings?",
         //   page: "#",

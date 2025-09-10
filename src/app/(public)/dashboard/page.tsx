@@ -13,6 +13,14 @@ export default async function Page() {
 
   const user = await db.user.findUnique({
     where: { id: userId },
+    include:{
+      enterprise:{
+        select:{
+          name: true,
+          image: true
+        }
+      }
+    }
   });
 
   const users = await db.user.findMany();
@@ -29,9 +37,18 @@ export default async function Page() {
 
   const firstname = user.name?.split(" ")[0] ?? "Sem Nome";
 
-  const expense = await db.expense.findMany({
-    where: { userId: userId },
-  });
+  const expense = await db.expense.findMany({where:
+    user.permission === 3 ? {userId: userId} : {},
+    include:{
+      user: {
+        select:{
+          email: true,
+          name: true,
+          id: true
+        }
+      }
+    }
+  })
 
   return <PageClient firtsname={firstname} user={user} users={users} expense={expense}/>;
 }

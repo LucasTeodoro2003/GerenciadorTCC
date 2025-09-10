@@ -44,7 +44,6 @@ export default function PageClient({
   expense
 }: PageClientProps) {
   const searchParams = useSearchParams();
-  const permissionUser = user.permission
 
   // const pathname = usePathname();
   // const router = useRouter();
@@ -70,6 +69,7 @@ export default function PageClient({
   //   return "";
   // }
   const firtsAcess = !user.emailVerified;
+  console.log(user.enterpriseId)
 
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";

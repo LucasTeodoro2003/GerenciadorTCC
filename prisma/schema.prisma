@@ -8,8 +8,19 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Enterprise {
+  id String @id @default(cuid())
+  name String
+  image String
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id            String    @id @default(cuid())
+  enterpriseId  String?
   password      String?
   name          String?
   email         String?   @unique
@@ -23,6 +34,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
 }
 
 model Expense {
