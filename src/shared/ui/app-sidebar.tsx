@@ -17,7 +17,6 @@ import {
   SidebarRail,
 } from "@/shared/ui/components/sidebar"
 import { Prisma, User } from "@prisma/client"
-import { LogoLavaJato } from "../../../public/lavajato";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;  users: User[],
@@ -217,7 +216,7 @@ const data = !dataUserPage ? {
     },
     {
       title: "Clientes",
-      page: "#",
+      page: "table",
       icon: Bot,
       items: [
         {
@@ -236,7 +235,7 @@ const data = !dataUserPage ? {
     },
     {
       title: "Mensagens",
-      page: "#",
+      page: "",
       icon: MessageCircleMoreIcon,
       items: [
         {

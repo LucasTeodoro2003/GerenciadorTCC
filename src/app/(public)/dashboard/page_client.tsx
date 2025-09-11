@@ -191,6 +191,12 @@ export default function PageClient({
             </div>
           )}
 
+          {activeSkeletonRevenue && !showRevenue && (
+            <div className="w-full h-screen p-4">
+              <SkeletonExpense />
+            </div>
+          )}
+
           {showTable && (
             <motion.div
               key="table-content"

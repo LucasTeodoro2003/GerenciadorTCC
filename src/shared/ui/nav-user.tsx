@@ -31,7 +31,6 @@ import {
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
 import { Button } from "./components/button";
-import ResetPasswordModal from "@/features/actions/Modal/users/resetPasswordUser";
 import { useState } from "react";
 import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
 import signOutFunction from "./signOut";
@@ -84,10 +83,9 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={()=>{setopenResetPassword(true)}}>
-                  <ResetPasswordModal onOpenChange={setopenResetPassword} open={openResetPassword} users={users}/>
+              <DropdownMenuItem>
                   <ManageAccountsSharpIcon/>
-                  Resetar Senha do Usuario
+                  Editar Perfil
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

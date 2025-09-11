@@ -113,7 +113,7 @@ export function NavMain({
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon onClick={()=>{handleSearch(item.page)}}/>}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -124,7 +124,7 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <a
-                          className="hover:cursor-pointer"
+                          className="hover:cursor-pointer hover:bg-gray-600 hover:bg-opacity-35"
                           onClick={() => {
                             handleSearch(subItem.page);
                           }}

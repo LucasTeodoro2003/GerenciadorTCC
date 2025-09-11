@@ -5,7 +5,6 @@ import db from "./prisma";
 
 export async function deleteRevenue(id: string) {
   try {
-    // Verifica se é um registro de ServiceVehicle
     const serviceVehicle = await db.serviceVehicle.findUnique({
       where: { id },
     });
@@ -15,13 +14,12 @@ export async function deleteRevenue(id: string) {
         where: { id },
       });
     } else {
-      // Se não for ServiceVehicle, tenta deletar de otherRevenue
       await db.revenue.delete({
         where: { id },
       });
     }
 
-    revalidatePath("/revenue");
+    revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
     console.error("Erro ao excluir receita:", error);

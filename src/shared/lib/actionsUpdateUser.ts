@@ -34,20 +34,3 @@ export async function updateUser2(userId: string, formData: FormData) {
     throw new Error("Falha ao atualizar o usuário.");
   }
 }
-
-export async function ResetPasswordUser(userId: string){
-  try{
-    await db.user.update({
-      where:{
-        id: userId
-      },
-      data: {
-        password: "00000000"
-      }
-    })
-
-  }catch(error){
-     console.error("Erro ao atualizar usuário:", error);
-    throw new Error("Falha ao atualizar o usuário.");
-  }
-}

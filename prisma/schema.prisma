@@ -98,7 +98,7 @@ model ServiceVehicle {
   id        String @id @default(cuid())
   vehicleId String
   serviceId String
-  date DateTime
+  date      String
   totalValue String
 
   vehicle Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: Cascade)

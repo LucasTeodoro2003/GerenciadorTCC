@@ -18,7 +18,7 @@ export async function createRevenue(userId: string, formData: FormData) {
         updatedAt: new Date(),
       },
     });
-    revalidatePath("/revenue");
+    revalidatePath("/dashboard");
   } catch (error) {
     console.error("Erro ao criar receita:", error);
     throw new Error("Falha ao criar receita.");

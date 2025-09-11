@@ -15,7 +15,7 @@ export async function updatePerfilUser(userid: string, formData: FormData) {
         updatedAt: new Date()
       },
     });
-    revalidatePath('/')
+    revalidatePath('/dashboard')
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);
     throw new Error("Falha ao atualizar o usuário.");

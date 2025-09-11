@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 
 export async function updateRevenue(id: string, formData: FormData) {
   try {
-    // Verifica se é um registro de ServiceVehicle
     const serviceVehicle = await db.serviceVehicle.findUnique({
       where: { id },
     });
@@ -15,11 +14,10 @@ export async function updateRevenue(id: string, formData: FormData) {
         where: { id },
         data: {
           totalValue: formData.get("amount")?.toString() || "",
-          date: new Date(formData.get("date")?.toString() || ""),
+          date: formData.get("date")?.toString() || "",
         },
       });
       
-      // Se for um serviço, pode querer atualizar a descrição no serviço relacionado
       if (serviceVehicle.serviceId) {
         await db.services.update({
           where: { id: serviceVehicle.serviceId },
@@ -29,12 +27,11 @@ export async function updateRevenue(id: string, formData: FormData) {
         });
       }
     } else {
-      // Se não for ServiceVehicle, atualiza em otherRevenue
       await db.revenue.update({
         where: { id },
         data: {
           amount: formData.get("amount")?.toString() || "",
-          date: new Date(formData.get("date")?.toString() || ""),
+          date: formData.get("date")?.toString() || "",
           description: formData.get("description")?.toString() || "",
           category: formData.get("category")?.toString() || "",
           source: formData.get("source")?.toString() || "",
@@ -43,7 +40,7 @@ export async function updateRevenue(id: string, formData: FormData) {
       });
     }
 
-    revalidatePath("/revenue");
+    revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
     console.error("Erro ao atualizar receita:", error);
