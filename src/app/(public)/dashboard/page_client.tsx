@@ -14,7 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
-import { Expense, Prisma, User } from "@prisma/client";
+import { Expense, Prisma, Revenue, Services, ServiceVehicle, User, Vehicle } from "@prisma/client";
 import TableUser from "../../../features/actions/users/page_client";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,12 +29,17 @@ import {
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
+import TableRevenue from "@/features/actions/revenue/page_client";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
   firtsname: string;
   users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
   expense: Expense[]
+  serviceVehicle: ServiceVehicle[]
+  services: Services[]
+  revenue: Revenue[]
+  vehicle: Vehicle[]
 }
 
 
@@ -43,7 +48,11 @@ export default function PageClient({
   firtsname,
   user,
   users,
-  expense
+  expense,
+  serviceVehicle,
+  services,
+  revenue,
+  vehicle
 }: PageClientProps) {
   const searchParams = useSearchParams();
 
@@ -76,16 +85,22 @@ export default function PageClient({
   const showHome = searchParams.toString() === "";
   const showMessage = searchParams.get("page") === "message";
   const showExpense = searchParams.get("page") === "expense";
+  const showRevenue = searchParams.get("page") === "revenue";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
   const [activeSkeletonMessage, setactiveSkeletonMessage] = useState(false);
   const [activeSkeletonExpense, setactiveSkeletonExpense] = useState(false);
+  const [activeSkeletonRevenue, setactiveSkeletonRevenue] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
   };
 
+  const handleSetSkeletonRevenue = (isActive: any) => {
+    setactiveSkeletonRevenue(isActive);
+  };
+  
   const handleSetSkeletonHome = (isActive: any) => {
     setactiveSkeletonHome(isActive);
   };
@@ -107,6 +122,7 @@ export default function PageClient({
         onSetSkeletonHome={handleSetSkeletonHome}
         onSetSkeletonMessage={handleSetSkeletonMessage}
         onSetSkeletonExpense={handleSetSkeletonExpense}
+        onSetSkeletonRevenue={handleSetSkeletonRevenue}
 
       />
       <SidebarInset>
@@ -195,6 +211,7 @@ export default function PageClient({
 
           {showMessage && <PageMessage user={user} users={users} />}
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
+          {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicle} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

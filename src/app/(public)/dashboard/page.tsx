@@ -62,12 +62,37 @@ export default async function Page() {
     },
   });
 
+  const serviceVehicle = await db.serviceVehicle.findMany()
+  const services = await db.services.findMany()
+  const revenue = await db.revenue.findMany()
+  const vehicles = await db.vehicle.findMany({
+    include:{
+      user:{
+        select:{
+          name: true,
+          id: true
+        }
+      },
+      serviceVehicle:{
+        include:
+        {
+          service:{
+          }
+        }
+      }
+    }
+  })
+
   return (
     <PageClient
       firtsname={firstname}
       user={user}
       users={usersWithServices}
       expense={expense}
+      serviceVehicle={serviceVehicle}
+      services={services}
+      revenue={revenue}
+      vehicle={vehicles}
     />
   );
 }

@@ -25,9 +25,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonHome: (isActive: boolean) => void;
   onSetSkeletonMessage: (isActive: boolean) => void;
   onSetSkeletonExpense: (isActive: boolean) => void;
+  onSetSkeletonRevenue: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -209,8 +210,8 @@ const data = !dataUserPage ? {
           page: "expense",
         },
         {
-          title: "Settings?",
-          page: "#",
+          title: "Receitas",
+          page: "revenue",
         },
       ],
     },
@@ -300,7 +301,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue}/>
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>

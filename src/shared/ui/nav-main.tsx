@@ -25,6 +25,7 @@ export function NavMain({
   onSetSkeletonHome,
   onSetSkeletonMessage,
   onSetSkeletonExpense,
+  onSetSkeletonRevenue,
 }: {
   items: {
     title: string;
@@ -40,6 +41,7 @@ export function NavMain({
   onSetSkeletonHome?: (isActive: boolean) => void;
   onSetSkeletonMessage?: (isActive: boolean) => void;
   onSetSkeletonExpense?: (isActive: boolean) => void;
+  onSetSkeletonRevenue?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -52,6 +54,8 @@ export function NavMain({
       onSetSkeletonTable(true);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
     }
 
     if (term === "" && onSetSkeletonHome) {
@@ -59,6 +63,7 @@ export function NavMain({
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
     }
 
     if (term === "message" && onSetSkeletonMessage) {
@@ -66,6 +71,7 @@ export function NavMain({
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
     }
 
     if (term === "expense" && onSetSkeletonExpense) {
@@ -73,6 +79,15 @@ export function NavMain({
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+    }
+
+    if (term === "revenue" && onSetSkeletonRevenue) {
+      onSetSkeletonRevenue(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
     }
 
     const params = new URLSearchParams(searchParams);
