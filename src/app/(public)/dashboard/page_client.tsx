@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import {
+  SkeletonCreate,
   SkeletonExpense,
   SkeletonHome,
   SkeletonMessage,
@@ -30,6 +31,7 @@ import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
 import TableRevenue from "@/features/actions/revenue/page_client";
+import ServicesCreate from "@/features/createThings/servicesCreate/services";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
@@ -42,8 +44,6 @@ interface PageClientProps {
   vehicle: Vehicle[]
 }
 
-
-
 export default function PageClient({
   firtsname,
   user,
@@ -55,46 +55,27 @@ export default function PageClient({
   vehicle
 }: PageClientProps) {
   const searchParams = useSearchParams();
-
-  // const pathname = usePathname();
-  // const router = useRouter();
-  // const { replace } = useRouter();
-
-  // function handleSearch(term: string) {
-  //   const params = new URLSearchParams(searchParams);
-  //   if (term) {
-  //     params.set("page", term);
-  //   } else {
-  //     params.delete("page");
-  //   }
-  //   replace(`${pathname}?${params.toString()}`);
-  // }
-
-  // function InitTable() {
-  //   console.log("Enviando");
-  //   return "table";
-  // }
-
-  // function removeParams() {
-  //   console.log("Removendo");
-  //   return "";
-  // }
   const firtsAcess = !user.emailVerified;
-
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
   const showMessage = searchParams.get("page") === "message";
   const showExpense = searchParams.get("page") === "expense";
   const showRevenue = searchParams.get("page") === "revenue";
+  const showCreate = searchParams.get("page") === "create";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
   const [activeSkeletonMessage, setactiveSkeletonMessage] = useState(false);
   const [activeSkeletonExpense, setactiveSkeletonExpense] = useState(false);
   const [activeSkeletonRevenue, setactiveSkeletonRevenue] = useState(false);
+  const [activeSkeletonCreate, setactiveSkeletonCreate] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
+  };
+
+  const handleSetSkeletonCreate = (isActive: any) => {
+    setactiveSkeletonCreate(isActive);
   };
 
   const handleSetSkeletonRevenue = (isActive: any) => {
@@ -123,6 +104,7 @@ export default function PageClient({
         onSetSkeletonMessage={handleSetSkeletonMessage}
         onSetSkeletonExpense={handleSetSkeletonExpense}
         onSetSkeletonRevenue={handleSetSkeletonRevenue}
+        onSetSkeletonCreate={handleSetSkeletonCreate}
 
       />
       <SidebarInset>
@@ -135,22 +117,6 @@ export default function PageClient({
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>Seja Bem Vindo, {firtsname}</BreadcrumbPage>
-                  {/* <Button
-                    className="border-white border-4"
-                    onClick={() => {
-                      handleSearch(InitTable());
-                    }}
-                  >
-                    Parametros
-                  </Button>
-                  <Button
-                    className="border-white border-4"
-                    onClick={() => {
-                      handleSearch(removeParams());
-                    }}
-                  >
-                    Parametros
-                  </Button> */}
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -160,11 +126,6 @@ export default function PageClient({
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
-          {/* GERENCIAMENTO DAS PAGINAS */}
-
-          {/* */}
-          {/* DASHBOARD INICIAL */}
-
           <ModalClient openModal={firtsAcess} user={user} />
 
           {activeSkeletonTable && !showTable && (
@@ -197,6 +158,12 @@ export default function PageClient({
             </div>
           )}
 
+          {activeSkeletonCreate && !showCreate && (
+            <div className="w-full h-screen p-4">
+              <SkeletonCreate />
+            </div>
+          )}
+
           {showTable && (
             <motion.div
               key="table-content"
@@ -218,6 +185,7 @@ export default function PageClient({
           {showMessage && <PageMessage user={user} users={users} />}
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicle} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
+          {showCreate &&  <ServicesCreate/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

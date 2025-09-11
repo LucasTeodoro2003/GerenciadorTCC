@@ -5,8 +5,14 @@ import { DataTable } from "@/features/actions/revenue/data_table";
 import { getColumns, RevenueTable } from "@/features/actions/revenue/columns";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shared/ui/components/button";
-import { PlusCircle, ChevronLeft, ChevronRight, ListFilter, CalendarDays } from "lucide-react";
-import { CreateRevenueModal } from "@/features/actions/Modal/revenue/createRevenue";
+import {
+  PlusCircle,
+  ChevronLeft,
+  ChevronRight,
+  ListFilter,
+  CalendarDays,
+} from "lucide-react";
+import { CreateRevenueModal } from "@/features/Modal/revenue/createRevenue";
 import { createRevenue } from "@/shared/lib/actionCreateRevenue";
 import { User } from "next-auth";
 import { Services, ServiceVehicle, Vehicle } from "@prisma/client";
@@ -17,7 +23,7 @@ interface TableRevenueProps {
   serviceVehicles: ServiceVehicle[];
   revenue?: any[];
   user: User;
-  vehicles: Vehicle[]
+  vehicles: Vehicle[];
 }
 
 export type RevenueData = {
@@ -30,42 +36,54 @@ export type RevenueData = {
   vehicleInfo?: string;
 };
 
-export default function TableRevenue({ services, serviceVehicles, revenue = [], user, vehicles }: TableRevenueProps) {
+export default function TableRevenue({
+  services,
+  serviceVehicles,
+  revenue = [],
+  user,
+  vehicles,
+}: TableRevenueProps) {
   const router = useRouter();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState<RevenueTable[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
   const [showAllMonths, setShowAllMonths] = useState<boolean>(false);
-  
+
   const isCurrentMonth = () => {
     const now = new Date();
-    return selectedMonth === now.getMonth() && selectedYear === now.getFullYear();
+    return (
+      selectedMonth === now.getMonth() && selectedYear === now.getFullYear()
+    );
   };
-  
-  const changeMonth = (direction: 'prev' | 'next') => {
+
+  const changeMonth = (direction: "prev" | "next") => {
     if (showAllMonths) {
       setShowAllMonths(false);
     }
-    
-    if (direction === 'prev') {
+
+    if (direction === "prev") {
       if (selectedMonth === 0) {
         setSelectedMonth(11);
-        setSelectedYear(prev => prev - 1);
+        setSelectedYear((prev) => prev - 1);
       } else {
-        setSelectedMonth(prev => prev - 1);
+        setSelectedMonth((prev) => prev - 1);
       }
     } else {
       if (selectedMonth === 11) {
         setSelectedMonth(0);
-        setSelectedYear(prev => prev + 1);
+        setSelectedYear((prev) => prev + 1);
       } else {
-        setSelectedMonth(prev => prev + 1);
+        setSelectedMonth((prev) => prev + 1);
       }
     }
   };
-  
+
   const goToCurrentMonth = () => {
     setSelectedMonth(new Date().getMonth());
     setSelectedYear(new Date().getFullYear());
@@ -73,48 +91,57 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
       setShowAllMonths(false);
     }
   };
-  
+
   useEffect(() => {
     const serviceRevenueData = serviceVehicles.map((serviceVehicle) => {
-      const service = services.find(s => s.id === serviceVehicle.serviceId);
-      
+      const service = services.find((s) => s.id === serviceVehicle.serviceId);
+
       return {
         id: serviceVehicle.id,
         description: service?.description || "Serviço automotivo",
         amount: decimalToNumber(Number(serviceVehicle.totalValue)),
-        date: serviceVehicle.date.split('T')[0],
+        date: serviceVehicle.date.split("T")[0],
         category: "Serviço",
         source: "Veículo",
         vehicleInfo: serviceVehicle.vehicleId,
       };
     });
-    
+
     const otherRevenueData = revenue.map((r) => ({
       id: r.id,
       description: r.description || "Receita adicional",
       amount: decimalToNumber(r.amount),
-      date: r.date || new Date().toISOString().split('T')[0],
+      date: r.date || new Date().toISOString().split("T")[0],
       category: r.category || "Outros",
       source: r.source || "Diversos",
     }));
-    
+
     const allRevenueData = [...serviceRevenueData, ...otherRevenueData];
-    
-    const filteredData = showAllMonths 
-      ? allRevenueData 
-      : allRevenueData.filter(revenue => {
+
+    const filteredData = showAllMonths
+      ? allRevenueData
+      : allRevenueData.filter((revenue) => {
           const revenueDate = new Date(revenue.date);
-          return revenueDate.getMonth() === selectedMonth && 
-                 revenueDate.getFullYear() === selectedYear;
+          return (
+            revenueDate.getMonth() === selectedMonth &&
+            revenueDate.getFullYear() === selectedYear
+          );
         });
-    
+
     setTableData(filteredData);
-  }, [services, serviceVehicles, revenue, selectedMonth, selectedYear, showAllMonths]);
-  
+  }, [
+    services,
+    serviceVehicles,
+    revenue,
+    selectedMonth,
+    selectedYear,
+    showAllMonths,
+  ]);
+
   const handleCreateRevenue = async (revenueData: Omit<RevenueTable, "id">) => {
     try {
       setIsSubmitting(true);
-      
+
       const formData = new FormData();
       formData.append("amount", revenueData.amount.toString());
       formData.append("date", revenueData.date.toString());
@@ -122,15 +149,14 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
       formData.append("category", revenueData.category);
       formData.append("source", revenueData.source);
       const userId = user.id;
-      
+
       await createRevenue(userId || "", formData);
-      
+
       setTimeout(() => {
         router.refresh();
         setCreateModalOpen(false);
         setIsSubmitting(false);
       }, 5000);
-      
     } catch (error) {
       console.error("Erro ao criar receita:", error);
       setIsSubmitting(false);
@@ -138,18 +164,18 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
   };
 
   const totalServiceRevenues = tableData
-    .filter(revenue => revenue.category === "Serviço")
+    .filter((revenue) => revenue.category === "Serviço")
     .reduce((sum, revenue) => sum + revenue.amount, 0);
-  
+
   const totalOtherRevenues = tableData
-    .filter(revenue => revenue.category !== "Serviço")
+    .filter((revenue) => revenue.category !== "Serviço")
     .reduce((sum, revenue) => sum + revenue.amount, 0);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Gerenciamento de Receitas</h1>
-        <Button 
+        <Button
           onClick={() => setCreateModalOpen(true)}
           className="flex items-center gap-2"
         >
@@ -157,53 +183,58 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
           Nova Receita
         </Button>
       </div>
-      
+
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => changeMonth('prev')}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => changeMonth("prev")}
             disabled={showAllMonths}
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Mês Anterior</span>
           </Button>
-          
+
           <div className="text-lg font-medium">
-            {showAllMonths 
-              ? "Todos os Meses" 
-              : new Date(selectedYear, selectedMonth).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+            {showAllMonths
+              ? "Todos os Meses"
+              : new Date(selectedYear, selectedMonth).toLocaleDateString(
+                  "pt-BR",
+                  { month: "long", year: "numeric" }
+                )}
           </div>
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => changeMonth('next')}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => changeMonth("next")}
             disabled={showAllMonths}
           >
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Próximo Mês</span>
           </Button>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <Button 
+          <Button
             variant={showAllMonths ? "default" : "outline"}
-            size="sm" 
+            size="sm"
             onClick={() => setShowAllMonths(!showAllMonths)}
             className="flex items-center gap-1"
           >
             <ListFilter className="h-4 w-4" />
             {showAllMonths ? "Filtrar por Mês" : "Ver Tudo"}
           </Button>
-          
+
           {!showAllMonths && (
-            <Button 
+            <Button
               variant={isCurrentMonth() ? "default" : "ghost"}
-              size="sm" 
+              size="sm"
               onClick={goToCurrentMonth}
-              className={`flex items-center gap-1 ${isCurrentMonth() ? "bg-primary text-primary-foreground" : ""}`}
+              className={`flex items-center gap-1 ${
+                isCurrentMonth() ? "bg-primary text-primary-foreground" : ""
+              }`}
               disabled={isCurrentMonth()}
             >
               <CalendarDays className="h-4 w-4" />
@@ -212,10 +243,12 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
           )}
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Total de Receitas</h3>
+          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">
+            Total de Receitas
+          </h3>
           <p className="text-2xl font-bold text-blue-600">
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
@@ -225,9 +258,11 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
             )}
           </p>
         </div>
-        
+
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Receitas de Serviços</h3>
+          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">
+            Receitas de Serviços
+          </h3>
           <p className="text-2xl font-bold text-green-600">
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
@@ -235,9 +270,11 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
             }).format(totalServiceRevenues)}
           </p>
         </div>
-        
+
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">Outras Receitas</h3>
+          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">
+            Outras Receitas
+          </h3>
           <p className="text-2xl font-bold text-amber-600">
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
@@ -246,9 +283,9 @@ export default function TableRevenue({ services, serviceVehicles, revenue = [], 
           </p>
         </div>
       </div>
-      
+
       <DataTable columns={getColumns(router, vehicles)} data={tableData} />
-      
+
       <CreateRevenueModal
         open={createModalOpen}
         onOpenChange={setCreateModalOpen}

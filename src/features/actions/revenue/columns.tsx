@@ -17,9 +17,9 @@ import { DataTableColumnHeader } from "./headerTable";
 import { Button } from "@/shared/ui/components/button";
 import { Edit, Trash2, Car } from "lucide-react";
 import { Badge } from "@/shared/ui/components/badge";
-import { EditRevenueModal } from "@/features/actions/Modal/revenue/revenueEdit";
+import { EditRevenueModal } from "@/features/Modal/revenue/revenueEdit";
 import { deleteRevenue } from "@/shared/lib/actionDeleteRevenue";
-import { VehicleInfoModal } from "../Modal/revenue/vehicleInfoModal";
+import { VehicleInfoModal } from "../../Modal/revenue/vehicleInfoModal";
 
 export type RevenueTable = {
   id: string;
@@ -138,7 +138,7 @@ export function getColumns(
         const [modalOpen, setModalOpen] = useState(false);
 
         // Busca o veículo pelo id
-        const vehicle = vehicles.find(v => v.id === revenue.vehicleInfo);
+        const vehicle = vehicles.find((v) => v.id === revenue.vehicleInfo);
 
         return (
           <>

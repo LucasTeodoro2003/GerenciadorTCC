@@ -17,7 +17,7 @@ import { DataTableColumnHeader } from "./headerTable";
 import { Button } from "@/shared/ui/components/button";
 import { Edit, Trash2 } from "lucide-react";
 import { Badge } from "@/shared/ui/components/badge";
-import { EditExpenseModal } from "@/features/actions/Modal/expense/expenseEdity";
+import { EditExpenseModal } from "@/features/Modal/expense/expenseEdity";
 import { deleteExpense } from "@/shared/lib/actionDeleteExpense";
 
 export type ExpenseTable = {
@@ -29,7 +29,6 @@ export type ExpenseTable = {
   paymentMethod: string;
   status: "Pago" | "Pendente" | "Atrasado";
 };
-
 
 export function getColumns(
   router: ReturnType<typeof useRouter>
@@ -128,7 +127,7 @@ export function getColumns(
           setConfirmOpen(false);
           setLoadingOpen(true);
           setPending(true);
-          await deleteExpense(expense.id)
+          await deleteExpense(expense.id);
           setTimeout(() => {
             router.refresh();
             setLoadingOpen(false);

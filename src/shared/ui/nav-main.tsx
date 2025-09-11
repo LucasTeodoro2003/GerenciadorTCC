@@ -26,6 +26,7 @@ export function NavMain({
   onSetSkeletonMessage,
   onSetSkeletonExpense,
   onSetSkeletonRevenue,
+  onSetSkeletonCreate,
 }: {
   items: {
     title: string;
@@ -42,13 +43,13 @@ export function NavMain({
   onSetSkeletonMessage?: (isActive: boolean) => void;
   onSetSkeletonExpense?: (isActive: boolean) => void;
   onSetSkeletonRevenue?: (isActive: boolean) => void;
+  onSetSkeletonCreate?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
 
   function handleSearch(term: string) {
-    //VERIFICAR QUAL PAGINA CARREGA O SKELETON \\
 
     if (term === "table" && onSetSkeletonTable) {
       onSetSkeletonTable(true);
@@ -56,6 +57,7 @@ export function NavMain({
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
     }
 
     if (term === "" && onSetSkeletonHome) {
@@ -64,6 +66,7 @@ export function NavMain({
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
     }
 
     if (term === "message" && onSetSkeletonMessage) {
@@ -72,6 +75,7 @@ export function NavMain({
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
     }
 
     if (term === "expense" && onSetSkeletonExpense) {
@@ -80,6 +84,7 @@ export function NavMain({
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
     }
 
     if (term === "revenue" && onSetSkeletonRevenue) {
@@ -88,6 +93,16 @@ export function NavMain({
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
+    }
+
+    if (term === "create" && onSetSkeletonCreate) {
+      onSetSkeletonCreate(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
     }
 
     const params = new URLSearchParams(searchParams);

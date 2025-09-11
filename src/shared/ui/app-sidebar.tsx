@@ -25,9 +25,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonMessage: (isActive: boolean) => void;
   onSetSkeletonExpense: (isActive: boolean) => void;
   onSetSkeletonRevenue: (isActive: boolean) => void;
+  onSetSkeletonCreate: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -47,30 +48,7 @@ const dataUser = {
   ]
 }
 
-  // This is sample data.
 const data = !dataUserPage ? {
-  // user: {
-  //   name: "shadcn",
-  //   email: "m@example.com",
-  //   avatar: "usuario.png",
-  // },
-  // teams: [
-  //   {
-  //     name: "Acme Inc",
-  //     logo: GalleryVerticalEnd,
-  //     plan: "Enterprise",
-  //   },
-  //   {
-  //     name: "Acme Corp.",
-  //     logo: AudioWaveform,
-  //     plan: "Startup",
-  //   },
-  //   {
-  //     name: "Evil Corp.",
-  //     logo: Command,
-  //     plan: "Free",
-  //   },
-  // ],
   navMain: [
     {
       title: "Pagina Inicial",
@@ -82,14 +60,6 @@ const data = !dataUserPage ? {
           title: "Home",
           page: "",
         },
-        // {
-        //   title: "Despesas",
-        //   page: "expense",
-        // },
-        // {
-        //   title: "Settings?",
-        //   page: "#",
-        // },
       ],
     },
     {
@@ -97,14 +67,6 @@ const data = !dataUserPage ? {
       page: "#",
       icon: Bot,
       items: [
-        // {
-        //   title: "Editar Usuários",
-        //   page: "table",
-        // },
-        // {
-        //   title: "Mensagens Automáticas",
-        //   page: "message",
-        // },
         {
           title: "Quantum",
           page: "#",
@@ -120,79 +82,12 @@ const data = !dataUserPage ? {
           title: "sei la",
           page: "#",
         },
-        // {
-        //   title: "Get Started",
-        //   page: "#",
-        // },
-        // {
-        //   title: "Tutorials",
-        //   page: "#",
-        // },
-        // {
-        //   title: "Changelog",
-        //   page: "#",
-        // },
       ],
     },
-    // {
-    //   title: "Settings",
-    //   page: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Team",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Billing",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Limits",
-    //       page: "#",
-    //     },
-    //   ],
-    // },
   ],
-  // projects: [
-  //   {
-  //     name: "Design Engineering",
-  //     page: "#",
-  //     icon: Frame,
-  //   },
-  //   {
-  //     name: "Sales & Marketing",
-  //     page: "#",
-  //     icon: PieChart,
-  //   },
-  // ],
-}:{
-  // user: {
-  //   name: "shadcn",
-  //   email: "m@example.com",
-  //   avatar: "usuario.png",
-  // },
-  // teams: [
-  //   {
-  //     name: "Acme Inc",
-  //     logo: GalleryVerticalEnd,
-  //     plan: "Enterprise",
-  //   },
-  //   {
-  //     name: "Acme Corp.",
-  //     logo: AudioWaveform,
-  //     plan: "Startup",
-  //   },
-  //   {
-  //     name: "Evil Corp.",
-  //     logo: Command,
-  //     plan: "Free",
-  //   },
-  // ],
+}
+:
+{
   navMain: [
     {
       title: "Pagina Inicial",
@@ -234,13 +129,13 @@ const data = !dataUserPage ? {
       ],
     },
     {
-      title: "Mensagens",
-      page: "",
+      title: "Criar",
+      page: "create",
       icon: MessageCircleMoreIcon,
       items: [
         {
-          title: "sei la",
-          page: "#",
+          title: "Serviços",
+          page: "create",
         },
         {
           title: "Get Started",
@@ -256,42 +151,7 @@ const data = !dataUserPage ? {
         },
       ],
     },
-    // {
-    //   title: "Settings",
-    //   page: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Team",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Billing",
-    //       page: "#",
-    //     },
-    //     {
-    //       title: "Limits",
-    //       page: "#",
-    //     },
-    //   ],
-    // },
   ],
-  // projects: [
-  //   {
-  //     name: "Design Engineering",
-  //     page: "#",
-  //     icon: Frame,
-  //   },
-  //   {
-  //     name: "Sales & Marketing",
-  //     page: "#",
-  //     icon: PieChart,
-  //   },
-  // ],
 }
 
   return (
@@ -300,8 +160,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue}/>
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} users={users}/>
