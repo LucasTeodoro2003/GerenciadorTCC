@@ -31,7 +31,8 @@ import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
 import TableRevenue from "@/features/actions/revenue/page_client";
-import ServicesCreate from "@/features/createThings/servicesCreate/services";
+import ServicesCreate from "@/features/createThings/servicesCreate/servicescopy";
+import CreateService from "@/features/createThings/servicesCreate/servicesTest";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
@@ -42,6 +43,7 @@ interface PageClientProps {
   services: Services[]
   revenue: Revenue[]
   vehicle: Vehicle[]
+  dataServices: ServiceVehicle[]  
 }
 
 export default function PageClient({
@@ -52,7 +54,8 @@ export default function PageClient({
   serviceVehicle,
   services,
   revenue,
-  vehicle
+  vehicle,
+  dataServices,
 }: PageClientProps) {
   const searchParams = useSearchParams();
   const firtsAcess = !user.emailVerified;
@@ -185,7 +188,8 @@ export default function PageClient({
           {showMessage && <PageMessage user={user} users={users} />}
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicle} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
-          {showCreate &&  <ServicesCreate/>}
+          {/* {showCreate &&  <ServicesCreate disableDates={dataServices}/>} */}
+          {showCreate &&  <CreateService disableDate={dataServices}/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

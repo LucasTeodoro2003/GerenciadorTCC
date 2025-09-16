@@ -24,7 +24,7 @@ interface ServiceInfo {
 
 interface ServiceVehicleInfo {
   id: string;
-  date: Date | string;
+  dateTime: Date | string; // pode ser dateTime!
   totalValue: string;
   service: ServiceInfo;
 }
@@ -47,7 +47,17 @@ interface VehicleInfoModalProps {
 
 function formatDate(date?: string | Date) {
   if (!date) return "-";
-  return new Date(date).toLocaleDateString("pt-BR");
+  let d: Date;
+  if (typeof date === "string") {
+    d = new Date(date);
+  } else {
+    d = date;
+  }
+  if (isNaN(d.getTime())) return "-";
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const year = d.getUTCFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 export function VehicleInfoModal({ open, onOpenChange, vehicle }: VehicleInfoModalProps) {
@@ -108,7 +118,7 @@ export function VehicleInfoModal({ open, onOpenChange, vehicle }: VehicleInfoMod
                     </span>
                     <Badge className="bg-green-500 text-white">{`R$ ${serviceVehicle.service.price}`}</Badge>
                     <span className="ml-2 text-gray-600 dark:text-gray-400">
-                      {formatDate(serviceVehicle.date)}
+                      {formatDate(serviceVehicle.dateTime)}
                     </span>
                   </div>
                   <div>

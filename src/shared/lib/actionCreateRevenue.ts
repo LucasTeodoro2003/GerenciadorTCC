@@ -8,7 +8,7 @@ export async function createRevenue(userId: string, formData: FormData) {
     await db.revenue.create({
       data: {
         amount: formData.get("amount")?.toString() || "",
-        date: formData.get("date")?.toString() || "",
+        date: new Date(formData.get("date")?.toString() || new Date().toISOString()),
         description: formData.get("description")?.toString() || "",
         category: formData.get("category")?.toString() || "",
         source: formData.get("source")?.toString() || "",

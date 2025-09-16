@@ -43,7 +43,7 @@ model Expense {
   id            String    @id @default(cuid())
   userId        String
   description   String
-  amount        Decimal
+  amount        Float
   date          String
   category      String
   paymentMethod String?
@@ -59,10 +59,9 @@ model Revenue {
   userId      String
   description String?
   amount      String
-  date        String
+  date        DateTime
   category    String?
   source      String?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -98,7 +97,7 @@ model ServiceVehicle {
   id        String @id @default(cuid())
   vehicleId String
   serviceId String
-  date      String
+  dateTime DateTime?
   totalValue String
 
   vehicle Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: Cascade)

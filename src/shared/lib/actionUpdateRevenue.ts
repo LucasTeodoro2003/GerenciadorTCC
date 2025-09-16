@@ -14,7 +14,7 @@ export async function updateRevenue(id: string, formData: FormData) {
         where: { id },
         data: {
           totalValue: formData.get("amount")?.toString() || "",
-          date: formData.get("date")?.toString() || "",
+          dateTime: new Date(formData.get("date")?.toString() || new Date().toISOString()),
         },
       });
       
@@ -31,7 +31,7 @@ export async function updateRevenue(id: string, formData: FormData) {
         where: { id },
         data: {
           amount: formData.get("amount")?.toString() || "",
-          date: formData.get("date")?.toString() || "",
+          date: new Date(formData.get("date")?.toString() || new Date().toISOString()), // Correção em uma linha
           description: formData.get("description")?.toString() || "",
           category: formData.get("category")?.toString() || "",
           source: formData.get("source")?.toString() || "",

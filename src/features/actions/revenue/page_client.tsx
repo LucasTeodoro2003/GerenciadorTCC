@@ -100,7 +100,7 @@ export default function TableRevenue({
         id: serviceVehicle.id,
         description: service?.description || "Serviço automotivo",
         amount: decimalToNumber(Number(serviceVehicle.totalValue)),
-        date: serviceVehicle.date.split("T")[0],
+        date: serviceVehicle.dateTime || new Date(),
         category: "Serviço",
         source: "Veículo",
         vehicleInfo: serviceVehicle.vehicleId,

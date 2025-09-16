@@ -74,21 +74,27 @@ export function CreateRevenueModal({
     const { value } = e.target;
     if (value) {
       setFormData((prev) => ({ ...prev, date: e.target.value }));
+      console.log(value)
     }
   };
 
-  const handleSubmit = async () => {
-    if (!formData.description || !formData.amount) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
-      return;
-    }
+const handleSubmit = async () => {
+  if (!formData.description || !formData.amount) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
 
-    try {
-      await onSave(formData as Omit<RevenueTable, "id">);
-    } catch (error) {
-      console.error("Erro ao criar receita:", error);
-    }
-  };
+  let date = formData.date;
+  if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    date = date + "T00:00:00Z";
+  }
+
+  try {
+    await onSave({ ...formData, date } as Omit<RevenueTable, "id">);
+  } catch (error) {
+    console.error("Erro ao criar receita:", error);
+  }
+};
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

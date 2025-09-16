@@ -71,7 +71,7 @@ function getCategoryColor(category: string) {
 
 export function getColumns(
   router: ReturnType<typeof useRouter>,
-  vehicles: Vehicle[] // Passe o array de veículos aqui
+  vehicles: Vehicle[]
 ): ColumnDef<RevenueTable>[] {
   return [
     {
@@ -101,7 +101,16 @@ export function getColumns(
       ),
       cell: ({ row }) => {
         const dateStr = row.getValue("date") as string;
-        const [year, month, day] = dateStr.split("-");
+        let date: Date;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+          date = new Date(dateStr + "T00:00:00Z");
+        } else {
+          date = new Date(dateStr);
+        }
+        if (!date || isNaN(date.getTime())) return <div>-</div>;
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const year = date.getUTCFullYear();
         return <div>{`${day}/${month}/${year}`}</div>;
       },
     },

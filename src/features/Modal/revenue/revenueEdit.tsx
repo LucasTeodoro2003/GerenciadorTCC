@@ -70,7 +70,8 @@ export function EditRevenueModal({
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value) {
-      setFormData((prev) => ({ ...prev, date: e.target.value }));
+      // Formato que seu banco espera: "YYYY-MM-DD 00:00:00"
+      setFormData((prev) => ({ ...prev, date: value + " 00:00:00" }));
     }
   };
 
@@ -83,7 +84,14 @@ export function EditRevenueModal({
       const formDate = new FormData();
       formDate.append("description", formData.description || "");
       formDate.append("amount", String(formData.amount || 0));
-      formDate.append("date", formData.date || "");
+      
+      // Certifique-se de que a data está no formato esperado pelo banco
+      let dateValue = formData.date || "";
+      if (typeof dateValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+        dateValue = dateValue + " 00:00:00";
+      }
+      formDate.append("date", dateValue);
+      
       formDate.append("category", formData.category || "");
       formDate.append("source", formData.source || "");
       
@@ -98,6 +106,61 @@ export function EditRevenueModal({
     } catch (error) {
       console.error("Erro ao salvar receita:", error);
       setIsLoading(false);
+    }
+  };
+
+  // Função corrigida para extrair a data sem o problema de subtração de dia
+  const getInputDate = (date?: any) => {
+    if (!date) return "";
+    
+    try {
+      // Se for string no formato do banco "YYYY-MM-DD HH:MM:SS"
+      if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
+        // Problema específico: ajuste para o fuso horário brasileiro
+        // Adiciona um dia se for "00:00:00" para compensar o fuso horário
+        const parts = date.split(' ');
+        const datePart = parts[0];
+        const timePart = parts[1];
+        
+        // Se o horário é meia-noite, precisamos compensar o fuso horário
+        if (timePart === '00:00:00') {
+          // Extrair ano, mês e dia
+          const [year, month, day] = datePart.split('-').map(Number);
+          
+          // Criar data diretamente com componentes para evitar conversões de fuso
+          // Importante: month-1 porque em JS meses são 0-11
+          const adjustedDate = new Date(Date.UTC(year, month-1, day));
+          
+          // Formatar para YYYY-MM-DD
+          return adjustedDate.toISOString().split('T')[0];
+        }
+        
+        return datePart;
+      }
+      
+      // Outros formatos de string
+      if (typeof date === 'string') {
+        if (date.includes('T')) {
+          // Formato ISO - precisamos tratar o fuso horário
+          const d = new Date(date);
+          return d.toISOString().split('T')[0];
+        }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          return date; // Já está no formato correto
+        }
+      }
+      
+      // Tenta converter para Date - precisa ajustar para o fuso horário
+      const d = new Date(date);
+      if (!isNaN(d.getTime())) {
+        // Usar toISOString() para garantir UTC
+        return d.toISOString().split('T')[0];
+      }
+      
+      return "";
+    } catch (e) {
+      console.error("Erro ao processar data:", e);
+      return "";
     }
   };
 
@@ -147,7 +210,7 @@ export function EditRevenueModal({
               id="date"
               name="date"
               type="date"
-              value={(formData.date as string) || ""}
+              value={getInputDate(formData.date)}
               onChange={handleDateChange}
               className="col-span-3"
             />

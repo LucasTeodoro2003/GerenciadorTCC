@@ -83,6 +83,8 @@ export default async function Page() {
     }
   })
 
+  const dateDisable = await db.serviceVehicle.findMany()
+
   return (
     <PageClient
       firtsname={firstname}
@@ -93,6 +95,7 @@ export default async function Page() {
       services={services}
       revenue={revenue}
       vehicle={vehicles}
+      dataServices={dateDisable}
     />
   );
 }
