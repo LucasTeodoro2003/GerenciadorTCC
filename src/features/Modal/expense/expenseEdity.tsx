@@ -21,8 +21,6 @@ import {
 } from "@/shared/ui/components/select";
 import { ExpenseTable } from "@/features/actions/expense/colunms";
 import { updateExpense } from "@/shared/lib/actionUpdateExpense";
-import { revalidatePath } from "next/cache";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 interface EditExpenseModalProps {

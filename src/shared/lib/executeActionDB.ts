@@ -1,31 +1,12 @@
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-
-type Options<T> = {
-  actionFn: () => Promise<T>;
-  successMessage?: string;
-};
-
-const executeActionDB = async <T>({
-  actionFn,
-  successMessage = "The actions was successful",
-}: Options<T>): Promise<{ success: boolean; message: string }> => {
+export const executeActionDB = async ({ actionFn }: { actionFn: () => Promise<void> }) => {
   try {
     await actionFn();
-
-    return {
-      success: true,
-      message: successMessage,
-    };
-  } catch (error) {
-    if (isRedirectError(error)) {
-      throw error;
-    }
-
-    return {
-      success: false,
-      message: "An error has occurred during executing the action",
+    return { success: true, message: "Operação realizada com sucesso" };
+  } catch (error: any) {
+    console.error("Erro na operação do banco de dados:", error);
+      return { 
+      success: false, 
+      message: error?.message || "An error has occurred during executing the action"
     };
   }
 };
-
-export { executeActionDB };

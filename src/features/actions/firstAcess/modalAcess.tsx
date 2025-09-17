@@ -1,4 +1,4 @@
-import { updateUser } from "@/shared/lib/actionsUpdateUser";
+import { updateUser, updateUser2 } from "@/shared/lib/actionsUpdateUser";
 import { updateNameUser } from "@/shared/lib/updateUserExample copy";
 import { Button } from "@/shared/ui/components/button";
 import {
@@ -32,7 +32,7 @@ export default function ModalClient({
   setIsSubmitting(true);
   try {
     const formData = new FormData(e.currentTarget);
-    await updateNameUser(user.id || "", formData);
+    await updateUser2(user.id || "", formData);
     // setOpenPerfil(false);
     window.location.reload();
   } catch (err) {

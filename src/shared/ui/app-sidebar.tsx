@@ -135,11 +135,11 @@ const data = !dataUserPage ? {
       icon: MessageCircleMoreIcon,
       items: [
         {
-          title: "Agendar Serviço",
+          title: "Agendar",
           page: "create",
         },
         {
-          title: "Criar Serviço",
+          title: "Itens",
           page: "createThings",
         },
         {
