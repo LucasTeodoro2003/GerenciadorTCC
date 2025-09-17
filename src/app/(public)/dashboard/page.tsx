@@ -76,7 +76,8 @@ export default async function Page() {
       serviceVehicle:{
         include:
         {
-          service:{
+          services:{
+            include:{}
           }
         }
       }

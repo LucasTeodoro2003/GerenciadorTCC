@@ -189,7 +189,7 @@ export default function PageClient({
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicle} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
           {/* {showCreate &&  <ServicesCreate disableDates={dataServices}/>} */}
-          {showCreate &&  <CreateService disableDate={dataServices}/>}
+          {showCreate &&  <CreateService disableDate={dataServices} users={users} services={services}/>}
           {/* DASHBOARD INICIAL */}
           {/* */}
         </div>

@@ -84,24 +84,35 @@ model Vehicle {
 }
 
 model Services {
-  id             String           @id @default(cuid())
+  id             String                 @id @default(cuid())
   price          String
   description    String?
-  serviceVehicle ServiceVehicle[]
+  serviceVehicle ServiceVehicleService[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model ServiceVehicle {
-  id        String @id @default(cuid())
-  vehicleId String
-  serviceId String
-  dateTime DateTime?
+  id         String                 @id @default(cuid())
+  vehicleId  String
+  dateTime   DateTime?
   totalValue String
+  services   ServiceVehicleService[]
 
-  vehicle Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vehicle    Vehicle                @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+}
+
+model ServiceVehicleService {
+  id               String        @id @default(cuid())
+  serviceVehicle   ServiceVehicle @relation(fields: [serviceVehicleId], references: [id], onDelete: Cascade)
+  serviceVehicleId String
+  service          Services       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId        String
+
+  @@unique([serviceVehicleId, serviceId])
 }
 
 model Products {
