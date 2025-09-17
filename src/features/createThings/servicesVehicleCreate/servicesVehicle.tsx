@@ -32,7 +32,7 @@ import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 
-interface CreateServiceProps {
+interface CreateServiceVehiclePageProps {
   disableDate: ServiceVehicle[];
   users: Prisma.UserGetPayload<{
     include: { vehicle: { include: { serviceVehicle: {} } } };
@@ -40,11 +40,11 @@ interface CreateServiceProps {
   services: Services[];
 }
 
-export default function CreateService({
+export default function CreateServiceVehiclePage({
   disableDate,
   users,
   services,
-}: CreateServiceProps) {
+}: CreateServiceVehiclePageProps) {
   const maxCarDay = 20;
   const maxCarHour = 2;
 

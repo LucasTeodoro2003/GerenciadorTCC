@@ -15,12 +15,12 @@ import {
 import { CreateRevenueModal } from "@/features/Modal/revenue/createRevenue";
 import { createRevenue } from "@/shared/lib/actionCreateRevenue";
 import { User } from "next-auth";
-import { Services, ServiceVehicle, Vehicle } from "@prisma/client";
+import { Prisma, Services, ServiceVehicle, Vehicle, } from "@prisma/client";
 import { decimalToNumber } from "@/shared/lib/decimalForNumber";
 
 interface TableRevenueProps {
   services: Services[];
-  serviceVehicles: ServiceVehicle[];
+  serviceVehicles: Prisma.ServiceVehicleGetPayload<{include:{services:{include:{service:{}}}}}>[]
   revenue?: any[];
   user: User;
   vehicles: Vehicle[];
@@ -93,12 +93,20 @@ export default function TableRevenue({
   };
 
   useEffect(() => {
+    // Modificação aqui para lidar com a nova estrutura de relacionamento
     const serviceRevenueData = serviceVehicles.map((serviceVehicle) => {
-      const service = services.find((s) => s.id === serviceVehicle.serviceId);
+      // Obter descrições de todos os serviços associados a este agendamento
+      const serviceDescriptions = serviceVehicle.services
+        .map(relation => relation.service.description || "")
+        .filter(Boolean)
+        .join(", ");
+      
+      // Se não houver descrições, use um valor padrão
+      const description = serviceDescriptions || "Serviço automotivo";
 
       return {
         id: serviceVehicle.id,
-        description: service?.description || "Serviço automotivo",
+        description: description,
         amount: decimalToNumber(Number(serviceVehicle.totalValue)),
         date: serviceVehicle.dateTime || new Date(),
         category: "Serviço",
@@ -184,6 +192,7 @@ export default function TableRevenue({
         </Button>
       </div>
 
+      {/* Resto do componente permanece igual */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Button

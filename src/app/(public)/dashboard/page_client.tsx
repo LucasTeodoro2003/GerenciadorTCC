@@ -17,11 +17,12 @@ import {
 import { Expense, Prisma, Revenue, Services, ServiceVehicle, User, Vehicle } from "@prisma/client";
 import TableUser from "../../../features/actions/users/page_client";
 import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import {
   SkeletonCreate,
+  SkeletonCreateThings,
   SkeletonExpense,
   SkeletonHome,
   SkeletonMessage,
@@ -31,15 +32,15 @@ import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
 import TableRevenue from "@/features/actions/revenue/page_client";
-import ServicesCreate from "@/features/createThings/servicesCreate/servicescopy";
-import CreateService from "@/features/createThings/servicesCreate/servicesTest";
+import CreateServiceVehiclePage from "@/features/createThings/servicesVehicleCreate/servicesVehicle";
+import { CreateService } from "@/features/createThings/serviceCreate/service";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
   firtsname: string;
   users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
   expense: Expense[]
-  serviceVehicle: ServiceVehicle[]
+  serviceVehicles: Prisma.ServiceVehicleGetPayload<{include:{services:{include:{service:{}}}}}>[]
   services: Services[]
   revenue: Revenue[]
   vehicle: Vehicle[]
@@ -51,7 +52,7 @@ export default function PageClient({
   user,
   users,
   expense,
-  serviceVehicle,
+  serviceVehicles,
   services,
   revenue,
   vehicle,
@@ -65,6 +66,7 @@ export default function PageClient({
   const showExpense = searchParams.get("page") === "expense";
   const showRevenue = searchParams.get("page") === "revenue";
   const showCreate = searchParams.get("page") === "create";
+  const showCreateThings = searchParams.get("page") === "createThings";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
@@ -72,11 +74,16 @@ export default function PageClient({
   const [activeSkeletonExpense, setactiveSkeletonExpense] = useState(false);
   const [activeSkeletonRevenue, setactiveSkeletonRevenue] = useState(false);
   const [activeSkeletonCreate, setactiveSkeletonCreate] = useState(false);
+  const [activeSkeletonCreateThings, setactiveSkeletonCreateThings] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
   };
 
+  const handleSetSkeletonCreateThings = (isActive: any) => {
+    setactiveSkeletonCreateThings(isActive);
+  };
+  
   const handleSetSkeletonCreate = (isActive: any) => {
     setactiveSkeletonCreate(isActive);
   };
@@ -108,6 +115,7 @@ export default function PageClient({
         onSetSkeletonExpense={handleSetSkeletonExpense}
         onSetSkeletonRevenue={handleSetSkeletonRevenue}
         onSetSkeletonCreate={handleSetSkeletonCreate}
+        onSetSkeletonCreateThings={handleSetSkeletonCreateThings}
 
       />
       <SidebarInset>
@@ -167,6 +175,12 @@ export default function PageClient({
             </div>
           )}
 
+          {activeSkeletonCreateThings && !showCreateThings && (
+            <div className="w-full h-screen p-4">
+              <SkeletonCreateThings />
+            </div>
+          )}
+
           {showTable && (
             <motion.div
               key="table-content"
@@ -187,11 +201,9 @@ export default function PageClient({
 
           {showMessage && <PageMessage user={user} users={users} />}
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
-          {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicle} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
-          {/* {showCreate &&  <ServicesCreate disableDates={dataServices}/>} */}
-          {showCreate &&  <CreateService disableDate={dataServices} users={users} services={services}/>}
-          {/* DASHBOARD INICIAL */}
-          {/* */}
+          {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicles} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
+          {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}
+          {showCreateThings &&  <CreateService/>}
         </div>
       </SidebarInset>
     </SidebarProvider>

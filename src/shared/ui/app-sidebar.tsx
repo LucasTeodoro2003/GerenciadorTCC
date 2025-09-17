@@ -26,9 +26,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonExpense: (isActive: boolean) => void;
   onSetSkeletonRevenue: (isActive: boolean) => void;
   onSetSkeletonCreate: (isActive: boolean) => void;
+  onSetSkeletonCreateThings: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonCreateThings, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -134,12 +135,12 @@ const data = !dataUserPage ? {
       icon: MessageCircleMoreIcon,
       items: [
         {
-          title: "Serviços",
+          title: "Agendar Serviço",
           page: "create",
         },
         {
-          title: "Get Started",
-          page: "#",
+          title: "Criar Serviço",
+          page: "createThings",
         },
         {
           title: "Tutorials",
@@ -160,7 +161,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonCreateThings={onSetSkeletonCreateThings}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} users={users}/>
