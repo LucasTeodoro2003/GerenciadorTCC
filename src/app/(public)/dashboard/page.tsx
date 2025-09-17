@@ -30,6 +30,7 @@ export default async function Page() {
     },
   });
 
+  const serviceTableMessage = await db.serviceVehicleService.findMany({include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}})
   // const account = await db.account.findMany({include:{
   //   user: true
   // }})
@@ -97,6 +98,7 @@ export default async function Page() {
       revenue={revenue}
       vehicle={vehicles}
       dataServices={dateDisable}
+      serviceTableMessage={serviceTableMessage}
     />
   );
 }

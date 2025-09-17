@@ -44,7 +44,8 @@ interface PageClientProps {
   services: Services[]
   revenue: Revenue[]
   vehicle: Vehicle[]
-  dataServices: ServiceVehicle[]  
+  dataServices: ServiceVehicle[]
+  serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
 }
 
 export default function PageClient({
@@ -57,6 +58,7 @@ export default function PageClient({
   revenue,
   vehicle,
   dataServices,
+  serviceTableMessage,
 }: PageClientProps) {
   const searchParams = useSearchParams();
   const firtsAcess = !user.emailVerified;
@@ -199,7 +201,7 @@ export default function PageClient({
             </motion.div>
           )}
 
-          {showMessage && <PageMessage user={user} users={users} />}
+          {showMessage && <PageMessage user={user} serviceTableMessage={serviceTableMessage}/>}
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicles} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
           {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}

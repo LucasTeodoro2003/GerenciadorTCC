@@ -11,68 +11,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/components/table";
+import { Prisma, User } from "@prisma/client";
+import { table } from "console";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function TableMessage() {
+interface TableMessageProps {
+  serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
+}
+
+export function TableMessage({ serviceTableMessage }: TableMessageProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const invoices = [
-    {
-      id: "1",
-      invoice: "Lucas Teodoro de Melo",
-      paymentStatus: "34998795116",
-      totalAmount: "Pacote Ouro",
-      paymentMethod: "Credit Card",
-      photo: "usuario.png",
-      plate: "HHD1A51",
-      typeCar: "HB20 Cor Laranja-Metalico",
-    },
-    {
-      id: "2",
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      id: "3",
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      id: "4",
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      id: "5",
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      id: "6",
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      id: "7",
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ];
-
-  const formatPhoneNumber = (phoneNumber: any) => {
+  const formatPhoneNumber = (phoneNumber: string | null) => {
     if (!phoneNumber || typeof phoneNumber !== "string") return phoneNumber;
     const cleaned = phoneNumber.replace(/\D/g, "");
     if (cleaned.length !== 11) return phoneNumber;
@@ -82,7 +33,7 @@ export function TableMessage() {
     )} ${cleaned.substring(3, 7)}-${cleaned.substring(7, 11)}`;
   };
 
-  const formatPlateCar = (plate: any) => {
+  const formatPlateCar = (plate: string | null) => {
     if (!plate || typeof plate !== "string") return plate;
     if (plate.length !== 7) return plate;
     return `${plate.substring(0, 3)} - ${plate.substring(3, 7)}`;
@@ -93,18 +44,20 @@ export function TableMessage() {
       setSelectedIds((prev) => {
         const newSelected = [...prev, id];
         console.log(newSelected);
-        toast.warning(newSelected.toString());
+        toast.success(`Usuário selecionado: ${id}`);
         return newSelected;
       });
     } else {
       setSelectedIds((prev) => {
         const newSelected = prev.filter((item) => item !== id);
         console.log(newSelected);
-        toast.warning(newSelected.toString());
+        toast.info(`Usuário removido: ${id}`);
         return newSelected;
       });
     }
   };
+
+  const user = serviceTableMessage.map((e)=>e.serviceVehicle?.vehicle.user)
 
   return (
     <Table>
@@ -119,61 +72,78 @@ export function TableMessage() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell>
-              {" "}
-              <div
-                className="relative cursor-pointer"
-                onClick={() =>
-                  handleCheckboxChange(
-                    invoice.id,
-                    !selectedIds.includes(invoice.id)
-                  )
-                }
-              >
-                <div className="relative rounded-full overflow-hidden w-12 h-12 hover:bg-blue-500 hover:border-2 hover:border-blue-500">
-                  <img
-                    src={invoice.photo || "usuario.png"}
-                    alt={invoice.invoice}
-                    className="w-full h-full object-cover"
-                  />
-                  {selectedIds.includes(invoice.id) && (
-                    <div className="absolute inset-0 rounded-full bg-blue-500 bg-opacity-40 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  )}
+        {serviceTableMessage && serviceTableMessage.length > 0 ? (
+          user.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>
+                <div
+                  className="relative cursor-pointer"
+                  onClick={() =>
+                    handleCheckboxChange(
+                      user.id,
+                      !selectedIds.includes(user.id)
+                    )
+                  }
+                >
+                  <div className="relative rounded-full overflow-hidden w-12 h-12 hover:bg-blue-500 hover:border-2 hover:border-blue-500">
+                    <img
+                      src={user.image || "/usuario.png"}
+                      alt={user.name || ""}
+                      className="w-full h-full object-cover"
+                    />
+                    {selectedIds.includes(user.id) && (
+                      <div className="absolute inset-0 rounded-full bg-blue-500 bg-opacity-40 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </TableCell>
+              <TableCell className="font-medium">
+                {user.name?.split(" ").slice(0, 2).join(" ")}
+              </TableCell>
+              <TableCell>{formatPhoneNumber(user.phone)}</TableCell>
+              <TableCell>{formatPlateCar(user.vehicle.find((e)=>e.plate)?.plate || "")} </TableCell>
+              <TableCell>{user.vehicle?.find((e)=>e.type)?.type || "Não informado"}</TableCell>
+{/* <TableCell>
+  {
+    user.vehicle.some(vehicle => 
+      vehicle.serviceVehicle?.some(serviceVehicle => 
+        serviceVehicle.services?.some(service => 
+          service.service?.description
+        )
+      )
+    ) || "Sem serviço"
+  }
+</TableCell> */}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center py-4">
+              Nenhum serviço realizado
             </TableCell>
-            <TableCell className="font-medium">
-              {invoice.invoice.split(" ").slice(0, 2).join(" ")}
-            </TableCell>
-            <TableCell>{formatPhoneNumber(invoice.paymentStatus)}</TableCell>
-            <TableCell>{formatPlateCar(invoice.plate)}</TableCell>
-            <TableCell>{invoice.typeCar}</TableCell>
-            <TableCell>{invoice.totalAmount}</TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={5}>Total de Serviços</TableCell>
           <TableCell className="w-56">
-            {invoices.filter((e) => e.totalAmount).length}
+            {serviceTableMessage ? serviceTableMessage.length : 0}
           </TableCell>
         </TableRow>
       </TableFooter>

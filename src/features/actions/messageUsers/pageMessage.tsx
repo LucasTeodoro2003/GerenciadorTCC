@@ -5,16 +5,16 @@ import { TableMessage } from "@/features/actions/userMessage/tableMessage";
 import { Button } from "@/shared/ui/components/button";
 import { Input } from "@/shared/ui/components/input";
 import { Toaster } from "@/shared/ui/components/sonner";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface PageMessageProps {
   user: User;
-  users: User[];
+  serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
 }
 
-export default function PageMessage({ user, users }: PageMessageProps) {
+export default function PageMessage({ user, serviceTableMessage }: PageMessageProps) {
   const [message, setMessage] = useState("Esta enviando esta mensagem aqui");
   const [openModal, setOpenModal] = useState(false);
 
@@ -59,7 +59,7 @@ export default function PageMessage({ user, users }: PageMessageProps) {
         <Toaster richColors position="top-center" />
       </div>
       <div>
-        <TableMessage />
+        <TableMessage serviceTableMessage={serviceTableMessage}/>
       </div>
     </>
   );
