@@ -11,10 +11,36 @@ import { toast } from "sonner";
 
 interface PageMessageProps {
   user: User;
-  serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
+  serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
+    include: {
+      service: {};
+      serviceVehicle: {
+        include: {
+          vehicle: {
+            include: {
+              user: {
+                include: {
+                  vehicle: {
+                    include: {
+                      serviceVehicle: {
+                        include: { services: { include: { service: {} } } };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  }>[];
 }
 
-export default function PageMessage({ user, serviceTableMessage }: PageMessageProps) {
+export default function PageMessage({
+  user,
+  serviceTableMessage,
+}: PageMessageProps) {
   const [message, setMessage] = useState("Esta enviando esta mensagem aqui");
   const [openModal, setOpenModal] = useState(false);
 
@@ -31,35 +57,41 @@ export default function PageMessage({ user, serviceTableMessage }: PageMessagePr
         user={user}
         openModal={openModal}
       />
-      <div className="flex w-full items-center gap-4">
-        <div className="flex-1"></div>
-        <div className="flex-1 flex justify-center">
+      {user.permission === 1 ? (
+        <div className="flex w-full items-center gap-4">
+          <div className="flex-1" />
+          <div className="flex-1 flex justify-center">
+            <h5 className="text-muted-foreground text-xl text-center">
+              Últimos Serviços Realizados
+            </h5>
+          </div>
+          <div className="flex-1 flex items-center justify-end space-x-4">
+            <h1>Editar Mensagem</h1>
+            <Button
+              type="submit"
+              variant="outline"
+              className="bg-transparent rounded-full w-12 h-12 p-0 flex items-center justify-center"
+              onClick={() => {
+                setOpenModal(true);
+              }}
+            >
+              <img
+                src="whatsapp.png"
+                alt="whatsapp"
+                className="w-12 dark:brightness-200 brightness-125 drop-shadow"
+              />
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full flex justify-center">
           <h5 className="text-muted-foreground text-xl text-center">
             Últimos Serviços Realizados
           </h5>
         </div>
-        <div className="flex-1 flex items-center justify-end space-x-4">
-          <h1>Editar Mensagem</h1>
-          {/* <Input type="message" placeholder="Mensagem à ser enviada" value={message} onChange={(e) => {setMessage(e.target.value);console.log(message)}} className="border-gray-300"/> */}
-          <Button
-            type="submit"
-            variant="outline"
-            className="bg-transparent rounded-full w-12 h-12 p-0 flex items-center justify-center"
-            onClick={() => {
-              setOpenModal(true);
-            }}
-          >
-            <img
-              src="whatsapp.png"
-              alt="whatsapp"
-              className="w-12 dark:brightness-200 brightness-125 drop-shadow "
-            />
-          </Button>
-        </div>
-        <Toaster richColors position="top-center" />
-      </div>
+      )}
       <div>
-        <TableMessage serviceTableMessage={serviceTableMessage}/>
+        <TableMessage serviceTableMessage={serviceTableMessage} />
       </div>
     </>
   );

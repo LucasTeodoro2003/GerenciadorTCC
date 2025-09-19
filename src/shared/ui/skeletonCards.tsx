@@ -70,7 +70,28 @@ export function SkeletonCreate() {
   )
 }
 
-export function SkeletonCreateThings() {
+export function SkeletonClient() {
+  return (
+    <div className="flex flex-col space-y-3 w-full h-full">
+      <Skeleton className="h-[70px] w-full rounded-xl" />
+      <Skeleton className="h-[60px] w-full rounded-xl" />
+      <Skeleton className="h-[58px] w-full rounded-xl" />
+      <Skeleton className="h-[56px] w-full rounded-xl" />
+      <Skeleton className="h-[54px] w-full rounded-xl" />
+      <Skeleton className="h-[52px] w-full rounded-xl" />
+      <Skeleton className="h-[50px] w-full rounded-xl" />
+      <Skeleton className="h-[40px] w-full rounded-xl" />
+      <Skeleton className="h-[30px] w-full rounded-xl" />
+      <Skeleton className="h-[20px] w-full rounded-xl" />
+      <Skeleton className="h-[25px] w-full rounded-xl" />
+      <Skeleton className="h-[30px] w-full rounded-xl" />
+      <div className="space-y-2">
+      </div>
+    </div>
+  )
+}
+
+export function SkeletonEnterprise() {
   return (
     <div className="flex flex-col space-y-3 w-full h-full">
       <Skeleton className="h-[70px] w-full rounded-xl" />

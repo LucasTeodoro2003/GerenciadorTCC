@@ -27,7 +27,8 @@ export function NavMain({
   onSetSkeletonExpense,
   onSetSkeletonRevenue,
   onSetSkeletonCreate,
-  onSetSkeletonCreateThings,
+  onSetSkeletonClient,
+  onSetSkeletonEnterprise,
 }: {
   items: {
     title: string;
@@ -45,7 +46,8 @@ export function NavMain({
   onSetSkeletonExpense?: (isActive: boolean) => void;
   onSetSkeletonRevenue?: (isActive: boolean) => void;
   onSetSkeletonCreate?: (isActive: boolean) => void;
-  onSetSkeletonCreateThings?: (isActive: boolean) => void;
+  onSetSkeletonClient?: (isActive: boolean) => void;
+  onSetSkeletonEnterprise?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -60,7 +62,8 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     if (term === "" && onSetSkeletonHome) {
@@ -70,7 +73,8 @@ export function NavMain({
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     if (term === "message" && onSetSkeletonMessage) {
@@ -80,7 +84,8 @@ export function NavMain({
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     if (term === "expense" && onSetSkeletonExpense) {
@@ -90,7 +95,8 @@ export function NavMain({
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     if (term === "revenue" && onSetSkeletonRevenue) {
@@ -100,7 +106,8 @@ export function NavMain({
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     if (term === "create" && onSetSkeletonCreate) {
@@ -110,17 +117,30 @@ export function NavMain({
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
-      if (onSetSkeletonCreateThings) onSetSkeletonCreateThings(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
-        if (term === "createThings" && onSetSkeletonCreateThings) {
-      onSetSkeletonCreateThings(true);
+        if (term === "clients" && onSetSkeletonClient) {
+      onSetSkeletonClient(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+    }
+
+        if (term === "enterprise" && onSetSkeletonEnterprise) {
+      onSetSkeletonEnterprise(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false)
+      if (onSetSkeletonClient) onSetSkeletonClient(false)
     }
 
     const params = new URLSearchParams(searchParams);

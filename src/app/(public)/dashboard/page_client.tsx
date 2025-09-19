@@ -21,8 +21,9 @@ import { motion } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import {
+  SkeletonClient,
   SkeletonCreate,
-  SkeletonCreateThings,
+  SkeletonEnterprise,
   SkeletonExpense,
   SkeletonHome,
   SkeletonMessage,
@@ -33,7 +34,8 @@ import PageMessage from "../../../features/actions/messageUsers/pageMessage";
 import TableExpense from "@/features/actions/expense/page_client";
 import TableRevenue from "@/features/actions/revenue/page_client";
 import CreateServiceVehiclePage from "@/features/createThings/servicesVehicleCreate/servicesVehicle";
-import { CreateService } from "@/features/createThings/allCreate/allCreate";
+import { CreateUserSomeVehicle } from "@/features/createThings/userVehicle/userVehicle";
+import { CreateServiceSomeProducts } from "@/features/createThings/productsServices/productsServices";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
@@ -68,7 +70,8 @@ export default function PageClient({
   const showExpense = searchParams.get("page") === "expense";
   const showRevenue = searchParams.get("page") === "revenue";
   const showCreate = searchParams.get("page") === "create";
-  const showCreateThings = searchParams.get("page") === "createThings";
+  const showClient = searchParams.get("page") === "clients";
+  const showEnterprise = searchParams.get("page") === "enterprise";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
@@ -76,14 +79,19 @@ export default function PageClient({
   const [activeSkeletonExpense, setactiveSkeletonExpense] = useState(false);
   const [activeSkeletonRevenue, setactiveSkeletonRevenue] = useState(false);
   const [activeSkeletonCreate, setactiveSkeletonCreate] = useState(false);
-  const [activeSkeletonCreateThings, setactiveSkeletonCreateThings] = useState(false);
+  const [activeSkeletonClient, setActiveSkeletonClient] = useState(false);
+  const [activeSkeletonEnterprise, setActiveSkeletonEnterprise] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
   };
 
-  const handleSetSkeletonCreateThings = (isActive: any) => {
-    setactiveSkeletonCreateThings(isActive);
+  const handleSetSkeletonEnterprise = (isActive: any) => {
+    setActiveSkeletonEnterprise(isActive);
+  };
+
+  const handleSetSkeletonClient = (isActive: any) => {
+    setActiveSkeletonClient(isActive);
   };
   
   const handleSetSkeletonCreate = (isActive: any) => {
@@ -117,7 +125,8 @@ export default function PageClient({
         onSetSkeletonExpense={handleSetSkeletonExpense}
         onSetSkeletonRevenue={handleSetSkeletonRevenue}
         onSetSkeletonCreate={handleSetSkeletonCreate}
-        onSetSkeletonCreateThings={handleSetSkeletonCreateThings}
+        onSetSkeletonClient={handleSetSkeletonClient}
+        onSetSkeletonEnterprise={handleSetSkeletonEnterprise}
 
       />
       <SidebarInset>
@@ -177,9 +186,15 @@ export default function PageClient({
             </div>
           )}
 
-          {activeSkeletonCreateThings && !showCreateThings && (
+          {activeSkeletonClient && !showClient && (
             <div className="w-full h-screen p-4">
-              <SkeletonCreateThings />
+              <SkeletonClient />
+            </div>
+          )}
+
+          {activeSkeletonEnterprise && !showEnterprise && (
+            <div className="w-full h-screen p-4">
+              <SkeletonEnterprise />
             </div>
           )}
 
@@ -205,7 +220,8 @@ export default function PageClient({
           {showExpense &&  <TableExpense expenses={expense} user={user}/>}
           {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicles} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
           {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}
-          {showCreateThings &&  <CreateService users={users}/>}
+          {showClient &&  <CreateUserSomeVehicle users={users}/>}
+          {showEnterprise &&  <CreateServiceSomeProducts users={users}/>}
         </div>
       </SidebarInset>
     </SidebarProvider>

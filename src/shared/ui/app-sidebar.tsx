@@ -3,8 +3,9 @@
 import * as React from "react"
 import {
   Bot,
+  Building2,
+  CogIcon,
   Home,
-  MessageCircleMoreIcon,
 } from "lucide-react"
 import { NavMain } from "@/shared/ui/nav-main"
 import { NavUser } from "@/shared/ui/nav-user"
@@ -26,10 +27,11 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonExpense: (isActive: boolean) => void;
   onSetSkeletonRevenue: (isActive: boolean) => void;
   onSetSkeletonCreate: (isActive: boolean) => void;
-  onSetSkeletonCreateThings: (isActive: boolean) => void;
+  onSetSkeletonClient: (isActive: boolean) => void;
+  onSetSkeletonEnterprise: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonCreateThings, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonClient,  onSetSkeletonEnterprise, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -63,25 +65,26 @@ const data = !dataUserPage ? {
         },
       ],
     },
-    {
-      title: "Clientes",
-      page: "#",
-      icon: Bot,
+        {
+      title: "Empresa",
+      page: "message",
+      icon: Building2,
+      isActive: true,
       items: [
         {
-          title: "Quantum",
-          page: "#",
+          title: "Finalizar Serviços",
+          page: "message",
         },
       ],
     },
     {
-      title: "Mensagens",
-      page: "#",
-      icon: MessageCircleMoreIcon,
+      title: "Clientes",
+      page: "table",
+      icon: Bot,
       items: [
         {
-          title: "sei la",
-          page: "#",
+          title: "Agendar",
+          page: "create",
         },
       ],
     },
@@ -100,6 +103,14 @@ const data = !dataUserPage ? {
           title: "Home",
           page: "",
         },
+      ],
+    },
+        {
+      title: "Empresa",
+      page: "message",
+      icon: Building2,
+      isActive: true,
+      items: [
         {
           title: "Despesas",
           page: "expense",
@@ -107,6 +118,10 @@ const data = !dataUserPage ? {
         {
           title: "Receitas",
           page: "revenue",
+        },
+        {
+          title: "Finalizar Serviços",
+          page: "message",
         },
       ],
     },
@@ -120,35 +135,23 @@ const data = !dataUserPage ? {
           page: "table",
         },
         {
-          title: "Mensagens Automáticas",
-          page: "message",
-        },
-        {
-          title: "Quantum",
-          page: "#",
+          title: "Agendar",
+          page: "create",
         },
       ],
     },
     {
       title: "Criar",
       page: "create",
-      icon: MessageCircleMoreIcon,
+      icon: CogIcon,
       items: [
         {
-          title: "Agendar",
-          page: "create",
+          title: "Clientes",
+          page: "clients",
         },
         {
-          title: "Itens",
-          page: "createThings",
-        },
-        {
-          title: "Tutorials",
-          page: "#",
-        },
-        {
-          title: "Changelog",
-          page: "#",
+          title: "Gerenciar",
+          page: "enterprise",
         },
       ],
     },
@@ -161,7 +164,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonCreateThings={onSetSkeletonCreateThings}/>
+        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonClient={onSetSkeletonClient} onSetSkeletonEnterprise={onSetSkeletonEnterprise}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} users={users}/>
