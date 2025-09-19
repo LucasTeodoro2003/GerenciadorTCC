@@ -93,6 +93,7 @@ model Vehicle {
   userId         String
   color          String?
   type           String
+  model          String?
   plate          String
   yearCar        String?
   serviceVehicle ServiceVehicle[]
@@ -131,8 +132,12 @@ model ServiceVehicleService {
   serviceVehicleId String
   service          Services       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId        String
+  finished         Boolean              @default(false)
+
 
   @@unique([serviceVehicleId, serviceId])
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
 }
 
 model Products {

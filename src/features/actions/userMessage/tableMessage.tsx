@@ -1,27 +1,47 @@
 "use client";
 
-import { Checkbox } from "@/shared/ui/components/checkbox";
+import { Switch } from "@/shared/ui/components/switch";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/shared/ui/components/table";
-import { Prisma, User } from "@prisma/client";
-import { table } from "console";
-import { useState } from "react";
+import { Prisma } from "@prisma/client";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/shared/ui/components/alert-dialog";
+import { FinishedService } from "@/shared/lib/actionUpdateService";
+import { Button } from "@/shared/ui/components/button";
+import { CircularProgress } from "@mui/material";
 
 interface TableMessageProps {
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
 }
 
 export function TableMessage({ serviceTableMessage }: TableMessageProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [pendingServiceId, setPendingServiceId] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [servicesCompleted, setServicesCompleted] = useState<string[]>([]);
+  const [isClient, setIsClient] = useState(false);
+  const [finishedService, setFinishedService] = useState(false)
+  
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const formatPhoneNumber = (phoneNumber: string | null) => {
     if (!phoneNumber || typeof phoneNumber !== "string") return phoneNumber;
@@ -39,114 +59,145 @@ export function TableMessage({ serviceTableMessage }: TableMessageProps) {
     return `${plate.substring(0, 3)} - ${plate.substring(3, 7)}`;
   };
 
-  const handleCheckboxChange = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedIds((prev) => {
-        const newSelected = [...prev, id];
-        console.log(newSelected);
-        toast.success(`Usuário selecionado: ${id}`);
-        return newSelected;
-      });
-    } else {
-      setSelectedIds((prev) => {
-        const newSelected = prev.filter((item) => item !== id);
-        console.log(newSelected);
-        toast.info(`Usuário removido: ${id}`);
-        return newSelected;
-      });
+  const formatDate = (date: Date | null | undefined) => {
+    if (!isClient || !date) return "";
+    
+    try {
+      return new Date(date).toLocaleDateString('pt-BR');
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "";
     }
   };
 
-  const user = serviceTableMessage.map((e)=>e.serviceVehicle?.vehicle.user)
+  const handleSwitchChange = (serviceId: string, completed: boolean) => {
+    if (completed) return;
+    setPendingServiceId(serviceId);
+    setIsDialogOpen(true);
+  };
+
+  const confirmServiceCompletion = async () => {
+    if (pendingServiceId) {
+      setFinishedService(true)
+      try {
+        setServicesCompleted((prev) => [...prev, pendingServiceId]);
+        const formData = new FormData();
+        formData.append("finished", "true");
+        await FinishedService(pendingServiceId, formData);
+        
+        toast.success(`Serviço finalizado com sucesso!`);
+      } catch (error) {
+        console.error("Erro ao finalizar serviço:", error);
+        toast.error("Erro ao finalizar serviço. Tente novamente.");
+      } finally {
+        setIsDialogOpen(false);
+        setPendingServiceId(null);
+        setFinishedService(false)
+      }
+    }
+  };
+
+  const cancelServiceCompletion = () => {
+    setIsDialogOpen(false);
+    setPendingServiceId(null);
+  };
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-20">Foto</TableHead>
-          <TableHead className="w-36">Nome</TableHead>
-          <TableHead className="w-28">Número</TableHead>
-          <TableHead className="w-20">Placa</TableHead>
-          <TableHead className="w-40">Veículo</TableHead>
-          <TableHead>Serviço Realizado</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {serviceTableMessage && serviceTableMessage.length > 0 ? (
-          user.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>
-                <div
-                  className="relative cursor-pointer"
-                  onClick={() =>
-                    handleCheckboxChange(
-                      user.id,
-                      !selectedIds.includes(user.id)
-                    )
-                  }
-                >
-                  <div className="relative rounded-full overflow-hidden w-12 h-12 hover:bg-blue-500 hover:border-2 hover:border-blue-500">
-                    <img
-                      src={user.image || "/usuario.png"}
-                      alt={user.name || ""}
-                      className="w-full h-full object-cover"
-                    />
-                    {selectedIds.includes(user.id) && (
-                      <div className="absolute inset-0 rounded-full bg-blue-500 bg-opacity-40 flex items-center justify-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell className="font-medium">
-                {user.name?.split(" ").slice(0, 2).join(" ")}
-              </TableCell>
-              <TableCell>{formatPhoneNumber(user.phone)}</TableCell>
-              <TableCell>{formatPlateCar(user.vehicle.find((e)=>e.plate)?.plate || "")} </TableCell>
-              <TableCell>{user.vehicle?.find((e)=>e.type)?.type || "Não informado"}</TableCell>
-{/* <TableCell>
-  {
-    user.vehicle.some(vehicle => 
-      vehicle.serviceVehicle?.some(serviceVehicle => 
-        serviceVehicle.services?.some(service => 
-          service.service?.description
-        )
-      )
-    ) || "Sem serviço"
-  }
-</TableCell> */}
-            </TableRow>
-          ))
-        ) : (
+    <>
+      <Table>
+        <TableHeader>
           <TableRow>
-            <TableCell colSpan={6} className="text-center py-4">
-              Nenhum serviço realizado
+            <TableHead className="w-20">Foto</TableHead>
+            <TableHead className="w-36">Nome</TableHead>
+            <TableHead className="w-32">Número</TableHead>
+            <TableHead className="w-24">Placa</TableHead>
+            <TableHead className="w-40">Veículo</TableHead>
+            <TableHead className="w-56">Serviço Realizado</TableHead>
+            <TableHead className="w-56">Data Agenda</TableHead>
+            <TableHead className="w-28">Finalizar</TableHead>
+            <TableHead className="w-28">Data Finalização</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {serviceTableMessage && serviceTableMessage.length > 0 ? (
+            serviceTableMessage.map((serviceItem) => {
+              const user = serviceItem.serviceVehicle?.vehicle.user;
+              const serviceId = serviceItem.id;
+              const isCompleted = serviceItem.finished || servicesCompleted.includes(serviceId);
+              
+              return (
+                <TableRow key={serviceId}>
+                  <TableCell>
+                    <div className="relative rounded-full overflow-hidden w-12 h-12">
+                      <img
+                        src={user.image || "/usuario.png"}
+                        alt={user.name || ""}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {user.name?.split(" ").slice(0, 2).join(" ")}
+                  </TableCell>
+                  <TableCell>{formatPhoneNumber(user.phone)}</TableCell>
+                  <TableCell>{formatPlateCar(serviceItem.serviceVehicle?.vehicle.plate || "")}</TableCell>
+                  <TableCell>
+                    {serviceItem.serviceVehicle?.vehicle.type || "Não informado"} - 
+                    {serviceItem.serviceVehicle?.vehicle.model || "Não informado"}
+                  </TableCell>
+                  <TableCell>{serviceItem.service?.description || "Serviço não especificado"}</TableCell>
+                  <TableCell>
+                    {isClient ? formatDate(serviceItem.createdAt) : "Carregando..."}
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={isCompleted}
+                      onCheckedChange={() => handleSwitchChange(serviceId, isCompleted)}
+                      disabled={isCompleted}
+                      className={isCompleted ? "dark:bg-green-500 dark:brightness-100 " : "dark:bg-red-500"}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {isClient && serviceItem.finished ? 
+                      formatDate(serviceItem.updatedAt) : 
+                      " - "}
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell colSpan={9} className="text-center py-4">
+                Nenhum serviço realizado
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={8}>Total de Serviços</TableCell>
+            <TableCell className="w-40">
+              {serviceTableMessage ? serviceTableMessage.length : 0}
             </TableCell>
           </TableRow>
-        )}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={5}>Total de Serviços</TableCell>
-          <TableCell className="w-56">
-            {serviceTableMessage ? serviceTableMessage.length : 0}
-          </TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableFooter>
+      </Table>
+
+      <AlertDialog open={isDialogOpen} >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar finalização</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você realmente deseja finalizar este serviço?
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelServiceCompletion}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmServiceCompletion} disabled={finishedService}>{finishedService ? <CircularProgress size={20} /> : "Sim, Finalizar"}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
