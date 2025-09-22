@@ -18,21 +18,45 @@ export default async function Page() {
     },
   });
 
-  const enterprise = await db.user.findUnique({where:{id:userId},select:{enterpriseId:true}})
-
+  const enterprise = await db.user.findUnique({
+    where: { id: userId },
+    select: { enterpriseId: true },
+  });
 
   const usersWithServices = await db.user.findMany({
     include: {
       vehicle: {
         include: {
-          serviceVehicle: {
-          }
+          serviceVehicle: {},
         },
       },
     },
   });
 
-  const serviceTableMessage = await db.serviceVehicleService.findMany({include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}})
+  const serviceTableMessage = await db.serviceVehicleService.findMany({
+    include: {
+      service: {},
+      serviceVehicle: {
+        include: {
+          vehicle: {
+            include: {
+              user: {
+                include: {
+                  vehicle: {
+                    include: {
+                      serviceVehicle: {
+                        include: { services: { include: { service: {} } } },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
   // const account = await db.account.findMany({include:{
   //   user: true
   // }})
@@ -65,32 +89,48 @@ export default async function Page() {
     },
   });
 
-  const serviceVehicle = await db.serviceVehicle.findMany({include:{services:{include:{service:{}}}}})
-  const services = await db.services.findMany()
-  const revenue = await db.revenue.findMany()
+  const serviceVehicle = await db.serviceVehicle.findMany({
+    include: { services: { include: { service: {} } } },
+  });
+  const services = await db.services.findMany();
+  const revenue = await db.revenue.findMany();
   const vehicles = await db.vehicle.findMany({
-    include:{
-      user:{
-        select:{
+    include: {
+      user: {
+        select: {
           name: true,
-          id: true
-        }
+          id: true,
+        },
       },
-      serviceVehicle:{
-        include:
-        {
-          services:{
-            include:{}
-          }
-        }
-      }
-    }
-  })
+      serviceVehicle: {
+        include: {
+          services: {
+            include: {},
+          },
+        },
+      },
+    },
+  });
 
-  const dateDisable = await db.serviceVehicle.findMany()
+  const dateDisable = await db.serviceVehicle.findMany();
 
-  const calendar = await db.user.findMany({where:{enterpriseId: enterprise?.enterpriseId},include:{vehicle:{include:{serviceVehicle:{}}}}})
-  
+  const calendar = await db.user.findMany({
+    where: { enterpriseId: enterprise?.enterpriseId },
+    include: {
+      vehicle: {
+        include: {
+          serviceVehicle: {
+            include: { services: { include: { service: {} } } },
+          },
+          user: { include: { addresses: {} } },
+        },
+      },
+    },
+  });
+
+  // const all = await db.user.findMany({include:{addresses:{}}})
+
+  // console.log("Tudo: => ", all)
 
   return (
     <PageClient

@@ -50,7 +50,7 @@ interface PageClientProps {
   vehicle: Vehicle[]
   dataServices: ServiceVehicle[]
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
-  calendar: Prisma.UserGetPayload<{include:{vehicle:{include:{serviceVehicle:{}}}}}>[]
+  calendar: Prisma.UserGetPayload<{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}},user:{include:{addresses:{}}}}}}}>[]
 }
 
 export default function PageClient({
@@ -239,7 +239,7 @@ export default function PageClient({
           {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}
           {showClient &&  <CreateUserSomeVehicle users={users}/>}
           {showEnterprise &&  <CreateServiceSomeProducts users={users}/>}
-          {showCalendar &&  <CalendarIcons calendar={calendar}/>}
+          {showCalendar &&  <CalendarIcons calendar={calendar} services={services} user={user}/>}
         </div>
       </SidebarInset>
     </SidebarProvider>
