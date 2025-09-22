@@ -18,6 +18,8 @@ export default async function Page() {
     },
   });
 
+  const enterprise = await db.user.findUnique({where:{id:userId},select:{enterpriseId:true}})
+
 
   const usersWithServices = await db.user.findMany({
     include: {
@@ -87,6 +89,9 @@ export default async function Page() {
 
   const dateDisable = await db.serviceVehicle.findMany()
 
+  const calendar = await db.user.findMany({where:{enterpriseId: enterprise?.enterpriseId},include:{vehicle:{include:{serviceVehicle:{}}}}})
+  
+
   return (
     <PageClient
       firtsname={firstname}
@@ -99,6 +104,7 @@ export default async function Page() {
       vehicle={vehicles}
       dataServices={dateDisable}
       serviceTableMessage={serviceTableMessage}
+      calendar={calendar}
     />
   );
 }

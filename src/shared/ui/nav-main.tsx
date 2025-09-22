@@ -29,6 +29,7 @@ export function NavMain({
   onSetSkeletonCreate,
   onSetSkeletonClient,
   onSetSkeletonEnterprise,
+  onSetSkeletonCalendar,
 }: {
   items: {
     title: string;
@@ -48,6 +49,7 @@ export function NavMain({
   onSetSkeletonCreate?: (isActive: boolean) => void;
   onSetSkeletonClient?: (isActive: boolean) => void;
   onSetSkeletonEnterprise?: (isActive: boolean) => void;
+  onSetSkeletonCalendar?: (isActive: boolean) => void;
 }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -64,6 +66,7 @@ export function NavMain({
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
     if (term === "" && onSetSkeletonHome) {
@@ -75,6 +78,7 @@ export function NavMain({
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
     if (term === "message" && onSetSkeletonMessage) {
@@ -86,6 +90,7 @@ export function NavMain({
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
     if (term === "expense" && onSetSkeletonExpense) {
@@ -97,6 +102,7 @@ export function NavMain({
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
     if (term === "revenue" && onSetSkeletonRevenue) {
@@ -108,6 +114,7 @@ export function NavMain({
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
     if (term === "create" && onSetSkeletonCreate) {
@@ -119,6 +126,7 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
         if (term === "clients" && onSetSkeletonClient) {
@@ -130,6 +138,7 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false)
       if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
     }
 
         if (term === "enterprise" && onSetSkeletonEnterprise) {
@@ -141,6 +150,19 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false)
       if (onSetSkeletonClient) onSetSkeletonClient(false)
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+    }
+
+        if (term === "calendar" && onSetSkeletonCalendar) {
+      onSetSkeletonCalendar(true);
+      if (onSetSkeletonTable) onSetSkeletonTable(false);
+      if (onSetSkeletonHome) onSetSkeletonHome(false);
+      if (onSetSkeletonMessage) onSetSkeletonMessage(false);
+      if (onSetSkeletonExpense) onSetSkeletonExpense(false);
+      if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false)
+      if (onSetSkeletonClient) onSetSkeletonClient(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
     }
 
     const params = new URLSearchParams(searchParams);

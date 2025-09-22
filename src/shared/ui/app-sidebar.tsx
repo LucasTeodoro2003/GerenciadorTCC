@@ -29,9 +29,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onSetSkeletonCreate: (isActive: boolean) => void;
   onSetSkeletonClient: (isActive: boolean) => void;
   onSetSkeletonEnterprise: (isActive: boolean) => void;
+  onSetSkeletonCalendar: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonClient,  onSetSkeletonEnterprise, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, onSetSkeletonCalendar, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonClient,  onSetSkeletonEnterprise, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -62,6 +63,10 @@ const data = !dataUserPage ? {
         {
           title: "Home",
           page: "",
+        },
+                {
+          title: "Calendário",
+          page: "calendar",
         },
       ],
     },
@@ -102,6 +107,10 @@ const data = !dataUserPage ? {
         {
           title: "Home",
           page: "",
+        },
+        {
+          title: "Calendário",
+          page: "calendar",
         },
       ],
     },
@@ -164,7 +173,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonClient={onSetSkeletonClient} onSetSkeletonEnterprise={onSetSkeletonEnterprise}/>
+        <NavMain items={data.navMain} onSetSkeletonCalendar={onSetSkeletonCalendar} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonClient={onSetSkeletonClient} onSetSkeletonEnterprise={onSetSkeletonEnterprise}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} users={users}/>

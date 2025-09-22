@@ -21,6 +21,7 @@ import { motion } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
 import {
+  SkeletonCalendar,
   SkeletonClient,
   SkeletonCreate,
   SkeletonEnterprise,
@@ -36,6 +37,7 @@ import TableRevenue from "@/features/actions/revenue/page_client";
 import CreateServiceVehiclePage from "@/features/createThings/servicesVehicleCreate/servicesVehicle";
 import { CreateUserSomeVehicle } from "@/features/createThings/userVehicle/userVehicle";
 import { CreateServiceSomeProducts } from "@/features/createThings/productsServices/productsServices";
+import CalendarIcons from "@/features/calendarWithicons/calendarHome";
 
 interface PageClientProps {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
@@ -48,6 +50,7 @@ interface PageClientProps {
   vehicle: Vehicle[]
   dataServices: ServiceVehicle[]
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{},serviceVehicle:{include:{vehicle:{include:{user:{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}}}}}}}}}}}>[]
+  calendar: Prisma.UserGetPayload<{include:{vehicle:{include:{serviceVehicle:{}}}}}>[]
 }
 
 export default function PageClient({
@@ -61,6 +64,7 @@ export default function PageClient({
   vehicle,
   dataServices,
   serviceTableMessage,
+  calendar,
 }: PageClientProps) {
   const searchParams = useSearchParams();
   const firtsAcess = !user.emailVerified;
@@ -72,6 +76,7 @@ export default function PageClient({
   const showCreate = searchParams.get("page") === "create";
   const showClient = searchParams.get("page") === "clients";
   const showEnterprise = searchParams.get("page") === "enterprise";
+  const showCalendar = searchParams.get("page") === "calendar";
 
   const [activeSkeletonTable, setactiveSkeletonTable] = useState(false);
   const [activeSkeletonHome, setactiveSkeletonHome] = useState(false);
@@ -81,9 +86,14 @@ export default function PageClient({
   const [activeSkeletonCreate, setactiveSkeletonCreate] = useState(false);
   const [activeSkeletonClient, setActiveSkeletonClient] = useState(false);
   const [activeSkeletonEnterprise, setActiveSkeletonEnterprise] = useState(false);
+  const [activeSkeletonCalendar, setActiveSkeletonCalendar] = useState(false);
 
   const handleSetSkeletonTable = (isActive: any) => {
     setactiveSkeletonTable(isActive);
+  };
+
+  const handleSetSkeletonCalendar = (isActive: any) => {
+    setActiveSkeletonCalendar(isActive);
   };
 
   const handleSetSkeletonEnterprise = (isActive: any) => {
@@ -127,6 +137,7 @@ export default function PageClient({
         onSetSkeletonCreate={handleSetSkeletonCreate}
         onSetSkeletonClient={handleSetSkeletonClient}
         onSetSkeletonEnterprise={handleSetSkeletonEnterprise}
+        onSetSkeletonCalendar={handleSetSkeletonCalendar}
 
       />
       <SidebarInset>
@@ -197,6 +208,12 @@ export default function PageClient({
               <SkeletonEnterprise />
             </div>
           )}
+          
+          {activeSkeletonCalendar && !showCalendar && (
+            <div className="w-full h-screen p-4">
+              <SkeletonCalendar />
+            </div>
+          )}
 
           {showTable && (
             <motion.div
@@ -222,6 +239,7 @@ export default function PageClient({
           {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}
           {showClient &&  <CreateUserSomeVehicle users={users}/>}
           {showEnterprise &&  <CreateServiceSomeProducts users={users}/>}
+          {showCalendar &&  <CalendarIcons calendar={calendar}/>}
         </div>
       </SidebarInset>
     </SidebarProvider>
