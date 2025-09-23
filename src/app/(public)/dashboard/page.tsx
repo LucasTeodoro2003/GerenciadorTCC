@@ -8,5 +8,6 @@ export default function Page() {
   useEffect(() => {
     router.prefetch("/dashboard/calendar");
   }, [router]);
+  
   return <></>;
 }

@@ -1,6 +1,5 @@
 import ThemeToggle from "@/shared/ui/darkOrWhiteDown";
 
-
 export default async function NoAcessPage() {
 
 

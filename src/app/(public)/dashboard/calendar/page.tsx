@@ -1,11 +1,15 @@
+import { auth } from "@/shared/lib/auth";
 import CalendarPageClient from "./page_client";
 import db from "@/shared/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const userId = (await headers()).get("x-user-id");
-  
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) {
+      redirect("/login");
+    }
   
   const user = (await db.user.findUnique({
     where: { id: userId || "" },
