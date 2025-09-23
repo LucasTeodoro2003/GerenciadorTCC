@@ -18,7 +18,7 @@ import { User } from "next-auth";
 import { Expense } from "@prisma/client";
 import { decimalToNumber } from "@/shared/lib/decimalForNumber";
 
-interface TableExpenseProps {
+export interface TableExpenseProps {
   expenses: Expense[];
   user: User;
 }

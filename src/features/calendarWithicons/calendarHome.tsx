@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import { ptBR } from "date-fns/locale";
 import { Prisma, Services, User } from "@prisma/client";
@@ -37,7 +39,7 @@ import { ScrollArea } from "@/shared/ui/components/scroll-area";
 import { toast } from "sonner";
 import { updateServiceVehicle } from "@/shared/lib/actionUpdateServiceVehicle ";
 
-interface CalendarIconsProps {
+export interface CalendarIconsProps {
   calendar: Prisma.UserGetPayload<{
     include: {
       vehicle: {

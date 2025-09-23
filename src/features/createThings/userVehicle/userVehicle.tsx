@@ -29,7 +29,7 @@ import { CircularProgress } from "@mui/material"
 import { createUserPage } from "@/shared/lib/actionsCreateuserPage"
 import { getUserByEmail } from "@/shared/lib/actionGetUser"
 
-interface CreateServiceProps{
+export interface CreateServiceProps{
     users: User[]
 }
 

@@ -16,7 +16,7 @@ import {
 } from "@/shared/ui/components/sidebar";
 import { Expense, Prisma, Revenue, Services, ServiceVehicle, User, Vehicle } from "@prisma/client";
 import TableUser from "../../../features/actions/users/page_client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { useState } from "react";
@@ -39,7 +39,8 @@ import { CreateUserSomeVehicle } from "@/features/createThings/userVehicle/userV
 import { CreateServiceSomeProducts } from "@/features/createThings/productsServices/productsServices";
 import CalendarIcons from "@/features/calendarWithicons/calendarHome";
 
-interface PageClientProps {
+interface LayoutClientProps {
+  children: React.ReactNode;
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
   firtsname: string;
   users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
@@ -53,7 +54,8 @@ interface PageClientProps {
   calendar: Prisma.UserGetPayload<{include:{vehicle:{include:{serviceVehicle:{include:{services:{include:{service:{}}}}},user:{include:{addresses:{}}}}}}}>[]
 }
 
-export default function PageClient({
+export default function LayoutClient({
+  children,
   firtsname,
   user,
   users,
@@ -65,9 +67,11 @@ export default function PageClient({
   dataServices,
   serviceTableMessage,
   calendar,
-}: PageClientProps) {
+}: LayoutClientProps) {
   const searchParams = useSearchParams();
   const firtsAcess = !user.emailVerified;
+
+
   const showTable = searchParams.get("page") === "table";
   const showHome = searchParams.toString() === "";
   const showMessage = searchParams.get("page") === "message";
@@ -161,85 +165,7 @@ export default function PageClient({
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
           <ModalClient openModal={firtsAcess} user={user} />
 
-          {activeSkeletonTable && !showTable && (
-            <div className="w-full h-screen p-4">
-              <SkeletonTable />
-            </div>
-          )}
-
-          {activeSkeletonHome && !showHome && (
-            <div className="w-full h-screen p-4">
-              <SkeletonHome />
-            </div>
-          )}
-
-          {activeSkeletonMessage && !showMessage && (
-            <div className="w-full h-screen p-4">
-              <SkeletonMessage />
-            </div>
-          )}
-
-          {activeSkeletonExpense && !showExpense && (
-            <div className="w-full h-screen p-4">
-              <SkeletonExpense />
-            </div>
-          )}
-
-          {activeSkeletonRevenue && !showRevenue && (
-            <div className="w-full h-screen p-4">
-              <SkeletonExpense />
-            </div>
-          )}
-
-          {activeSkeletonCreate && !showCreate && (
-            <div className="w-full h-screen p-4">
-              <SkeletonCreate />
-            </div>
-          )}
-
-          {activeSkeletonClient && !showClient && (
-            <div className="w-full h-screen p-4">
-              <SkeletonClient />
-            </div>
-          )}
-
-          {activeSkeletonEnterprise && !showEnterprise && (
-            <div className="w-full h-screen p-4">
-              <SkeletonEnterprise />
-            </div>
-          )}
-          
-          {activeSkeletonCalendar && !showCalendar && (
-            <div className="w-full h-screen p-4">
-              <SkeletonCalendar />
-            </div>
-          )}
-
-          {showTable && (
-            <motion.div
-              key="table-content"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-              onAnimationComplete={() => {
-                setactiveSkeletonTable(false);
-              }}
-            >
-              <div className="flex flex-col w-full h-screen rounded-xl bg-muted/50 p-4 overflow-hidden">
-                <div className="w-full h-full overflow-auto">
-                  <TableUser users={users} />
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {showMessage && <PageMessage user={user} serviceTableMessage={serviceTableMessage}/>}
-          {showExpense &&  <TableExpense expenses={expense} user={user}/>}
-          {showRevenue &&  <TableRevenue serviceVehicles={serviceVehicles} services={services} user={user} revenue={revenue} vehicles={vehicle}/>}
-          {showCreate &&  <CreateServiceVehiclePage disableDate={dataServices} users={users} services={services}/>}
-          {showClient &&  <CreateUserSomeVehicle users={users}/>}
-          {showEnterprise &&  <CreateServiceSomeProducts users={users}/>}
-          {showCalendar &&  <CalendarIcons calendar={calendar} services={services} user={user}/>}
+          {children}
         </div>
       </SidebarInset>
     </SidebarProvider>

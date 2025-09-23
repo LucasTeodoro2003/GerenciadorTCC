@@ -5,7 +5,7 @@ import { Prisma, User } from "@prisma/client";
 import { getColumns, Usertable } from "@/features/actions/usersEdit/colunms";
 import { useRouter } from "next/navigation";
 
-interface TableUserProps {
+export interface TableUserProps {
   users: Prisma.UserGetPayload<{include: {vehicle:{include:{serviceVehicle:{}}}}}>[];
 }
 

@@ -32,7 +32,7 @@ import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 
-interface CreateServiceVehiclePageProps {
+export interface CreateServiceVehiclePageProps {
   disableDate: ServiceVehicle[];
   users: Prisma.UserGetPayload<{
     include: { vehicle: { include: { serviceVehicle: {} } } };

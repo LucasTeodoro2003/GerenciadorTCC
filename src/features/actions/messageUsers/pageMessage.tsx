@@ -9,7 +9,7 @@ import { Prisma, User } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface PageMessageProps {
+export interface PageMessageProps {
   user: User;
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
     include: {

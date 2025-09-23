@@ -18,6 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/shared/ui/components/sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function NavMain({
   items,
@@ -51,12 +52,12 @@ export function NavMain({
   onSetSkeletonEnterprise?: (isActive: boolean) => void;
   onSetSkeletonCalendar?: (isActive: boolean) => void;
 }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
 
   function handleSearch(term: string) {
-
     if (term === "table" && onSetSkeletonTable) {
       onSetSkeletonTable(true);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
@@ -65,8 +66,8 @@ export function NavMain({
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
     if (term === "" && onSetSkeletonHome) {
@@ -77,8 +78,8 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
     if (term === "message" && onSetSkeletonMessage) {
@@ -89,8 +90,8 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
     if (term === "expense" && onSetSkeletonExpense) {
@@ -101,8 +102,8 @@ export function NavMain({
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
     if (term === "revenue" && onSetSkeletonRevenue) {
@@ -113,8 +114,8 @@ export function NavMain({
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonCreate) onSetSkeletonCreate(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
     if (term === "create" && onSetSkeletonCreate) {
@@ -125,53 +126,47 @@ export function NavMain({
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
       if (onSetSkeletonClient) onSetSkeletonClient(false);
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
-        if (term === "clients" && onSetSkeletonClient) {
+    if (term === "clients" && onSetSkeletonClient) {
       onSetSkeletonClient(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
-      if (onSetSkeletonCreate) onSetSkeletonCreate(false)
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
-        if (term === "enterprise" && onSetSkeletonEnterprise) {
+    if (term === "enterprise" && onSetSkeletonEnterprise) {
       onSetSkeletonEnterprise(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
-      if (onSetSkeletonCreate) onSetSkeletonCreate(false)
-      if (onSetSkeletonClient) onSetSkeletonClient(false)
-      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false)
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonCalendar) onSetSkeletonCalendar(false);
     }
 
-        if (term === "calendar" && onSetSkeletonCalendar) {
+    if (term === "calendar" && onSetSkeletonCalendar) {
       onSetSkeletonCalendar(true);
       if (onSetSkeletonTable) onSetSkeletonTable(false);
       if (onSetSkeletonHome) onSetSkeletonHome(false);
       if (onSetSkeletonMessage) onSetSkeletonMessage(false);
       if (onSetSkeletonExpense) onSetSkeletonExpense(false);
       if (onSetSkeletonRevenue) onSetSkeletonRevenue(false);
-      if (onSetSkeletonCreate) onSetSkeletonCreate(false)
-      if (onSetSkeletonClient) onSetSkeletonClient(false)
-      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false)
+      if (onSetSkeletonCreate) onSetSkeletonCreate(false);
+      if (onSetSkeletonClient) onSetSkeletonClient(false);
+      if (onSetSkeletonEnterprise) onSetSkeletonEnterprise(false);
     }
 
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("page", term);
-    } else {
-      params.delete("page");
-    }
-    replace(`${pathname}?${params.toString()}`);
+    router.push("/dashboard/" + term);
   }
 
   return (
@@ -188,7 +183,14 @@ export function NavMain({
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon onClick={()=>{handleSearch(item.page)}}/>}
+                  {item.icon && (
+                    <Link
+                      href={"/dashboard/" + item.page}
+                      className="bg-red-500"
+                    >
+                      <item.icon />
+                    </Link>
+                  )}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -198,14 +200,12 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a
+                        <Link
                           className="hover:cursor-pointer hover:bg-gray-600 hover:bg-opacity-35"
-                          onClick={() => {
-                            handleSearch(subItem.page);
-                          }}
+                          href={"/dashboard/" + subItem.page}
                         >
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

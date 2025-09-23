@@ -18,7 +18,7 @@ import { User } from "next-auth";
 import { Prisma, Services, ServiceVehicle, Vehicle, } from "@prisma/client";
 import { decimalToNumber } from "@/shared/lib/decimalForNumber";
 
-interface TableRevenueProps {
+export interface TableRevenueProps {
   services: Services[];
   serviceVehicles: Prisma.ServiceVehicleGetPayload<{include:{services:{include:{service:{}}}}}>[]
   revenue?: any[];
