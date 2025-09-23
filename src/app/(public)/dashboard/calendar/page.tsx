@@ -1,29 +1,23 @@
-import { auth } from "@/shared/lib/auth";
 import CalendarPageClient from "./page_client";
 import db from "@/shared/lib/prisma";
-import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
+import { headers } from "next/headers";
 
 export default async function Page() {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) {
-    redirect("/login");
-  }
-  const enterprise = await db.user.findUnique({
-    where: { id: userId },
-    select: { enterpriseId: true },
-  });
+  const userId = (await headers()).get("x-user-id");
+  
   
   const user = (await db.user.findUnique({
-    where: { id: userId },
+    where: { id: userId || "" },
     include: {
       enterprise: {},
     },
   })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
+  
+  const enterprise = user.enterpriseId
 
   const calendar = await db.user.findMany({
-    where: { enterpriseId: enterprise?.enterpriseId },
+    where: { enterpriseId: enterprise },
     include: {
       vehicle: {
         include: {

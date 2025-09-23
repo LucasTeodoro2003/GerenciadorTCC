@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { ptBR } from "date-fns/locale";
@@ -53,7 +53,7 @@ export interface CalendarIconsProps {
     };
   }>[];
   services: Services[];
-  user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
+  user: Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
 }
 
 export default function CalendarIcons({
@@ -84,13 +84,12 @@ export default function CalendarIcons({
               ? vehicle.user.addresses[0]
               : null;
 
-          const includedServices =
-            service.services.map((sv) => ({
-              id: sv.id,
-              serviceId: sv.id,
-              name: sv.service.description || "Serviço sem nome",
-              value: sv.service.price || "0.00",
-            })) || [];
+          const includedServices = service.services.map((sv) => ({
+            id: sv.id,
+            serviceId: sv.serviceId,
+            name: sv.service.description || "Serviço sem nome",
+            value: sv.service.price || "0.00",
+          }));
 
           return {
             id: service.id,
@@ -133,18 +132,17 @@ export default function CalendarIcons({
   const handleDateClick = (info: any) => {
     setDate(info.date);
   };
-const handleEventClick = (info: any) => {
-  setSelectedEvent(info.event);
-  setEditMode(false);
-  if (info.event.extendedProps.services) {
-    setSelectedServices([...info.event.extendedProps.services]); // só os vinculados
-  } else {
-    setSelectedServices([]);
-  }
-  setDiscount("0");
-  setAddition("0");
-};
-
+  const handleEventClick = (info: any) => {
+    setSelectedEvent(info.event);
+    setEditMode(false);
+    if (info.event.extendedProps.services) {
+      setSelectedServices([...info.event.extendedProps.services]); // só os vinculados
+    } else {
+      setSelectedServices([]);
+    }
+    setDiscount("0");
+    setAddition("0");
+  };
 
   const formatCurrency = (value: string) => {
     return parseFloat(value).toLocaleString("pt-BR", {
@@ -161,38 +159,38 @@ const handleEventClick = (info: any) => {
     setEditMode(true);
   };
 
-const handleAddService = () => {
-  if (serviceToAdd) {
-    const serviceToAddObj = services.find((s) => s.id === serviceToAdd);
-    if (serviceToAddObj) {
-      const serviceAlreadyExists = selectedServices.some(
-        (s) => s.serviceId === serviceToAddObj.id
-      );
-      if (!serviceAlreadyExists) {
-        const newService = {
-          id: `temp-${Date.now()}`,
-          serviceId: serviceToAddObj.id,
-          name: serviceToAddObj.description || "Serviço sem descrição",
-          value: serviceToAddObj.price,
-        };
-        const updatedServices = [...selectedServices, newService];
-        setSelectedServices(updatedServices);
-        setSelectedEvent((prev: any) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            extendedProps: {
-              ...prev.extendedProps,
-              services: updatedServices,
-            },
+  const handleAddService = () => {
+    if (serviceToAdd) {
+      const serviceToAddObj = services.find((s) => s.id === serviceToAdd);
+      if (serviceToAddObj) {
+        const serviceAlreadyExists = selectedServices.some(
+          (s) => s.serviceId === serviceToAddObj.id
+        );
+        if (!serviceAlreadyExists) {
+          const newService = {
+            id: `temp-${Date.now()}`,
+            serviceId: serviceToAddObj.id,
+            name: serviceToAddObj.description || "Serviço sem descrição",
+            value: serviceToAddObj.price,
           };
-        });
+          const updatedServices = [...selectedServices, newService];
+          setSelectedServices(updatedServices);
+          setSelectedEvent((prev: any) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              extendedProps: {
+                ...prev.extendedProps,
+                services: updatedServices,
+              },
+            };
+          });
+        }
+        setServiceToAdd("");
+        setShowServiceList(false);
       }
-      setServiceToAdd("");
-      setShowServiceList(false);
     }
-  }
-};
+  };
 
   const handleRemoveService = (index: number) => {
     const updatedServices = [...selectedServices];
@@ -215,7 +213,10 @@ const handleAddService = () => {
     if (!selectedEvent) return;
     const serviceIds = selectedServices.map((service) => service.serviceId);
     const formData = new FormData();
-    formData.append("idServiceVehicle",selectedEvent.extendedProps.serviceVehicleId);
+    formData.append(
+      "idServiceVehicle",
+      selectedEvent.extendedProps.serviceVehicleId
+    );
     formData.append("idVehicle", selectedEvent.extendedProps.vehicleId);
     formData.append("discount", String(parseFloat(discount) || 0));
     formData.append("addition", String(parseFloat(addition) || 0));
@@ -229,8 +230,7 @@ const handleAddService = () => {
     }
 
     try {
-
-      await updateServiceVehicle(formData)
+      await updateServiceVehicle(formData);
       toast.success("Serviço atualizado com sucesso!");
       setEditMode(false);
     } catch (error) {

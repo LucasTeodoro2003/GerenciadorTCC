@@ -1,5 +1,4 @@
 "use client"
-
 import * as React from "react"
 import {
   Bot,
@@ -21,18 +20,9 @@ import { Prisma, User } from "@prisma/client"
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;  users: User[],
-  onSetSkeletonTable: (isActive: boolean) => void;
-  onSetSkeletonHome: (isActive: boolean) => void;
-  onSetSkeletonMessage: (isActive: boolean) => void;
-  onSetSkeletonExpense: (isActive: boolean) => void;
-  onSetSkeletonRevenue: (isActive: boolean) => void;
-  onSetSkeletonCreate: (isActive: boolean) => void;
-  onSetSkeletonClient: (isActive: boolean) => void;
-  onSetSkeletonEnterprise: (isActive: boolean) => void;
-  onSetSkeletonCalendar: (isActive: boolean) => void;
 }
 
-export function AppSidebar({user, users, onSetSkeletonCalendar, onSetSkeletonTable, onSetSkeletonHome, onSetSkeletonMessage,onSetSkeletonExpense, onSetSkeletonRevenue, onSetSkeletonCreate, onSetSkeletonClient,  onSetSkeletonEnterprise, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -173,7 +163,7 @@ const data = !dataUserPage ? {
         <TeamSwitcher teams={dataUser.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} onSetSkeletonCalendar={onSetSkeletonCalendar} onSetSkeletonTable={onSetSkeletonTable} onSetSkeletonHome={onSetSkeletonHome} onSetSkeletonMessage={onSetSkeletonMessage} onSetSkeletonExpense={onSetSkeletonExpense} onSetSkeletonRevenue={onSetSkeletonRevenue} onSetSkeletonCreate={onSetSkeletonCreate} onSetSkeletonClient={onSetSkeletonClient} onSetSkeletonEnterprise={onSetSkeletonEnterprise}/>
+        <NavMain items={data.navMain}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} users={users}/>

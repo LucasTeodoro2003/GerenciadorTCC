@@ -1,5 +1,5 @@
-import { updateUser, updateUser2 } from "@/shared/lib/actionsUpdateUser";
-import { updateNameUser } from "@/shared/lib/updateUserExample copy";
+"use client"
+import { updateUser2 } from "@/shared/lib/actionsUpdateUser";
 import { Button } from "@/shared/ui/components/button";
 import {
   Dialog,
