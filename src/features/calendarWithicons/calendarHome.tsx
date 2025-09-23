@@ -36,8 +36,9 @@ import {
 } from "@/shared/ui/components/select";
 import { Trash2, Plus, X, Save } from "lucide-react";
 import { ScrollArea } from "@/shared/ui/components/scroll-area";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { updateServiceVehicle } from "@/shared/lib/actionUpdateServiceVehicle ";
+import { CircularProgress } from "@mui/material";
 
 export interface CalendarIconsProps {
   calendar: Prisma.UserGetPayload<{
@@ -61,7 +62,8 @@ export default function CalendarIcons({
   services,
   user,
 }: CalendarIconsProps) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isLoading, setIsLoading] = useState(false);
+  const [, setDate] = useState<Date | undefined>(new Date());
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [selectedServices, setSelectedServices] = useState<any[]>([]);
@@ -210,6 +212,7 @@ export default function CalendarIcons({
   };
 
   const handleSaveChanges = async () => {
+    setIsLoading(true);
     if (!selectedEvent) return;
     const serviceIds = selectedServices.map((service) => service.serviceId);
     const formData = new FormData();
@@ -233,18 +236,21 @@ export default function CalendarIcons({
       await updateServiceVehicle(formData);
       toast.success("Serviço atualizado com sucesso!");
       setEditMode(false);
+      setIsLoading(false);
     } catch (error) {
       toast.error("Erro ao salvar:");
+      setIsLoading(false);
       console.log("Error aqui: ", error);
     }
   };
 
   return (
     <div
-      className={`flex ${
-        editMode ? "w-full" : "w-full md:w-7/12"
-      } flex-col md:flex-row gap-4`}
+    className={`flex ${
+      editMode ? "w-full" : "w-full md:w-7/12"
+    } flex-col md:flex-row gap-4`}
     >
+      <Toaster richColors/>
       <Card
         className={`border shadow-md ${
           editMode ? "w-full md:w-8/12" : "w-full"
@@ -451,8 +457,8 @@ export default function CalendarIcons({
             <Button variant="outline" onClick={() => setEditMode(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveChanges}>
-              <Save className="h-4 w-4 mr-2" /> Salvar Alterações
+            <Button onClick={handleSaveChanges} disabled={isLoading}>
+              {isLoading ? (<>Salvando <CircularProgress size={20}/></>) :(<><Save className="h-4 w-4 mr-2" /> Salvar Alterações</>)}
             </Button>
           </CardFooter>
         </Card>

@@ -11,16 +11,20 @@ export default async function Page() {
   if (!userId) {
     redirect("/login");
   }
+
   const serviceVehicle = await db.serviceVehicle.findMany({
     include: { services: { include: { service: {} } } },
   });
+
   const services = await db.services.findMany();
+  
   const user = (await db.user.findUnique({
     where: { id: userId },
     include: {
       enterprise: {},
     },
   })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
+
   const vehicles = await db.vehicle.findMany({
     include: {
       user: {
@@ -32,7 +36,9 @@ export default async function Page() {
       serviceVehicle: {
         include: {
           services: {
-            include: {},
+            include: {
+              service:{}
+            },
           },
         },
       },

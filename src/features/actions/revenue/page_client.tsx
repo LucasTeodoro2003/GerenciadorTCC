@@ -23,7 +23,7 @@ export interface TableRevenueProps {
   serviceVehicles: Prisma.ServiceVehicleGetPayload<{include:{services:{include:{service:{}}}}}>[]
   revenue?: any[];
   user: User;
-  vehicles: Vehicle[];
+  vehicles: Prisma.VehicleGetPayload<{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}, user:{select:{id:true, name:true}}}}>[];
 }
 
 export type RevenueData = {

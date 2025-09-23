@@ -20,6 +20,7 @@ import { Badge } from "@/shared/ui/components/badge";
 import { EditRevenueModal } from "@/features/Modal/revenue/revenueEdit";
 import { deleteRevenue } from "@/shared/lib/actionDeleteRevenue";
 import { VehicleInfoModal } from "../../Modal/revenue/vehicleInfoModal";
+import { Prisma } from "@prisma/client";
 
 export type RevenueTable = {
   id: string;
@@ -31,26 +32,6 @@ export type RevenueTable = {
   vehicleInfo?: string;
 };
 
-type Vehicle = {
-  id: string;
-  color?: string | null;
-  type: string;
-  plate: string;
-  yearCar?: string | null;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  user?: {
-    id: string;
-    name: string | null;
-  } | null;
-  services?: {
-    id: string;
-    description?: string | null;
-    price: string;
-    date: string;
-    totalValue: string;
-  }[];
-};
 
 function getCategoryColor(category: string) {
   switch (category) {
@@ -71,7 +52,7 @@ function getCategoryColor(category: string) {
 
 export function getColumns(
   router: ReturnType<typeof useRouter>,
-  vehicles: Vehicle[]
+  vehicles: Prisma.VehicleGetPayload<{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}, user:{select:{id:true, name:true}}}}>[]
 ): ColumnDef<RevenueTable>[] {
   return [
     {
@@ -162,11 +143,13 @@ export function getColumns(
                 >
                   Ver Veículo
                 </Button>
+                {vehicle ? (
                 <VehicleInfoModal
                   open={modalOpen}
                   onOpenChange={setModalOpen}
-                  vehicle={vehicle || null}
-                />
+                  vehicle={vehicle}
+                  revenueid={revenue.id}
+                />): (<>Erro</>)}
               </div>
             ) : (
               <div>N/A</div>
