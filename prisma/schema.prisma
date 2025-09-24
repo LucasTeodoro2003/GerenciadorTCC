@@ -13,6 +13,7 @@ model Enterprise {
   name String
   image String
   users User[]
+  services Services[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,9 +110,11 @@ model Services {
   price          String
   description    String?
   serviceVehicle ServiceVehicleService[]
+  enterpriseId   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
 }
 
 model ServiceVehicle {

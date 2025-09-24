@@ -12,6 +12,7 @@ export async function createVehicle(formData: FormData) {
         color: formData.get("color")?.toString() || "",
         yearCar: formData.get("year")?.toString() || "",
         userId: formData.get("user")?.toString() || "",
+        model: formData.get("model")?.toString() || "",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

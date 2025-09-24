@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import { updateUser2 } from "@/shared/lib/actionsUpdateUser";
+import { updateUserNoImage } from "@/shared/lib/actionsUpdateUserNoImage";
 import { Button } from "@/shared/ui/components/button";
 import {
   Dialog,
@@ -23,25 +24,29 @@ interface ModalClientPromp {
 export default function ModalClient({
   openModal,
   user,
-  // setOpenPerfil,
-}: ModalClientPromp) {
+}: // setOpenPerfil,
+ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  try {
-    const formData = new FormData(e.currentTarget);
-    await updateUser2(user.id || "", formData);
-    // setOpenPerfil(false);
-    window.location.reload();
-  } catch (err) {
-    alert("Erro ao atualizar");
-  }
-  setIsSubmitting(false);
-  alert("Atualizado com sucesso")
-};
-  
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      if (formData.get("image") === "") {
+      await updateUserNoImage(user.id || "", formData);
+    } else {
+      await updateUser2(user.id || "", formData);
+    }
+      // setOpenPerfil(false);
+      window.location.reload();
+    } catch (err) {
+      alert("Erro ao atualizar");
+    }
+    setIsSubmitting(false);
+    alert("Atualizado com sucesso");
+  };
+
   return (
     <Dialog open={openModal}>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
@@ -57,7 +62,29 @@ export default function ModalClient({
             </div>
             <DialogDescription>Digite suas informações</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4 ">
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 items-center gap-4">
+              <div className="flex flex-col">
+                <Label htmlFor="email" className="text-center mb-1">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  defaultValue={user.email ? user.email : "ERRO"}
+                />
+              </div>
+              <div className="flex flex-col">
+                <Label htmlFor="phone" className="text-center mb-1">
+                  Telefone
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  defaultValue={user.phone ? user.phone : ""}
+                />
+              </div>
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-center">
                 Nome
@@ -69,30 +96,15 @@ export default function ModalClient({
                 defaultValue={user.name ? user.name : "ERRO"}
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-center">
-                Email
-              </Label>
-              <Input
-                id="email"
-                className="col-span-3"
-                name="email"
-                defaultValue={user.email ? user.email : "ERRO"}
-              />
-            </div>
             <div className="flex w-full items-center gap-1.5">
               <Label htmlFor="image" className="text-center">
                 Selecione Nova Foto
               </Label>
-              <div className="flex w-full items-center gap-1.5">
-                <Input id="image" type="file" name="image" />
-              </div>
+              <Input id="image" type="file" name="image" />
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="submit"
-            >
+            <Button type="submit">
               {isSubmitting ? "Atualizando..." : "Atualizar"}
             </Button>
           </DialogFooter>

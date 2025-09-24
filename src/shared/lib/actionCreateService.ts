@@ -9,6 +9,7 @@ export async function createService(formData: FormData) {
       data: {
         price: formData.get("price")?.toString() || "",
         description: formData.get("description")?.toString() || "",
+        enterpriseId: formData.get("enterpriseId")?.toString() || "",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

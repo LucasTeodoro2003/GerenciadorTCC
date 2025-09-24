@@ -14,8 +14,7 @@ import {
 } from "lucide-react";
 import { CreateRevenueModal } from "@/features/Modal/revenue/createRevenue";
 import { createRevenue } from "@/shared/lib/actionCreateRevenue";
-import { User } from "next-auth";
-import { Prisma, Services, ServiceVehicle, Vehicle, } from "@prisma/client";
+import { Prisma, Services, User } from "@prisma/client";
 import { decimalToNumber } from "@/shared/lib/decimalForNumber";
 
 export interface TableRevenueProps {
@@ -156,6 +155,7 @@ export default function TableRevenue({
       formData.append("description", revenueData.description);
       formData.append("category", revenueData.category);
       formData.append("source", revenueData.source);
+      formData.append("entepriseId", user.enterpriseId || "");
       const userId = user.id;
 
       await createRevenue(userId || "", formData);

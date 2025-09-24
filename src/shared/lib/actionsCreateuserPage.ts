@@ -28,6 +28,7 @@ const createUserPage = async (formData: FormData) => {
           email: validateData.email.toLocaleLowerCase(),
           password: hash,
           name: formData.get("name")?.toString() || "",
+          enterpriseId: formData.get("enterpriseId")?.toString() || "",
           permission: parseInt(formData.get("permission")?.toString() || "") || 3, //Usuario Normal 3 - Usuario Funcionario 2 - Usuario Administrador 1
         },
       });

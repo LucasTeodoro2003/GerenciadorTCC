@@ -16,7 +16,6 @@ export default async function Page() {
     include: { services: { include: { service: {} } } },
   });
 
-  const services = await db.services.findMany();
   
   const user = (await db.user.findUnique({
     where: { id: userId },
@@ -24,6 +23,12 @@ export default async function Page() {
       enterprise: {},
     },
   })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
+
+  const enterprise = user.enterpriseId;
+  
+  const services = await db.services.findMany({
+    where: {  enterpriseId: enterprise },
+  });
 
   const vehicles = await db.vehicle.findMany({
     include: {

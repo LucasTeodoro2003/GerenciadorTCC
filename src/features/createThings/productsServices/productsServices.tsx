@@ -61,8 +61,9 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
       }
       setIsSubmittingService(true);
       const formData = new FormData()
-      formData.append("price", servicePrice)
+      formData.append("price", servicePrice.replace(',', '.'))
       formData.append("description", serviceDescription)
+      formData.append("enterpriseId", users[0].enterpriseId || "")
       await createService(formData)
       toast.success("Serviço cadastrado com sucesso!")
       setServicePrice("")

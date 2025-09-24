@@ -31,6 +31,7 @@ import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
+import { CircularProgress } from "@mui/material";
 
 export interface CreateServiceVehiclePageProps {
   disableDate: ServiceVehicle[];
@@ -55,6 +56,7 @@ export default function CreateServiceVehiclePage({
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
   const [openUserCombobox, setOpenUserCombobox] = useState(false);
   const [openServiceCombobox, setOpenServiceCombobox] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const userVehicles = selectedUserId
     ? users.find((user) => user.id === selectedUserId)?.vehicle || []
@@ -106,13 +108,18 @@ export default function CreateServiceVehiclePage({
     };
   }, [disableDate, maxCarDay, maxCarHour]);
 
-  const isHourDisabled = (hour: number): boolean => {
-    if (!date) return true;
-    const dayKey = format(date, "yyyy-MM-dd");
-    return disabledHours.get(dayKey)?.has(hour) || false;
-  };
+const isHourDisabled = (hour: number): boolean => {
+  if (!date) return true;
+  const dayKey = format(date, "yyyy-MM-dd");
+  const adjustedHour = hour - 3;
+  if (adjustedHour < 0) return false;
+
+  return disabledHours.get(dayKey)?.has(adjustedHour) || false;
+};
+
 
   const handleSend = async () => {
+    setIsLoading(false);
     if (
       !date ||
       selectedHour === null ||
@@ -156,9 +163,11 @@ export default function CreateServiceVehiclePage({
       setSelectedUserId("");
       setSelectedVehicleId("");
       setSelectedServiceIds([]);
+      setIsLoading(true);
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
       toast.error("Erro ao criar agendamento. Tente novamente.");
+      setIsLoading(true);
     }
   };
 
@@ -391,8 +400,8 @@ export default function CreateServiceVehiclePage({
             )}
           </div>
 
-          <Button className="w-full mt-4" onClick={handleSend}>
-            ENVIAR
+          <Button className="w-full mt-4" onClick={handleSend} disabled={!isLoading}>
+            {!isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "ENVIAR"}
           </Button>
         </div>
       </div>

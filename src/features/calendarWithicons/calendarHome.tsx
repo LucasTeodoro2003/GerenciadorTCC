@@ -297,6 +297,7 @@ export default function CalendarIcons({
             themeSystem="standard"
             dayHeaderClassNames="!text-foreground dark:!text-foreground font-medium p-2"
             dayCellClassNames="!text-foreground dark:!text-foreground"
+            eventClassNames="hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
           />
         </CardContent>
       </Card>

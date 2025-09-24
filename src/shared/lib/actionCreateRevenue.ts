@@ -12,6 +12,7 @@ export async function createRevenue(userId: string, formData: FormData) {
         description: formData.get("description")?.toString() || "",
         category: formData.get("category")?.toString() || "",
         source: formData.get("source")?.toString() || "",
+        
         userId: userId,
         
         createdAt: new Date(),

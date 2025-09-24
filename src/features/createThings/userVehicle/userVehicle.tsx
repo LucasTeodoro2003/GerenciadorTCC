@@ -72,6 +72,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       userFormData.append("password", "123456789")
       userFormData.append("permission", userPermission.toString())
       userFormData.append("name", userName)
+      userFormData.append("enterpriseId", users[0].enterpriseId || "")
       if (userPhone) {
         userFormData.append("phone", userPhone)
       }
@@ -175,6 +176,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       formDate.append("color", vehicleColor)
       formDate.append("year", vehicleYear)
       formDate.append("user", vehicleOwner)
+      formDate.append("model", vehicleModel)
       await createVehicle(formDate)      
       toast.success("Veículo cadastrado com sucesso!")
       setVehicleOwner("")

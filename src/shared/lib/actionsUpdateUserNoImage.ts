@@ -15,16 +15,14 @@ export async function updateUser(userId: string, newPermission: number) {
 }
 
 import { revalidatePath } from "next/cache";
-import { fileToBase64 } from "./convertImage";
 
-export async function updateUser2(userId: string, formData: FormData) {
+export async function updateUserNoImage(userId: string, formData: FormData) {
   try {
     await db.user.update({
       where: { id: userId },
       data: {
-        emailVerified: new Date() || "",
-        name: formData.get("name")?.toString() || "",
-        image: await fileToBase64(formData.get("image") as File) || "",
+        emailVerified: new Date(),
+        name: formData.get("name")?.toString(),
         updatedAt: new Date()
       },
     });

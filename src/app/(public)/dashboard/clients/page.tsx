@@ -9,7 +9,12 @@ export default async function Page() {
   if (!userId) {
     redirect("/login");
   }
+  const user = await db.user.findUnique({
+    where: { id: userId },
+  });
+  const enterpriseId = user?.enterpriseId || "";
   const users = await db.user.findMany({
+    where: {enterpriseId: enterpriseId},
     include: {
       vehicle: {
         include: {
