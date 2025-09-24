@@ -177,6 +177,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       formDate.append("year", vehicleYear)
       formDate.append("user", vehicleOwner)
       formDate.append("model", vehicleModel)
+      formDate.append("enterpriseId", users[0].enterpriseId || "")
       await createVehicle(formDate)      
       toast.success("Veículo cadastrado com sucesso!")
       setVehicleOwner("")

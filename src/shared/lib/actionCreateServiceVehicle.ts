@@ -12,6 +12,7 @@ export async function createServiceVehicle(formData: FormData) {
         dateTime: new Date(formData.get("dateTime")?.toString() || new Date().toISOString()),
         totalValue: formData.get("totalValue")?.toString() || "",
         vehicleId: formData.get("vehicleId")?.toString() || "",
+        enterpriseId: formData.get("enterpriseId")?.toString() || "",
         services: {
           create: serviceIds.map((serviceId: string) => ({
             service: {

@@ -13,6 +13,7 @@ export async function createVehicle(formData: FormData) {
         yearCar: formData.get("year")?.toString() || "",
         userId: formData.get("user")?.toString() || "",
         model: formData.get("model")?.toString() || "",
+        enterpriseId: formData.get("enterpriseId")?.toString() || "",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

@@ -148,6 +148,7 @@ const isHourDisabled = (hour: number): boolean => {
       formData.append("dateTime", formattedDate.toISOString());
       formData.append("totalValue", totalValue.toFixed(2));
       formData.append("serviceIds", JSON.stringify(selectedServiceIds));
+      formData.append("enterpriseId", users[0].enterpriseId || "");
 
       await createServiceVehicle(formData);
 
