@@ -33,7 +33,7 @@ export default async function Page() {
       },
     },
   });
-  const services = await db.services.findMany();
+  const services = await db.services.findMany({where:{enterpriseId:enterprise}});
 
   return (
     <CalendarPageClient calendar={calendar} services={services} user={user} />

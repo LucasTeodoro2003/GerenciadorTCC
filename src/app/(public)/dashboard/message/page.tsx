@@ -10,7 +10,16 @@ export default async function Page() {
   if (!userId) {
     redirect("/login");
   }
+    const user = (await db.user.findUnique({
+    where: { id: userId },
+    include: {
+      enterprise: {},
+    },
+  })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
+const enterprise = user.enterpriseId
+
   const service = await db.serviceVehicleService.findMany({
+    where: {service:{enterpriseId:enterprise}},
     include: {
       service: {},
       serviceVehicle: {
@@ -34,12 +43,6 @@ export default async function Page() {
       },
     },
   });
-  const user = (await db.user.findUnique({
-    where: { id: userId },
-    include: {
-      enterprise: {},
-    },
-  })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
 
   return <MessagePageClient serviceTableMessage={service} user={user} />;
 }

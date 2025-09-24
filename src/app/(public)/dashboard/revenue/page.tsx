@@ -1,6 +1,5 @@
 import { auth } from "@/shared/lib/auth";
 import { redirect } from "next/navigation";
-import ExpensePageClient from "../expense/page_client";
 import RevenuePageClient from "./page_client";
 import db from "@/shared/lib/prisma";
 import { Prisma } from "@prisma/client";
@@ -11,26 +10,25 @@ export default async function Page() {
   if (!userId) {
     redirect("/login");
   }
-
-  const serviceVehicle = await db.serviceVehicle.findMany({
-    include: { services: { include: { service: {} } } },
-  });
-
-  
-  const user = (await db.user.findUnique({
+    const user = (await db.user.findUnique({
     where: { id: userId },
     include: {
       enterprise: {},
     },
   })) as Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
-
   const enterprise = user.enterpriseId;
+
+  const serviceVehicle = await db.serviceVehicle.findMany({where:{enterpriseId: enterprise},
+    include: { services: { include: { service: {} } } },
+  });
+
   
   const services = await db.services.findMany({
     where: {  enterpriseId: enterprise },
   });
 
   const vehicles = await db.vehicle.findMany({
+    where: {enterpriseId: enterprise},
     include: {
       user: {
         select: {

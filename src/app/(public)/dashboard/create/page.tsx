@@ -9,8 +9,13 @@ export default async function Page(){
       if (!userId) {
         redirect("/login");
       }
-  const dateDisable = await db.serviceVehicle.findMany();
+  const user = await db.user.findUnique({
+    where: {id: userId}
+  })
+  const enterprise = user?.enterpriseId
+  const dateDisable = await db.serviceVehicle.findMany({where:{enterpriseId:enterprise}});
   const users = await db.user.findMany({
+    where: {enterpriseId: enterprise},
     include: {
       vehicle: {
         include: {

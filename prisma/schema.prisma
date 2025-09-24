@@ -14,6 +14,8 @@ model Enterprise {
   image String
   users User[]
   services Services[]
+  serviceVehicle ServiceVehicle[] 
+  vehicle Vehicle[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -98,11 +100,13 @@ model Vehicle {
   plate          String
   yearCar        String?
   serviceVehicle ServiceVehicle[]
+  enterpriseId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
 }
 
 model Services {
@@ -125,11 +129,14 @@ model ServiceVehicle {
   discounts  String?
   addValue   String?
   services   ServiceVehicleService[]
+  enterpriseId String?
 
   vehicle    Vehicle                @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime               @default(now())
   updatedAt  DateTime               @updatedAt
   obs        String?
+
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
 }
 
 model ServiceVehicleService {
