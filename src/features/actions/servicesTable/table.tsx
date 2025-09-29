@@ -29,6 +29,9 @@ import {
 import { Services } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
+import { deleteService } from "@/shared/lib/actionDeleteService";
+import { toast } from "sonner";
+import { CircularProgress } from "@mui/material";
 
 export const columns: ColumnDef<Services>[] = [
   {
@@ -47,21 +50,64 @@ export const columns: ColumnDef<Services>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("description")}</div>,
   },
   {
+    accessorKey: "price",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Valor do Serviço
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("price")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const service = row.original
+      
+      const router = useRouter();
+      const [loading, setLoading] = React.useState(false);
+      const handleSubmitService = async () => {
+          router.push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)
+      };
+      const handleDeleteService = async () => {
+        try {
+          setLoading(true);
+          await deleteService(service.id);
+
+          toast.success("Serviço excluído com sucesso!");
+          router.refresh();
+        } catch (error) {
+          console.error(error);
+          toast.error("Erro ao excluir o serviço.");
+        } finally {
+          setLoading(false);
+        }
+      };
 
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => useRouter().push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)}>
+      <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmitService()}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar
       </Button>
 
-      <Button variant="destructive" className="h-8 px-3" onClick={()=>{deleteProduct(service.id)}}>
-        <DeleteIcon fontSize="small" className="mr-2" />
-        Excluir
+      <Button variant="destructive" className="h-8 px-3" onClick={() => handleDeleteService() } disabled={loading}>
+                    {!loading ? (
+              <>
+                <DeleteIcon fontSize="small" className="mr-2" />
+                Excluir{" "}
+              </>
+            ) : (
+              <>
+                "Excluindo... " <CircularProgress size={20} />
+              </>
+            )}
       </Button>
     </div>
   )

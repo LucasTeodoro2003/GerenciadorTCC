@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,12 +12,12 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table"
-import { ArrowUpDown} from "lucide-react"
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from "@/shared/ui/components/button"
-import { Input } from "@/shared/ui/components/input"
+} from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button } from "@/shared/ui/components/button";
+import { Input } from "@/shared/ui/components/input";
 import {
   Table,
   TableBody,
@@ -25,12 +25,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/components/table"
-import { Products } from "@prisma/client"
+} from "@/shared/ui/components/table";
+import { Products } from "@prisma/client";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CircularProgress } from "@mui/material";
+import { Toaster } from "@/shared/ui/components/sonner";
 
 export const columns: ColumnDef<Products>[] = [
   {
@@ -44,9 +45,11 @@ export const columns: ColumnDef<Products>[] = [
           Produto
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("description")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("description")}</div>
+    ),
   },
   {
     accessorKey: "amount",
@@ -60,18 +63,12 @@ export const columns: ColumnDef<Products>[] = [
           Quantidade Estoque
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(amount)
-
-      return <div className="text-center font-medium">{formatted}</div>
+      return <div className="text-center font-medium">{amount} unidades</div>;
     },
   },
   {
@@ -85,79 +82,88 @@ export const columns: ColumnDef<Products>[] = [
           Quantidade Minima Alerta
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("minAmout")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("minAmout")}</div>
+    ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const products = row.original
+      const products = row.original;
 
-      const router = useRouter()
-      const [loading, setLoading] = React.useState(false)
+      const router = useRouter();
+      const [loading, setLoading] = React.useState(false);
       const handleSubmit = async () => {
-      router.push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)
-      }
+        router.push(
+          `/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`
+        );
+      };
 
-            const handleDelete = async () => {
+      const handleDelete = async () => {
         try {
-          setLoading(true)
-          await deleteProduct(products.id)
+          setLoading(true);
+          await deleteProduct(products.id);
 
-          toast.success("Produto excluído com sucesso!")
-          router.refresh()
+          toast.success("Produto excluído com sucesso!");
+          router.refresh();
         } catch (error) {
-          console.error(error)
-          toast.error("Erro ao excluir o produto.")
+          console.error(error);
+          toast.error("Erro ao excluir o produto.");
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }
+      };
 
-  return (
-    <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmit()}>
-        <EditIcon fontSize="small" className="mr-2" />
-        Editar
-      </Button>
+      return (
+        <div className="flex space-x-2">
+          <Toaster richColors position="top-right" />
+          <Button
+            variant="outline"
+            className="h-8 px-3"
+            onClick={() => handleSubmit()}
+          >
+            <EditIcon fontSize="small" className="mr-2" />
+            Editar
+          </Button>
 
-      <Button variant="destructive" className="h-8 px-3" onClick={() => handleDelete() } disabled={loading}>
-        {!loading? (<><DeleteIcon fontSize="small" className="mr-2" />
-        Excluir </>) :
-        (<>
-        "Excluindo... " <CircularProgress size={20} />
-        </>)}
-      </Button>
-    </div>
-  )
+          <Button
+            variant="destructive"
+            className="h-8 px-3"
+            onClick={() => handleDelete()}
+            disabled={loading}
+          >
+            {!loading ? (
+              <>
+                <DeleteIcon fontSize="small" className="mr-2" />
+                Excluir{" "}
+              </>
+            ) : (
+              <>
+                "Excluindo... " <CircularProgress size={20} />
+              </>
+            )}
+          </Button>
+        </div>
+      );
     },
   },
-]
-
-
-
-
-
-
-
-
-
+];
 
 interface DataTableDemoProps {
-products: Products[]
+  products: Products[];
 }
 
-
-export function DataTableDemo({products}: DataTableDemoProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function DataTableDemo({ products }: DataTableDemoProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data: products,
@@ -176,26 +182,24 @@ export function DataTableDemo({products}: DataTableDemoProps) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <Toaster richColors position="top-right" />
         <Input
           placeholder="Pesquisar produto..."
-          value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
-          onChange={(event:any) =>
+          value={
+            (table.getColumn("description")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event: any) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
       </div>
       <div className="overflow-hidden rounded-md border">
-
-
-
-
-
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -210,7 +214,7 @@ export function DataTableDemo({products}: DataTableDemoProps) {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -244,11 +248,6 @@ export function DataTableDemo({products}: DataTableDemoProps) {
             )}
           </TableBody>
         </Table>
-
-
-
-
-
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
@@ -271,5 +270,5 @@ export function DataTableDemo({products}: DataTableDemoProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

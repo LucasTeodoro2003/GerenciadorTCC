@@ -31,9 +31,7 @@ import { createExpense } from "@/shared/lib/actionCreateExpense"
 import { createProduct } from "@/shared/lib/actionCreateProduct"
 import { CircularProgress } from "@mui/material"
 import { useSearchParams } from "next/navigation"
-import { on } from "events"
 import { edityProduct } from "@/shared/lib/actionUpdateProduct"
-import { updateExpense } from "@/shared/lib/actionUpdateExpense"
 
 interface CreateServiceProps{
     users: User[]
@@ -216,14 +214,16 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
         isSubmittingProduct || 
         !productPrice || 
         !productDescription || 
-        !productAmount || 
+        !productAmount ||
+        !productMinAmount ||
         (productAsExpense && (!expenseUser || !expenseDate))
       }
     >
-      {isSubmittingProduct ? 
-        <CircularProgress size={20} /> : 
-        `Cadastrar Produto${productAsExpense ? " e Registrar Despesa" : ""}`
-      }
+      {isSubmittingProduct ? (
+        typeTable ? "Editando Produto..." : "Cadastrando Produto..."
+      ) : (
+        typeTable ? `Editar Produto${productAsExpense ? " e Registrar Despesa" : ""}` : `Cadastrar Produto${productAsExpense ? " e Registrar Despesa" : ""}`
+      )}
     </Button>
   );
 

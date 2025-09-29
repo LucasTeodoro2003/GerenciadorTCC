@@ -401,8 +401,8 @@ const isHourDisabled = (hour: number): boolean => {
             )}
           </div>
 
-          <Button className="w-full mt-4" onClick={handleSend} disabled={!isLoading}>
-            {!isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "ENVIAR"}
+          <Button className="w-full mt-4" onClick={handleSend} disabled={isLoading}>
+            {isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "ENVIAR"}
           </Button>
         </div>
       </div>
