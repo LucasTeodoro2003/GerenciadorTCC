@@ -26,12 +26,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/components/table"
-import { Products } from "@prisma/client"
+import { Products, Services } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
 const router = useRouter()
 
-export const columns: ColumnDef<Products>[] = [
+export const columns: ColumnDef<Services>[] = [
   {
     accessorKey: "description",
     header: ({ column }) => {
@@ -48,60 +48,19 @@ export const columns: ColumnDef<Products>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("description")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-center"
-        >
-          Quantidade Estoque
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(amount)
-
-      return <div className="text-center font-medium">{formatted}</div>
-    },
-  },
-  {
-    accessorKey: "minAmount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Quantidade Minima Alerta
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("minAmount")}</div>,
-  },
-  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const products = row.original
+      const service = row.original
 
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => router.push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)}>
+      <Button variant="outline" className="h-8 px-3" onClick={() => router.push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar
       </Button>
 
-      <Button variant="destructive" className="h-8 px-3" onClick={()=>{deleteProduct(products.id)}}>
+      <Button variant="destructive" className="h-8 px-3" onClick={()=>{deleteProduct(service.id)}}>
         <DeleteIcon fontSize="small" className="mr-2" />
         Excluir
       </Button>
@@ -121,11 +80,11 @@ export const columns: ColumnDef<Products>[] = [
 
 
 interface DataTableDemoProps {
-products: Products[]
+services: Services[]
 }
 
 
-export function DataTableDemo({products}: DataTableDemoProps) {
+export function DataTableDemoServices({services}: DataTableDemoProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -135,7 +94,7 @@ export function DataTableDemo({products}: DataTableDemoProps) {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: products,
+    data: services,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

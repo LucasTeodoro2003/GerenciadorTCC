@@ -14,9 +14,9 @@ export default async function Page() {
     where: { id: userId },
   });
   const enterpriseId = user?.enterpriseId || "";
-  const products = await db.products.findMany({
+  const services = await db.services.findMany({
     where: { enterpriseId: enterpriseId },
   });
 
-  return <TableProdutctPage products={products} />;
+  return <TableProdutctPage services={services} />;
 }

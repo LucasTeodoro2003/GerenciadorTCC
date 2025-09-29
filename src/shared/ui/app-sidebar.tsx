@@ -122,6 +122,14 @@ const data = !dataUserPage ? {
           title: "Finalizar Serviços",
           page: "message",
         },
+                {
+          title: "Produtos",
+          page: "tableProducts",
+        },
+                {
+          title: "Serviços",
+          page: "tableServices",
+        },
       ],
     },
     {

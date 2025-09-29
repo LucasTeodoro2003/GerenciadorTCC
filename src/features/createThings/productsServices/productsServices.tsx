@@ -31,6 +31,9 @@ import { createExpense } from "@/shared/lib/actionCreateExpense"
 import { createProduct } from "@/shared/lib/actionCreateProduct"
 import { CircularProgress } from "@mui/material"
 import { useSearchParams } from "next/navigation"
+import { on } from "events"
+import { edityProduct } from "@/shared/lib/actionUpdateProduct"
+import { updateExpense } from "@/shared/lib/actionUpdateExpense"
 
 interface CreateServiceProps{
     users: User[]
@@ -77,7 +80,30 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
       setIsSubmittingService(false);
     }
   }
-
+  
+  const handleEdityService = async () => {
+    try {
+      if (!servicePrice || !serviceDescription) {
+        toast.error("Preencha todos os campos obrigatórios");
+        return
+      }
+      setIsSubmittingService(true);
+      const formData = new FormData()
+      formData.append("idservice", params.get("id") || "")
+      formData.append("price", servicePrice.replace(',', '.'))
+      formData.append("description", serviceDescription)
+      formData.append("enterpriseId", users[0].enterpriseId || "")
+      await createService(formData)
+      toast.success("Serviço atualizado com sucesso!")
+      setServicePrice("")
+      setServiceDescription("")
+    } catch (error) {
+      console.error("Erro ao editar serviço:", error)
+      toast.error("Ocorreu um erro ao editar o serviço")
+    } finally {
+      setIsSubmittingService(false);
+    }
+  }
 
   const handleCreateProduct = async () => {
     try {
@@ -133,10 +159,47 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
     }
   };
 
+  const handleEdityProduct = async () => {
+    try {
+      if (!productPrice || !productDescription || !productAmount) {
+        toast.error("Preencha todos os campos obrigatórios");
+        return;
+      }
+      setIsSubmittingProduct(true);
+      const formDate = new FormData();
+      formDate.append("idproduct", params.get("id") || "");
+      formDate.append("price", productPrice);
+      formDate.append("description", productDescription);
+      formDate.append("amount", productAmount);
+      formDate.append("enterpriseId", users[0].enterpriseId || "");
+      if (productMinAmount) {
+        formDate.append("minAmount", productMinAmount);
+      }
+      await edityProduct(formDate);
+
+      toast.success(`Produto cadastrado com sucesso!`);
+      setProductPrice("");
+      setProductDescription("");
+      setProductAmount("");
+      setProductMinAmount("");
+      setProductAsExpense(false);
+      setExpenseDate(new Date());
+      setExpenseCategory("Produtos");
+      setExpensePaymentMethod("Dinheiro");
+      setExpenseStatus("Pago");
+      setExpenseUser("");
+    } catch (error) {
+      console.error("Erro ao criar produto:", error);
+      toast.error("Ocorreu um erro ao cadastrar o produto");
+    } finally {
+      setIsSubmittingProduct(false);
+    }
+  };
+
   const ServiceSubmitButton = () => (
     <Button 
       className="w-full flex items-center justify-center" 
-      onClick={handleCreateService}
+      onClick={typeTable ?  handleEdityService : handleCreateService}
       disabled={isSubmittingService || !servicePrice || !serviceDescription}
     >
       {isSubmittingService ? <CircularProgress size={20} /> : "Cadastrar Serviço"}
@@ -144,8 +207,8 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
   );
   const ProductSubmitButton = () => (
     <Button 
-      className="w-full flex items-center justify-center" 
-      onClick={handleCreateProduct}
+      className="w-full flex items-center justify-center"
+      onClick={params.get("description") ? handleCreateProduct : handleEdityProduct}
       disabled={
         isSubmittingProduct || 
         !productPrice || 
@@ -204,7 +267,7 @@ const typeTable = params.get("description") ? true : false
             <CardHeader>
               <CardTitle>{typeTable ? "Editar Serviço" : "Cadastrar Serviço"}</CardTitle>
               <CardDescription>
-                Preencha os dados para cadastrar um novo tipo de serviço.
+                Preencha os dados para {typeTable ? "editar um serviço" : "cadastrar um novo tipo de serviço"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -303,7 +366,9 @@ const typeTable = params.get("description") ? true : false
                   </div>
                 </div>
               </div>
-              
+              {typeTable ? (
+
+
               <div className="border-t pt-4">
                 <div className="flex items-center space-x-2 mb-4">
                   <input
@@ -468,6 +533,7 @@ const typeTable = params.get("description") ? true : false
                   </div>
                 )}
               </div>
+              ) : (<></>)}
             </CardContent>
             <CardFooter>
               <ProductSubmitButton />

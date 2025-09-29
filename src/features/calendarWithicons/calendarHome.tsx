@@ -195,6 +195,10 @@ export default function CalendarIcons({
   };
 
   const handleRemoveService = (index: number) => {
+      if (selectedServices.length === 1) {
+    toast.error("O serviço não pode ficar sem pelo menos um item.");
+    return;
+  }
     const updatedServices = [...selectedServices];
     updatedServices.splice(index, 1);
     setSelectedServices(updatedServices);
@@ -458,8 +462,8 @@ export default function CalendarIcons({
             <Button variant="outline" onClick={() => setEditMode(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveChanges} disabled={isLoading}>
-              {isLoading ? (<>Salvando <CircularProgress size={20}/></>) :(<><Save className="h-4 w-4 mr-2" /> Salvar Alterações</>)}
+            <Button onClick={handleSaveChanges} disabled={!isLoading}>
+              {!isLoading ? (<><Save className="h-4 w-4 mr-2" /> Salvar Alterações</>) : (<>Salvando <CircularProgress size={20}/></>)}
             </Button>
           </CardFooter>
         </Card>
