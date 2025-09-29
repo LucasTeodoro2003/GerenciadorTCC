@@ -29,9 +29,9 @@ import {
 import { Products } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
-const router = useRouter()
 
 export const columns: ColumnDef<Products>[] = [
+
   {
     accessorKey: "description",
     header: ({ column }) => {
@@ -96,7 +96,7 @@ export const columns: ColumnDef<Products>[] = [
 
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => router.push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)}>
+      <Button variant="outline" className="h-8 px-3" onClick={() => useRouter().push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar
       </Button>

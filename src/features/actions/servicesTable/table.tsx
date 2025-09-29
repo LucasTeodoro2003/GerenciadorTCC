@@ -26,10 +26,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/components/table"
-import { Products, Services } from "@prisma/client"
+import { Services } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
-const router = useRouter()
 
 export const columns: ColumnDef<Services>[] = [
   {
@@ -55,7 +54,7 @@ export const columns: ColumnDef<Services>[] = [
 
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => router.push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)}>
+      <Button variant="outline" className="h-8 px-3" onClick={() => useRouter().push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar
       </Button>
