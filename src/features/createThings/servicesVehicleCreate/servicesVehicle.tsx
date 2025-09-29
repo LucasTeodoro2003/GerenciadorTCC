@@ -71,9 +71,8 @@ export default function CreateServiceVehiclePage({
       .filter((e) => e.dateTime)
       .map((e) => {
         try {
-          const date = new Date(e.dateTime as any);
-          date.setHours(date.getHours() + 3);
-          return date;
+          // Não ajusta +3, usa a data como está no banco
+          return new Date(e.dateTime as any);
         } catch (error) {
           return null;
         }
@@ -88,6 +87,7 @@ export default function CreateServiceVehiclePage({
       const dayKey = format(dateTime, "yyyy-MM-dd");
       const hour = dateTime.getHours();
       const hourKey = `${dayKey} ${hour}`;
+
       dayCounter.set(dayKey, (dayCounter.get(dayKey) || 0) + 1);
       hourCounter.set(hourKey, (hourCounter.get(hourKey) || 0) + 1);
 
@@ -101,25 +101,27 @@ export default function CreateServiceVehiclePage({
 
     const disabledDays = Array.from(dayCounter.entries())
       .filter(([_, count]) => count >= maxCarDay)
-      .map(([dayKey]) => new Date(dayKey));
+      .map(([dayKey]) => {
+        const [year, month, day] = dayKey.split("-").map(Number);
+        return new Date(year, month - 1, day);
+      });
+
     return {
       disabledDays,
       disabledHours: disabledHoursMap,
     };
   }, [disableDate, maxCarDay, maxCarHour]);
 
-const isHourDisabled = (hour: number): boolean => {
-  if (!date) return true;
-  const dayKey = format(date, "yyyy-MM-dd");
-  const adjustedHour = hour - 3;
-  if (adjustedHour < 0) return false;
+  const isHourDisabled = (hour: number): boolean => {
+    if (!date) return true;
+    const dayKey = format(date, "yyyy-MM-dd");
+    return disabledHours.get(dayKey)?.has(hour) || false;
+  };
 
-  return disabledHours.get(dayKey)?.has(adjustedHour) || false;
-};
 
 
   const handleSend = async () => {
-    setIsLoading(false);
+    setIsLoading(true);
     if (
       !date ||
       selectedHour === null ||
@@ -164,11 +166,11 @@ const isHourDisabled = (hour: number): boolean => {
       setSelectedUserId("");
       setSelectedVehicleId("");
       setSelectedServiceIds([]);
-      setIsLoading(true);
+      setIsLoading(false);
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
       toast.error("Erro ao criar agendamento. Tente novamente.");
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 
