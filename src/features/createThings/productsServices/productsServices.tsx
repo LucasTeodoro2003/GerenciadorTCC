@@ -199,7 +199,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
   const ServiceSubmitButton = () => (
     <Button 
       className="w-full flex items-center justify-center" 
-      onClick={typeTable ? handleCreateService : handleEdityService}
+      onClick={!typeTable ? handleCreateService : handleEdityService}
       disabled={isSubmittingService || !servicePrice || !serviceDescription}
     >
       {isSubmittingService ? <CircularProgress size={20} /> : "Cadastrar Serviço"}
@@ -208,7 +208,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
   const ProductSubmitButton = () => (
     <Button 
       className="w-full flex items-center justify-center"
-      onClick={typeTable ? handleCreateProduct : handleEdityProduct}
+      onClick={!typeTable ? handleCreateProduct : handleEdityProduct}
       disabled={
         isSubmittingProduct || 
         !productPrice || 
@@ -366,7 +366,7 @@ const typeTable = params.get("description") ? true : false
                   </div>
                 </div>
               </div>
-              {typeTable ? (
+              {!typeTable ? (
 
 
               <div className="border-t pt-4">
