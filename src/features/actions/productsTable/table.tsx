@@ -27,11 +27,12 @@ import {
   TableRow,
 } from "@/shared/ui/components/table"
 import { Products } from "@prisma/client"
-import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { CircularProgress } from "@mui/material";
 
 export const columns: ColumnDef<Products>[] = [
-
   {
     accessorKey: "description",
     header: ({ column }) => {
@@ -86,7 +87,7 @@ export const columns: ColumnDef<Products>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("minAmount")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("minAmout")}</div>,
   },
   {
     id: "actions",
@@ -94,16 +95,40 @@ export const columns: ColumnDef<Products>[] = [
     cell: ({ row }) => {
       const products = row.original
 
+      const router = useRouter()
+      const [loading, setLoading] = React.useState(false)
+      const handleSubmit = async () => {
+      router.push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)
+      }
+
+            const handleDelete = async () => {
+        try {
+          setLoading(true)
+          await deleteProduct(products.id)
+
+          toast.success("Produto excluído com sucesso!")
+          router.refresh()
+        } catch (error) {
+          console.error(error)
+          toast.error("Erro ao excluir o produto.")
+        } finally {
+          setLoading(false)
+        }
+      }
+
   return (
     <div className="flex space-x-2">
-      <Button variant="outline" className="h-8 px-3" onClick={() => useRouter().push(`/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`)}>
+      <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmit()}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar
       </Button>
 
-      <Button variant="destructive" className="h-8 px-3" onClick={()=>{deleteProduct(products.id)}}>
-        <DeleteIcon fontSize="small" className="mr-2" />
-        Excluir
+      <Button variant="destructive" className="h-8 px-3" onClick={() => handleDelete() } disabled={loading}>
+        {loading? (<><DeleteIcon fontSize="small" className="mr-2" />
+        Excluir </>) :
+        (<>
+        "Excluindo... " <CircularProgress size={20} />
+        </>)}
       </Button>
     </div>
   )
