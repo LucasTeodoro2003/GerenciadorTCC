@@ -75,7 +75,7 @@ export const columns: ColumnDef<Products>[] = [
     },
   },
   {
-    accessorKey: "minAmount",
+    accessorKey: "minAmout",
     header: ({ column }) => {
       return (
         <Button
@@ -124,7 +124,7 @@ export const columns: ColumnDef<Products>[] = [
       </Button>
 
       <Button variant="destructive" className="h-8 px-3" onClick={() => handleDelete() } disabled={loading}>
-        {loading? (<><DeleteIcon fontSize="small" className="mr-2" />
+        {!loading? (<><DeleteIcon fontSize="small" className="mr-2" />
         Excluir </>) :
         (<>
         "Excluindo... " <CircularProgress size={20} />
