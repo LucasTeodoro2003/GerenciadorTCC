@@ -33,11 +33,13 @@ ModalClientPromp) {
     setIsSubmitting(true);
     try {
       const formData = new FormData(e.currentTarget);
-      if (formData.get("image") === "") {
-      await updateUserNoImage(user.id || "", formData);
-    } else {
-      await updateUser2(user.id || "", formData);
-    }
+      const file = formData.get("image");
+
+      if (!file || (file instanceof File && file.size === 0)) {
+        await updateUserNoImage(user.id || "", formData);
+      } else {
+        await updateUser2(user.id || "", formData);
+      }
       // setOpenPerfil(false);
       window.location.reload();
     } catch (err) {

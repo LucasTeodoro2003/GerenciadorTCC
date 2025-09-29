@@ -21,12 +21,14 @@ export async function updateUserNoImage(userId: string, formData: FormData) {
     await db.user.update({
       where: { id: userId },
       data: {
+        email: formData.get("email")?.toString() || "",
+        phone: formData.get("phone")?.toString() || "",
+        name: formData.get("name")?.toString() || "",
         emailVerified: new Date(),
-        name: formData.get("name")?.toString(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
     });
-    revalidatePath('/')
+    revalidatePath("/");
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);
     throw new Error("Falha ao atualizar o usuário.");
