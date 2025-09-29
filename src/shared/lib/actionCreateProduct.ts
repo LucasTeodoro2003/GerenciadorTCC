@@ -11,6 +11,7 @@ export async function createProduct(formData: FormData) {
         description: formData.get("description")?.toString() || "",
         price: formData.get("price")?.toString() || "",
         minAmout: formData.get("minAmount")?.toString() || "",
+        enterpriseId: formData.get("enterpriseId")?.toString() || "",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

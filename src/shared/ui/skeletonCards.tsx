@@ -138,6 +138,32 @@ export function SkeletonExpense() {
   )
 }
 
+export function SkeletonTableProducts() {
+  return (
+    <div className="flex flex-col space-y-3 w-full h-full">
+      <Skeleton className="h-[80px] w-full rounded-xl" />
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-[99%]" />
+        <Skeleton className="h-8 w-[80%]" />
+        <Skeleton className="h-8 w-[65%]" />
+        <Skeleton className="h-8 w-[97%]" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-[91%]" />
+        <Skeleton className="h-8 w-[98%]" />
+        <Skeleton className="h-8 w-[84%]" />
+        <Skeleton className="h-8 w-[50%]" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-[75%]" />
+        <Skeleton className="h-8 w-[90%]" />
+        <Skeleton className="h-8 w-[85%]" />
+        <Skeleton className="h-8 w-[99%]" />
+      </div>
+    </div>
+  )
+}
+
 export function SkeletonCalendar() {
   return (
     <div className="flex flex-col space-y-3 w-full h-full">

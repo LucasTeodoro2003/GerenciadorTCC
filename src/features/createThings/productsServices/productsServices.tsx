@@ -16,7 +16,7 @@ import {
   TabsTrigger,
 } from "@/shared/ui/components/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/components/select"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/components/popover"
 import { Check, ChevronsUpDown, Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
@@ -30,6 +30,7 @@ import { createService } from "@/shared/lib/actionCreateService"
 import { createExpense } from "@/shared/lib/actionCreateExpense"
 import { createProduct } from "@/shared/lib/actionCreateProduct"
 import { CircularProgress } from "@mui/material"
+import { useSearchParams } from "next/navigation"
 
 interface CreateServiceProps{
     users: User[]
@@ -51,6 +52,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
   const [openExpenseDateCalendar, setOpenExpenseDateCalendar] = useState(false)
   const [isSubmittingService, setIsSubmittingService] = useState(false)
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false)
+  const params = useSearchParams()
 
 
   const handleCreateService = async () => {
@@ -88,6 +90,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
       formDate.append("price", productPrice);
       formDate.append("description", productDescription);
       formDate.append("amount", productAmount);
+      formDate.append("enterpriseId", users[0].enterpriseId || "");
       if (productMinAmount) {
         formDate.append("minAmount", productMinAmount);
       }
@@ -158,12 +161,40 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
     </Button>
   );
 
+const defaultTable = params.get("table") ? (params.get("table") === "product" ? "product" : "service") : "service";
+const typeTable = params.get("description") ? true : false
+
+{typeTable ? (
+  defaultTable === "product" ? (
+  useEffect(() => {
+      const desc = params.get("description")
+      const price = params.get("price")
+      const amount = params.get("amount")
+      const minAmount = params.get("minAmount")
+  
+      if (desc) setProductDescription(desc)
+      if (price) setProductPrice(price)
+      if (amount) setProductAmount(amount)
+      if (minAmount) setProductMinAmount(minAmount)
+    }, [params])
+  ) : (
+    useEffect(() => {
+      const desc = params.get("description")
+      const price = params.get("price")
+
+      if (desc) setServiceDescription(desc)
+      if (price) setServicePrice(price)
+    }, [params])
+  )
+): (null)
+}
+
 
 
   return (
     <div className="w-full h-full p-4">
       <Toaster richColors position="top-center"/>
-      <Tabs defaultValue="service" className="w-full">
+      <Tabs defaultValue={defaultTable} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="service">Serviço</TabsTrigger>
           <TabsTrigger value="product">Produto</TabsTrigger>
@@ -171,7 +202,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
         <TabsContent value="service" className="w-full">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>Cadastrar Serviço</CardTitle>
+              <CardTitle>{typeTable ? "Editar Serviço" : "Cadastrar Serviço"}</CardTitle>
               <CardDescription>
                 Preencha os dados para cadastrar um novo tipo de serviço.
               </CardDescription>
@@ -210,9 +241,9 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
         <TabsContent value="product" className="w-full">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>Cadastrar Produto</CardTitle>
+              <CardTitle>{typeTable ? "Editar Produto" : "Cadastrar Produto"}</CardTitle>
               <CardDescription>
-                Preencha os dados para cadastrar um novo produto no estoque.
+                Preencha os dados para {typeTable ? "editar um produto" : "cadastrar um novo produto"} no estoque.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
