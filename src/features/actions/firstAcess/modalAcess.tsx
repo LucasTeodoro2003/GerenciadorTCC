@@ -59,7 +59,7 @@ ModalClientPromp) {
               <img
                 src={user.image || "usuario.png"}
                 alt={user.id}
-                className="w-12 h-12 rounded-full"
+                className="w-12 h-12 rounded-full object-cover"
               />
             </div>
             <DialogDescription>Digite suas informações</DialogDescription>
@@ -83,7 +83,13 @@ ModalClientPromp) {
                 <Input
                   id="phone"
                   name="phone"
-                  defaultValue={user.phone ? user.phone : ""}
+                  type="tel"
+                  defaultValue={user.phone || ""}
+                  maxLength={11}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="34999999999"
+                  
                 />
               </div>
             </div>

@@ -55,7 +55,7 @@ export default function ModalMessage({
               <img
                 src={user.image || "usuario.png"}
                 alt={user.name || "Usuário"}
-                className="w-12 h-12 rounded-full"
+                className="w-12 h-12 rounded-full object-cover"
               />
             </div>
             <DialogDescription>

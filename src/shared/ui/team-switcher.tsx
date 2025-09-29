@@ -40,7 +40,7 @@ export function TeamSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-transparent text-sidebar-primary-foreground">
-                    <img src={activeTeam.logo} alt={activeTeam.name} className="relative z-10 size-8 shadow-2xl shadow-white" />
+                    <img src={activeTeam.logo} alt={activeTeam.name} className="relative z-10 size-8 shadow-2xl shadow-white object-cover" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
@@ -67,7 +67,7 @@ export function TeamSwitcher({
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
-                  <img src={team.logo} alt={team.name} className="size-4 shrink-0" />
+                  <img src={team.logo} alt={team.name} className="size-4 shrink-0 object-cover" />
                 </div>
                 {team.name}
               </DropdownMenuItem>

@@ -78,7 +78,7 @@ export default function PageMessage({
               <img
                 src="/whatsapp.png"
                 alt="whatsapp"
-                className="w-12 dark:brightness-200 brightness-125 drop-shadow"
+                className="w-12 dark:brightness-200 brightness-125 drop-shadow object-cover"
               />
             </Button>
           </div>
