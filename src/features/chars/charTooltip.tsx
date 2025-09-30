@@ -78,7 +78,7 @@ console.log("GRAFICO COISAS DIARIAS: ", chartData);
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => {
-                return new Date(value).toLocaleDateString("en-US", {
+                return new Date(value).toLocaleDateString("pt-BR", {
                   weekday: "short",
                 })
               }}
