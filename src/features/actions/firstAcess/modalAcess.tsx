@@ -18,14 +18,14 @@ import { useState } from "react";
 interface ModalClientPromp {
   openModal: boolean;
   user: User;
-  // setOpenPerfil: (open: boolean) => void;
+  setOpenPerfil: (open: boolean) => void;
 }
 
 export default function ModalClient({
   openModal,
   user,
-}: // setOpenPerfil,
-ModalClientPromp) {
+  setOpenPerfil,
+}: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +40,7 @@ ModalClientPromp) {
       } else {
         await updateUser2(user.id || "", formData);
       }
-      // setOpenPerfil(false);
+      setOpenPerfil(false);
       window.location.reload();
     } catch (err) {
       alert("Erro ao atualizar");
@@ -50,7 +50,7 @@ ModalClientPromp) {
   };
 
   return (
-    <Dialog open={openModal}>
+    <Dialog open={openModal} onOpenChange={setOpenPerfil}>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader>

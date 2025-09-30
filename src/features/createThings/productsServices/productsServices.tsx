@@ -30,7 +30,7 @@ import { createService } from "@/shared/lib/actionCreateService"
 import { createExpense } from "@/shared/lib/actionCreateExpense"
 import { createProduct } from "@/shared/lib/actionCreateProduct"
 import { CircularProgress } from "@mui/material"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { edityProduct } from "@/shared/lib/actionUpdateProduct"
 import { updateService } from "@/shared/lib/actionUpdateServicePage"
 
@@ -55,6 +55,7 @@ export function   CreateServiceSomeProducts({users}:CreateServiceProps) {
   const [isSubmittingService, setIsSubmittingService] = useState(false)
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false)
   const params = useSearchParams()
+  const router = useRouter()
 
 
   const handleCreateService = async () => {
@@ -96,9 +97,11 @@ export function   CreateServiceSomeProducts({users}:CreateServiceProps) {
       toast.success("Serviço atualizado com sucesso!")
       setServicePrice("")
       setServiceDescription("")
+      router.replace("/dashboard/enterprise");
     } catch (error) {
       console.error("Erro ao editar serviço:", error)
       toast.error("Ocorreu um erro ao editar o serviço")
+      router.replace("/dashboard/enterprise");
     } finally {
       setIsSubmittingService(false);
     }
@@ -175,7 +178,6 @@ export function   CreateServiceSomeProducts({users}:CreateServiceProps) {
         formDate.append("minAmount", productMinAmount);
       }
       await edityProduct(formDate);
-
       toast.success(`Produto cadastrado com sucesso!`);
       setProductPrice("");
       setProductDescription("");
@@ -187,9 +189,11 @@ export function   CreateServiceSomeProducts({users}:CreateServiceProps) {
       setExpensePaymentMethod("Dinheiro");
       setExpenseStatus("Pago");
       setExpenseUser("");
+      router.replace("/dashboard/enterprise");
     } catch (error) {
       console.error("Erro ao criar produto:", error);
       toast.error("Ocorreu um erro ao cadastrar o produto");
+      router.replace("/dashboard/enterprise");
     } finally {
       setIsSubmittingProduct(false);
     }

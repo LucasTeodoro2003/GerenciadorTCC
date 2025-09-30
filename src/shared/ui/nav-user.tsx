@@ -30,18 +30,16 @@ import {
   useSidebar,
 } from "@/shared/ui/components/sidebar";
 import { User } from "@prisma/client";
-import { Button } from "./components/button";
-import { useState } from "react";
 import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
-import signOutFunction from "./signOut";
 import { signOut } from "next-auth/react";
+import { set } from "date-fns";
 
 export function NavUser({
-  user, users
-}: {user: User, users:User[]}
+  user,
+  setOpenPerfil
+}: {user: User, setOpenPerfil: (open: boolean) => void}
 ) {
   const { isMobile } = useSidebar();
-  const [openResetPassword, setopenResetPassword] = useState(false)
 
   return (
     <SidebarMenu>
@@ -83,26 +81,12 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>{setOpenPerfil(true)}} className="hover:cursor-pointer">
                   <ManageAccountsSharpIcon/>
                   Editar Perfil
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={()=>signOut()} className="hover:cursor-pointer">
               <LogOut />

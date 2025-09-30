@@ -28,8 +28,9 @@ import { createAddress } from "@/shared/lib/actionCreateAddress"
 import { CircularProgress } from "@mui/material"
 import { createUserPage } from "@/shared/lib/actionsCreateuserPage"
 import { getUserByEmail } from "@/shared/lib/actionGetUser"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { edityVehicle } from "@/shared/lib/actionUpdateVehicle"
+
 
 export interface CreateServiceProps{
     users: User[]
@@ -62,6 +63,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
     "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
   ]
     const params = useSearchParams()
+    const router = useRouter()
   
 
   const handleCreateUser = async () => {
@@ -221,9 +223,11 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       setVehicleModel("")
       setVehicleYear("")
       setVehicleColor("")
+      router.replace("/dashboard/clients");
     } catch (error) {
       console.error("Erro ao editar veículo:", error)
       toast.error("Ocorreu um erro ao editar o veículo")
+      router.replace("/dashboard/clients");
     } finally {
       setIsSubmittingVehicle(false);
     }
