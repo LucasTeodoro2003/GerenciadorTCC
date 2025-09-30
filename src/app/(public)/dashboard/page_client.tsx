@@ -1,3 +1,4 @@
+"use client"
 import { ChartRadarDots } from "@/features/chars/charRadar";
 import { ChartRadialShape } from "@/features/chars/charRadial";
 import { ChartTooltipIndicatorLine } from "@/features/chars/charTooltip"; 

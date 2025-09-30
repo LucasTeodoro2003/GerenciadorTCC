@@ -1,17 +1,11 @@
-"use client";
+"use server";
 
 import { auth } from "@/shared/lib/auth";
 import db from "@/shared/lib/prisma";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import CharPage from "./page_client";
 
 export default async function Page() {
-  const router = useRouter();
-  useEffect(() => {
-    router.prefetch("/dashboard/calendar");
-  }, [router]);
-
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
