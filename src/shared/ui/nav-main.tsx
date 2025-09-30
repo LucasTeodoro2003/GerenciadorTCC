@@ -32,11 +32,6 @@ export function NavMain({
     }[];
   }[];
 }) {
-  // const router = useRouter();
-  // function handleSearch(term: string) {
-  //   router.push("/dashboard/" + term);
-  // }
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Itens</SidebarGroupLabel>

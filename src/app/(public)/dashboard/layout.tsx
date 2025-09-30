@@ -33,7 +33,6 @@ export default async function Layout({
   });
 
   if (!user || user.permission === 3) {
-    console.log(user)
     redirect("/noAcess");
   }
 

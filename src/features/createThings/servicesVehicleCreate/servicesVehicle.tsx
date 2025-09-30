@@ -71,7 +71,6 @@ export default function CreateServiceVehiclePage({
       .filter((e) => e.dateTime)
       .map((e) => {
         try {
-          // Não ajusta +3, usa a data como está no banco
           return new Date(e.dateTime as any);
         } catch (error) {
           return null;

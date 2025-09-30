@@ -9,8 +9,6 @@ export default async function LoginPage() {
   const session = await auth();
   if (session) redirect("/dashboard");
 
-  // const [error, setError]
-
   return (
     <>
       <div className="absolute top-6 right-6">

@@ -74,7 +74,6 @@ export function CreateRevenueModal({
     const { value } = e.target;
     if (value) {
       setFormData((prev) => ({ ...prev, date: e.target.value }));
-      console.log(value)
     }
   };
 

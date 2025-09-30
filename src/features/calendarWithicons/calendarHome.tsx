@@ -79,8 +79,6 @@ export default function CalendarIcons({
         .map((service) => {
           const startDate = service.dateTime as Date;
           const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
-
-          // Encontrar o endereço principal
           const userAddress =
             vehicle.user.addresses && vehicle.user.addresses.length > 0
               ? vehicle.user.addresses[0]
@@ -138,7 +136,7 @@ export default function CalendarIcons({
     setSelectedEvent(info.event);
     setEditMode(false);
     if (info.event.extendedProps.services) {
-      setSelectedServices([...info.event.extendedProps.services]); // só os vinculados
+      setSelectedServices([...info.event.extendedProps.services]);
     } else {
       setSelectedServices([]);
     }
@@ -231,11 +229,6 @@ export default function CalendarIcons({
     formData.append("serviceIds", JSON.stringify(serviceIds));
     formData.append("userId", user.name || "");
 
-    console.log("FormData criado:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
-
     try {
       await updateServiceVehicle(formData);
       toast.success("Serviço atualizado com sucesso!");
@@ -244,7 +237,6 @@ export default function CalendarIcons({
     } catch (error) {
       toast.error("Erro ao salvar:");
       setIsLoading(false);
-      console.log("Error aqui: ", error);
     }
   };
 

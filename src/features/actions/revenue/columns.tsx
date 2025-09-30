@@ -131,9 +131,6 @@ export function getColumns(
         const revenue = row.original;
         const [modalOpen, setModalOpen] = useState(false);
         const vehicle = vehicles.find((v) => v.id === revenue.vehicleInfo);
-        console.log("Vehicle Info:", revenue.vehicleInfo, vehicle);
-        console.log("All Vehicles:", vehicles);
-      console.log("Tudo", revenue)
 
         return (
           <>

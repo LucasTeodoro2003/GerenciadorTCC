@@ -25,7 +25,7 @@ interface ServiceInfo {
 
 interface ServiceVehicleInfo {
   id: string;
-  dateTime: Date | string; // pode ser dateTime!
+  dateTime: Date | string;
   totalValue: string;
   service: ServiceInfo;
 }
@@ -134,7 +134,6 @@ export function VehicleInfoModal({
         )
         if (matchedServices.length === 0) return null
 
-        // Converte valores para número (ou 0 se nulo)
         const discounts = parseFloat(serviceVehicle.discounts || "0")
         const addValue = parseFloat(serviceVehicle.addValue || "0")
         const totalValue = parseFloat(serviceVehicle.totalValue || "0")

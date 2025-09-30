@@ -92,15 +92,11 @@ export default function TableRevenue({
   };
 
   useEffect(() => {
-    // Modificação aqui para lidar com a nova estrutura de relacionamento
     const serviceRevenueData = serviceVehicles.map((serviceVehicle) => {
-      // Obter descrições de todos os serviços associados a este agendamento
       const serviceDescriptions = serviceVehicle.services
         .map(relation => relation.service.description || "")
         .filter(Boolean)
         .join(", ");
-      
-      // Se não houver descrições, use um valor padrão
       const description = serviceDescriptions || "Serviço automotivo";
 
       return {

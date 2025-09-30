@@ -129,7 +129,6 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
         }      
         try {
           const addressResult = await createAddress(addressFormData);
-          console.log("Resultado da criação de endereço:", addressResult);
         } catch (addressError) {
           console.error("Erro ao criar endereço:", addressError);
           toast.error("Erro ao cadastrar endereço: ");

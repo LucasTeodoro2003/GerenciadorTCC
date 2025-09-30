@@ -19,8 +19,6 @@ function getTypeUser(permission: number | null | undefined): "Administrador" | "
 export default function TableUser({ users }: TableUserProps) {
   const router = useRouter();
 
-  console.log("AQUI: ", users.map((u)=>u.vehicle.length))
-
   const data: Usertable[] = users.map((user) => ({
     id: user.id,
     name: user.name ?? "",
