@@ -32,7 +32,6 @@ export type RevenueTable = {
   vehicleInfo?: string;
 };
 
-
 function getCategoryColor(category: string) {
   switch (category) {
     case "Serviço":
@@ -52,7 +51,12 @@ function getCategoryColor(category: string) {
 
 export function getColumns(
   router: ReturnType<typeof useRouter>,
-  vehicles: Prisma.VehicleGetPayload<{include:{serviceVehicle:{include:{services:{include:{service:{}}}}}, user:{select:{id:true, name:true}}}}>[]
+  vehicles: Prisma.VehicleGetPayload<{
+    include: {
+      serviceVehicle: { include: { services: { include: { service: {} } } } };
+      user: { select: { id: true; name: true } };
+    };
+  }>[]
 ): ColumnDef<RevenueTable>[] {
   return [
     {
@@ -143,13 +147,14 @@ export function getColumns(
                 >
                   Ver Veículo
                 </Button>
-                {vehicle ? (
-                <VehicleInfoModal
-                  open={modalOpen}
-                  onOpenChange={setModalOpen}
-                  vehicle={vehicle}
-                  revenueid={revenue.id}
-                />): (<>Erro</>)}
+                {vehicle && (
+                  <VehicleInfoModal
+                    open={modalOpen}
+                    onOpenChange={setModalOpen}
+                    vehicle={vehicle}
+                    revenueid={revenue.id}
+                  />
+                )}
               </div>
             ) : (
               <div>N/A</div>

@@ -3,7 +3,7 @@
 import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function edityService(formData: FormData) {
+export async function updateService(formData: FormData) {
   try {
     await db.services.update({
       where: { id: formData.get("idservice")?.toString() || "" },

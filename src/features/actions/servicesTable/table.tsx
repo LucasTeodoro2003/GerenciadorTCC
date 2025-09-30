@@ -32,6 +32,7 @@ import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
 import { deleteService } from "@/shared/lib/actionDeleteService";
 import { toast } from "sonner";
 import { CircularProgress } from "@mui/material";
+import { Toaster } from "@/shared/ui/components/sonner";
 
 export const columns: ColumnDef<Services>[] = [
   {
@@ -92,6 +93,7 @@ export const columns: ColumnDef<Services>[] = [
 
   return (
     <div className="flex space-x-2">
+      <Toaster richColors position="top-right" />
       <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmitService()}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar

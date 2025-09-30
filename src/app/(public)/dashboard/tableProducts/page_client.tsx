@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/components/button";
 import { useRouter } from "next/navigation";
 import { DataTableDemo } from "@/features/actions/productsTable/table";
 import { Products } from "@prisma/client";
+import { Toaster } from '@/shared/ui/components/sonner';
 
 interface TableProdutctPageProps {
 products: Products[] 
@@ -15,6 +16,7 @@ export default function TableProdutctPage({products}: TableProdutctPageProps) {
     <>
         <div className="flex w-full items-center gap-4">
           <div className="flex-1" />
+          <Toaster richColors position="top-right" />
           <div className="flex-1 flex justify-center">
             <h5 className="text-muted-foreground text-xl text-center">
               Produtos

@@ -32,6 +32,7 @@ import { createProduct } from "@/shared/lib/actionCreateProduct"
 import { CircularProgress } from "@mui/material"
 import { useSearchParams } from "next/navigation"
 import { edityProduct } from "@/shared/lib/actionUpdateProduct"
+import { updateService } from "@/shared/lib/actionUpdateServicePage"
 
 interface CreateServiceProps{
     users: User[]
@@ -91,7 +92,7 @@ export function CreateServiceSomeProducts({users}:CreateServiceProps) {
       formData.append("price", servicePrice.replace(',', '.'))
       formData.append("description", serviceDescription)
       formData.append("enterpriseId", users[0].enterpriseId || "")
-      await createService(formData)
+      await updateService(formData)
       toast.success("Serviço atualizado com sucesso!")
       setServicePrice("")
       setServiceDescription("")
@@ -291,7 +292,11 @@ const typeTable = params.get("description") ? true : false
                     id="service-price" 
                     placeholder="Ex: 120.00" 
                     value={servicePrice}
-                    onChange={(e) => setServicePrice(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const validValue = value.replace(/[^\d.,]/g, '');
+                      setServicePrice(validValue);
+                    }}
                   />
                   <p className="text-sm text-gray-500">
                     Digite o valor
@@ -336,6 +341,7 @@ const typeTable = params.get("description") ? true : false
                       placeholder="Ex: 45.90" 
                       value={productPrice}
                       onChange={(e) => setProductPrice(e.target.value)}
+                      
                     />
                   </div>
                 </div>
