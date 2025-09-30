@@ -103,7 +103,7 @@ export const columns: ColumnDef<Vehicle>[] = [
       const router = useRouter();
       const [loading, setLoading] = React.useState(false);
       const handleSubmitCar = async () => {
-          router.push(`/dashboard/enterprise?clients=vehicles&userid=${vehicle.userId}&plate=${vehicle.plate}&type=${vehicle.type}&model=${vehicle.model}&color=${vehicle.color}&yearCar=${vehicle.yearCar}`);
+          router.push(`/dashboard/clients?table=vehicles&userid=${vehicle.userId}&plate=${vehicle.plate}&type=${vehicle.type}&model=${vehicle.model}&color=${vehicle.color}&yearCar=${vehicle.yearCar}`);
       };
       const handleDeleteCar = async () => {
         try {
@@ -192,10 +192,10 @@ export function DataTableDemoCar({vehicles}: DataTableDemoProps) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Pesquisar produto..."
-          value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
+          placeholder="Pesquisar veículo..."
+          value={(table.getColumn("plate")?.getFilterValue() as string) ?? ""}
           onChange={(event:any) =>
-            table.getColumn("description")?.setFilterValue(event.target.value)
+            table.getColumn("plate")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -163,7 +163,7 @@ export function DataTableDemoServices({services}: DataTableDemoProps) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Pesquisar produto..."
+          placeholder="Pesquisar serviços..."
           value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
           onChange={(event:any) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
