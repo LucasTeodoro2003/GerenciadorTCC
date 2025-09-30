@@ -136,6 +136,7 @@ const data = !dataUserPage ? {
       title: "Clientes",
       page: "table",
       icon: Bot,
+      isActive: true,
       items: [
         {
           title: "Editar Usuários",
@@ -155,6 +156,7 @@ const data = !dataUserPage ? {
       title: "Criar",
       page: "create",
       icon: CogIcon,
+      isActive: true,
       items: [
         {
           title: "Clientes",
