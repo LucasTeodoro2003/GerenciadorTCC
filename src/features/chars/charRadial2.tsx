@@ -1,75 +1,73 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
-
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/shared/ui/components/card"
+} from "@/shared/ui/components/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/shared/ui/components/chart"
-import { Prisma } from "@prisma/client"
+} from "@/shared/ui/components/chart";
+import { Prisma } from "@prisma/client";
 
-export const description = "A radial chart with stacked sections"
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig
+export const description = "A radial chart with stacked sections";
 
 interface ChartRadialStackedProps {
-    servicesNames: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{select:{description:true}},serviceVehicle:{select:{dateTime:true}}}}>[];
+  servicesNames: Prisma.ServiceVehicleServiceGetPayload<{
+    include: {
+      service: { select: { description: true } };
+      serviceVehicle: { select: { dateTime: true } };
+    };
+  }>[];
 }
 
 export function ChartRadialStacked({ servicesNames }: ChartRadialStackedProps) {
-    const counts = new Map();
-
+  const counts = new Map();
   servicesNames.forEach((item) => {
-    const service = item.service.description;
-    counts.set(service || "", (counts.get(service || "") || 0) + 1);
+    const service = item.service.description || "Outro";
+    counts.set(service, (counts.get(service) || 0) + 1);
   });
-
-  const sorted = Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
-
-  const top1 = sorted[0] || ["desktop", 0];
-  const top2 = sorted[1] || ["mobile", 0];
-
   const chartData = [
-    {
-      desktop: top1[1],
-      mobile: top2[1],
-    },
+    Object.fromEntries(counts.entries()) as Record<string, number>,
+  ];
+  const serviceColors = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "var(--chart-5)",
+    "var(--chart-6)",
   ];
 
-  console.log("Total: ",chartData);
+  const chartConfig: ChartConfig = {};
+  Array.from(counts.keys()).forEach((service, i) => {
+    chartConfig[service] = {
+      label: service,
+      color: serviceColors[i % serviceColors.length],
+    };
+  });
 
-  const totalVisitors = chartData[0].desktop + chartData[0].mobile
+  const totalServices = Array.from(counts.values()).reduce(
+    (acc, val) => acc + val,
+    0
+  );
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Total de Serviços</CardTitle>
-        <CardDescription>Todos os serviços realizados</CardDescription>
+        <CardDescription>Distribuição de todos os serviços realizados</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[250px]"
+          className="mx-auto aspect-square w-full max-w-[280px]"
         >
           <RadialBarChart
             data={chartData}
@@ -92,7 +90,7 @@ export function ChartRadialStacked({ servicesNames }: ChartRadialStackedProps) {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalServices.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -102,28 +100,25 @@ export function ChartRadialStacked({ servicesNames }: ChartRadialStackedProps) {
                           Serviços
                         </tspan>
                       </text>
-                    )
+                    );
                   }
                 }}
               />
             </PolarRadiusAxis>
-            <RadialBar
-              dataKey="desktop"
-              stackId="a"
-              cornerRadius={5}
-              fill="var(--color-desktop)"
-              className="stroke-transparent stroke-2"
-            />
-            <RadialBar
-              dataKey="mobile"
-              fill="var(--color-mobile)"
-              stackId="a"
-              cornerRadius={5}
-              className="stroke-transparent stroke-2"
-            />
+
+            {Object.keys(chartData[0]).map((service, i) => (
+              <RadialBar
+                key={service}
+                dataKey={service}
+                stackId="a"
+                cornerRadius={5}
+                fill={serviceColors[i % serviceColors.length]}
+                className="stroke-transparent stroke-2"
+              />
+            ))}
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
