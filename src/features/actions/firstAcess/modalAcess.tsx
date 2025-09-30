@@ -27,8 +27,7 @@ export default function ModalClient({
   setOpenPerfil,
 }: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-const firtsAcess = !user.emailVerified;
-
+  const firtsAcess = !user.emailVerified;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,16 +52,24 @@ const firtsAcess = !user.emailVerified;
 
   return (
     <Dialog
-  open={openModal} 
-  onOpenChange={(open) => {
-    if (!firtsAcess) setOpenPerfil(open)
-  }}
->
-      <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
+      open={openModal}
+      onOpenChange={(open) => {
+        if (!firtsAcess) setOpenPerfil(open);
+      }}
+    >
+      <DialogContent
+        className="sm:max-w-[425px] max-w-[90%] rounded-lg"
+        onInteractOutside={(e) => {
+          if (firtsAcess) e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          if (firtsAcess) e.preventDefault();
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle>Primeiro Acesso</DialogTitle>
+              <DialogTitle>Editar Perfil</DialogTitle>
               <img
                 src={user.image || "usuario.png"}
                 alt={user.id}
@@ -96,7 +103,6 @@ const firtsAcess = !user.emailVerified;
                   inputMode="numeric"
                   pattern="[0-9]*"
                   placeholder="34999999999"
-                  
                 />
               </div>
             </div>

@@ -109,13 +109,13 @@ export function TableMessage({ serviceTableMessage }: TableMessageProps) {
           <TableRow>
             <TableHead className="w-20">Foto</TableHead>
             <TableHead className="w-36">Nome</TableHead>
-            <TableHead className="w-32">Número</TableHead>
-            <TableHead className="w-24">Placa</TableHead>
-            <TableHead className="w-40">Veículo</TableHead>
+            <TableHead className="w-40">Número</TableHead>
+            <TableHead className="w-28">Placa</TableHead>
+            <TableHead className="w-48">Veículo</TableHead>
             <TableHead className="w-56">Serviço Realizado</TableHead>
-            <TableHead className="w-56">Data Agenda</TableHead>
-            <TableHead className="w-28">Finalizar</TableHead>
-            <TableHead className="w-28">Data Finalização</TableHead>
+            <TableHead className="w-24">Data Agenda</TableHead>
+            <TableHead className="w-24">Finalizar</TableHead>
+            <TableHead className="w-24">Data Finalização</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
