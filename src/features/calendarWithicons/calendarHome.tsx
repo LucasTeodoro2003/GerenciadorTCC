@@ -124,8 +124,20 @@ export default function CalendarIcons({
       return "#FF69B4";
     } else if (vehicleColor === "Cinza Escuro") {
       return "#555555";
+    } else if (vehicleColor === "Azul") {
+      return "#15BCC2";
+    } else if (vehicleColor === "Azul Escuro") {
+      return "#0A15C9";
+    } else if (vehicleColor === "Azul Claro") {
+      return "#0FF2EF";
+    } else if (vehicleColor === "Vermelho") {
+      return "#FF0000";
+    } else if (vehicleColor === "Vermelho Escuro") {
+      return "#8B0000";
+    } else if (vehicleColor === "Vermelho Claro") {
+      return "#FF7F7F";
     } else {
-      return "#3788d8";
+      return "#00FF29";
     }
   }
 
@@ -193,10 +205,10 @@ export default function CalendarIcons({
   };
 
   const handleRemoveService = (index: number) => {
-      if (selectedServices.length === 1) {
-    toast.error("O serviço não pode ficar sem pelo menos um item.");
-    return;
-  }
+    if (selectedServices.length === 1) {
+      toast.error("O serviço não pode ficar sem pelo menos um item.");
+      return;
+    }
     const updatedServices = [...selectedServices];
     updatedServices.splice(index, 1);
     setSelectedServices(updatedServices);
@@ -242,11 +254,11 @@ export default function CalendarIcons({
 
   return (
     <div
-    className={`flex ${
-      editMode ? "w-full" : "w-full md:w-7/12"
-    } flex-col md:flex-row gap-4`}
+      className={`flex ${
+        editMode ? "w-full" : "w-full md:w-7/12"
+      } flex-col md:flex-row gap-4`}
     >
-      <Toaster richColors/>
+      <Toaster richColors />
       <Card
         className={`border shadow-md ${
           editMode ? "w-full md:w-8/12" : "w-full"
@@ -266,6 +278,10 @@ export default function CalendarIcons({
             dateClick={handleDateClick}
             eventClick={handleEventClick}
             height="auto"
+            contentHeight="auto"
+            expandRows={true}
+            dayMaxEventRows={3}
+            moreLinkClick="popover"
             businessHours={{
               daysOfWeek: [1, 2, 3, 4, 5, 6],
               startTime: "08:00",
@@ -455,7 +471,15 @@ export default function CalendarIcons({
               Cancelar
             </Button>
             <Button onClick={handleSaveChanges} disabled={!isLoading}>
-              {!isLoading ? (<><Save className="h-4 w-4 mr-2" /> Salvar Alterações</>) : (<>Salvando <CircularProgress size={20}/></>)}
+              {!isLoading ? (
+                <>
+                  <Save className="h-4 w-4 mr-2" /> Salvar Alterações
+                </>
+              ) : (
+                <>
+                  Salvando <CircularProgress size={20} />
+                </>
+              )}
             </Button>
           </CardFooter>
         </Card>

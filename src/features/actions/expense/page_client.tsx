@@ -182,9 +182,7 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Próximo Mês</span>
           </Button>
-        </div>
 
-        <div className="flex items-center space-x-2">
           <Button
             variant={showAllMonths ? "default" : "outline"}
             size="sm"
@@ -194,22 +192,22 @@ export default function TableExpense({ expenses, user }: TableExpenseProps) {
             <ListFilter className="h-4 w-4" />
             {showAllMonths ? "Filtrar por Mês" : "Ver Tudo"}
           </Button>
-
-          {!showAllMonths && (
-            <Button
-              variant={isCurrentMonth() ? "default" : "ghost"}
-              size="sm"
-              onClick={goToCurrentMonth}
-              className={`flex items-center gap-1 ${
-                isCurrentMonth() ? "bg-primary text-primary-foreground" : ""
-              }`}
-              disabled={isCurrentMonth()}
-            >
-              <CalendarDays className="h-4 w-4" />
-              {isCurrentMonth() ? "Mês Atual" : "Ir para Mês Atual"}
-            </Button>
-          )}
         </div>
+
+        {!showAllMonths && (
+          <Button
+            variant={isCurrentMonth() ? "default" : "ghost"}
+            size="sm"
+            onClick={goToCurrentMonth}
+            className={`flex items-center gap-1 ${
+              isCurrentMonth() ? "bg-primary text-primary-foreground" : ""
+            }`}
+            disabled={isCurrentMonth()}
+          >
+            <CalendarDays className="h-4 w-4" />
+            {isCurrentMonth() ? "Mês Atual" : "Ir para Mês Atual"}
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
