@@ -34,11 +34,11 @@ const chartConfig = {
     label: "Visitors",
   },
   receita: {
-    label: "Receitas",
+    label: "Despesas",
     color: "var(--chart-1)",
   },
   despesas: {
-    label: "Despesas",
+    label: "Receitas",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
@@ -164,6 +164,7 @@ export function ChartAreaInteractive({
   }, [chartData, timeRange]);
 
   console.log("Despesas: ",chartData);
+
   return (
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
