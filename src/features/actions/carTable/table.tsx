@@ -103,7 +103,7 @@ export const columns: ColumnDef<Vehicle>[] = [
       const router = useRouter();
       const [loading, setLoading] = React.useState(false);
       const handleSubmitCar = async () => {
-          router.push(`/dashboard/clients?table=vehicles&userid=${vehicle.userId}&plate=${vehicle.plate}&type=${vehicle.type}&model=${vehicle.model}&color=${vehicle.color}&yearCar=${vehicle.yearCar}`);
+          router.push(`/dashboard/clients?table=vehicles&userid=${vehicle.userId}&plate=${vehicle.plate}&type=${vehicle.type}&model=${vehicle.model}&color=${vehicle.color}&yearCar=${vehicle.yearCar}&idvehicle=${vehicle.id}`);
       };
       const handleDeleteCar = async () => {
         try {
