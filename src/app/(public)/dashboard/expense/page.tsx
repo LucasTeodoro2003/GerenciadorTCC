@@ -36,7 +36,7 @@ export default async function Page() {
     },
   });
 
-  console.log(expense);
+  console.log("Aqui", expense);
 
   return <ExpensePageClient expenses={expense} user={user} />;
 }
