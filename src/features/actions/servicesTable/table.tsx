@@ -93,7 +93,7 @@ export const columns: ColumnDef<Services>[] = [
 
   return (
     <div className="flex space-x-2">
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-center" />
       <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmitService()}>
         <EditIcon fontSize="small" className="mr-2" />
         Editar

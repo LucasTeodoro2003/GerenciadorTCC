@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,12 +12,12 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Button } from "@/shared/ui/components/button";
-import { Input } from "@/shared/ui/components/input";
+} from "@tanstack/react-table"
+import { ArrowUpDown} from "lucide-react"
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button } from "@/shared/ui/components/button"
+import { Input } from "@/shared/ui/components/input"
 import {
   Table,
   TableBody,
@@ -25,117 +25,111 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/components/table";
-import { Products } from "@prisma/client";
-import { deleteProduct } from "@/shared/lib/actionDeleteProduct";
+} from "@/shared/ui/components/table"
+import { Vehicle } from "@prisma/client"
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CircularProgress } from "@mui/material";
 import { Toaster } from "@/shared/ui/components/sonner";
+import { deleteCar } from "@/shared/lib/actionDeleteCar";
 
-export const columns: ColumnDef<Products>[] = [
+export const columns: ColumnDef<Vehicle>[] = [
   {
-    accessorKey: "description",
+    accessorKey: "plate",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Produto
+          Placa
           <ArrowUpDown />
         </Button>
-      );
+      )
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("description")}</div>
-    ),
+    cell: ({ row }) => <div className="lowercase">{row.getValue("plate")}</div>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "model",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-center"
         >
-          Quantidade Estoque
+          Modelo
           <ArrowUpDown />
         </Button>
-      );
+      )
     },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      return <div className="text-center font-medium">{amount} unidades</div>;
-    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("model")}</div>,
   },
   {
-    accessorKey: "minAmout",
+    accessorKey: "yearCar",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quantidade Minima Alerta
+          Ano
           <ArrowUpDown />
         </Button>
-      );
+      )
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("minAmout")}</div>
-    ),
+    cell: ({ row }) => <div className="lowercase">{row.getValue("yearCar")}</div>,
+  },
+  {
+    accessorKey: "color",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Cor
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("color")}</div>,
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const products = row.original;
-
+      const vehicle = row.original
+      
       const router = useRouter();
       const [loading, setLoading] = React.useState(false);
-      const handleSubmit = async () => {
-        router.push(
-          `/dashboard/enterprise?table=products&description=${products.description}&amount=${products.amount}&minAmount=${products.minAmout}&price=${products.price}&id=${products.id}`
-        );
+      const handleSubmitCar = async () => {
+          router.push(`/dashboard/enterprise?clients=vehicles&userid=${vehicle.userId}&plate=${vehicle.plate}&type=${vehicle.type}&model=${vehicle.model}&color=${vehicle.color}&yearCar=${vehicle.yearCar}`);
       };
-
-      const handleDelete = async () => {
+      const handleDeleteCar = async () => {
         try {
           setLoading(true);
-          await deleteProduct(products.id);
+          await deleteCar(vehicle.id);
 
-          toast.success("Produto excluído com sucesso!");
+          toast.success("Veículo excluído com sucesso!");
           router.refresh();
         } catch (error) {
           console.error(error);
-          toast.error("Erro ao excluir o produto.");
+          toast.error("Erro ao excluir o veículo.");
         } finally {
           setLoading(false);
         }
       };
 
-      return (
-        <div className="flex space-x-2">
-          <Toaster richColors position="top-center" />
-          <Button
-            variant="outline"
-            className="h-8 px-3"
-            onClick={() => handleSubmit()}
-          >
-            <EditIcon fontSize="small" className="mr-2" />
-            Editar
-          </Button>
+  return (
+    <div className="flex space-x-2">
+      <Toaster richColors position="top-center" />
+      <Button variant="outline" className="h-8 px-3" onClick={() => handleSubmitCar()}>
+        <EditIcon fontSize="small" className="mr-2" />
+        Editar
+      </Button>
 
-          <Button
-            variant="destructive"
-            className="h-8 px-3"
-            onClick={() => handleDelete()}
-            disabled={loading}
-          >
-            {!loading ? (
+      <Button variant="destructive" className="h-8 px-3" onClick={() => handleDeleteCar() } disabled={loading}>
+                    {!loading ? (
               <>
                 <DeleteIcon fontSize="small" className="mr-2" />
                 Excluir{" "}
@@ -145,28 +139,38 @@ export const columns: ColumnDef<Products>[] = [
                 "Excluindo... " <CircularProgress size={20} />
               </>
             )}
-          </Button>
-        </div>
-      );
+      </Button>
+    </div>
+  )
     },
   },
-];
+]
+
+
+
+
+
+
+
+
+
 
 interface DataTableDemoProps {
-  products: Products[];
+vehicles: Vehicle[]
 }
 
-export function DataTableDemo({ products }: DataTableDemoProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+export function DataTableDemoCar({vehicles}: DataTableDemoProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  );
+  )
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+    React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: products,
+    data: vehicles,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -182,24 +186,26 @@ export function DataTableDemo({ products }: DataTableDemoProps) {
       columnVisibility,
       rowSelection,
     },
-  });
+  })
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Toaster richColors position="top-center" />
         <Input
           placeholder="Pesquisar produto..."
-          value={
-            (table.getColumn("description")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event: any) =>
+          value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
+          onChange={(event:any) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
       </div>
       <div className="overflow-hidden rounded-md border">
+
+
+
+
+
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -214,7 +220,7 @@ export function DataTableDemo({ products }: DataTableDemoProps) {
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -248,6 +254,11 @@ export function DataTableDemo({ products }: DataTableDemoProps) {
             )}
           </TableBody>
         </Table>
+
+
+
+
+
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
@@ -270,5 +281,5 @@ export function DataTableDemo({ products }: DataTableDemoProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

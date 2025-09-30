@@ -16,7 +16,7 @@ import {
   TabsTrigger,
 } from "@/shared/ui/components/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/components/select"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/components/popover"
 import { Check, ChevronsUpDown, MapPin } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
@@ -28,6 +28,8 @@ import { createAddress } from "@/shared/lib/actionCreateAddress"
 import { CircularProgress } from "@mui/material"
 import { createUserPage } from "@/shared/lib/actionsCreateuserPage"
 import { getUserByEmail } from "@/shared/lib/actionGetUser"
+import { useSearchParams } from "next/navigation"
+import { edityVehicle } from "@/shared/lib/actionUpdateVehicle"
 
 export interface CreateServiceProps{
     users: User[]
@@ -59,6 +61,8 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
     "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", 
     "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
   ]
+    const params = useSearchParams()
+  
 
   const handleCreateUser = async () => {
     try {
@@ -192,7 +196,38 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       setIsSubmittingVehicle(false);
     }
   }
-
+  
+  const handleEdityVehicle = async () => {
+    try {
+      if (!vehicleOwner || !vehiclePlate || !vehicleType) {
+        toast.error("Preencha os campos obrigatórios (Proprietário, Placa e Tipo)")
+        return
+      }
+      setIsSubmittingVehicle(true);
+      const formDate = new FormData();
+      formDate.append("idvehicle", params.get("userid") || "")
+      formDate.append("plate", vehiclePlate)
+      formDate.append("type", vehicleType)
+      formDate.append("color", vehicleColor)
+      formDate.append("year", vehicleYear)
+      formDate.append("user", vehicleOwner)
+      formDate.append("model", vehicleModel)
+      formDate.append("enterpriseId", users[0].enterpriseId || "")
+      await edityVehicle(formDate)      
+      toast.success("Veículo editado com sucesso!")
+      setVehicleOwner("")
+      setVehiclePlate("")
+      setVehicleType("")
+      setVehicleModel("")
+      setVehicleYear("")
+      setVehicleColor("")
+    } catch (error) {
+      console.error("Erro ao editar veículo:", error)
+      toast.error("Ocorreu um erro ao editar o veículo")
+    } finally {
+      setIsSubmittingVehicle(false);
+    }
+  }
 
   const UserSubmitButton = () => (
     <Button 
@@ -211,17 +246,41 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
   const VehicleSubmitButton = () => (
     <Button 
       className="w-full flex items-center justify-center" 
-      onClick={handleCreateVehicle}
+      onClick={!typeTable ? handleCreateVehicle : handleEdityVehicle}
       disabled={isSubmittingVehicle || !vehicleOwner || !vehiclePlate || !vehicleType}
     >
       {isSubmittingVehicle ? <CircularProgress size={20} /> : "Cadastrar Veículo"}
     </Button>
   );
 
+  const defaultTable = params.get("table") ? (params.get("table") === "vehicles" ? "car" : "user") : "user";
+  const typeTable = params.get("description") ? true : false
+
+  {typeTable ? (
+    defaultTable === "car" ? (
+    useEffect(() => {
+        const plate = params.get("plate")
+        const type = params.get("type")
+        const model = params.get("model")
+        const color = params.get("color")
+        const year = params.get("yearCar")
+        const userVehicle = params.get("userVehicle")
+    
+        if (userVehicle) setVehicleOwner(userVehicle)
+        if (plate) setVehiclePlate(plate)
+        if (type) setVehicleType(type)
+        if (model) setVehicleModel(model)
+        if (color) setVehicleColor(color)
+        if (year) setVehicleYear(year)
+      }, [params])
+    ) : (null)
+  ): (null)
+  }
+
   return (
     <div className="w-full h-full p-4">
       <Toaster richColors position="top-center"/>
-      <Tabs defaultValue="user" className="w-full">
+      <Tabs defaultValue={defaultTable} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="user">Usuário</TabsTrigger>
           <TabsTrigger value="car">Veículo</TabsTrigger>
@@ -424,9 +483,9 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
         <TabsContent value="car" className="w-full">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>Cadastrar Veículo</CardTitle>
+              <CardTitle>{typeTable ? "Editar Veículo" : "Cadastrar Veículo"}</CardTitle>
               <CardDescription>
-                Preencha os dados para cadastrar um novo veículo.
+                Preencha os dados para {typeTable ? "editar um veículo" : "cadastrar um novo veículo"}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">

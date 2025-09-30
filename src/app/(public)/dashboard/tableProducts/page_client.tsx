@@ -16,7 +16,7 @@ export default function TableProdutctPage({products}: TableProdutctPageProps) {
     <>
         <div className="flex w-full items-center gap-4">
           <div className="flex-1" />
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-center" />
           <div className="flex-1 flex justify-center">
             <h5 className="text-muted-foreground text-xl text-center">
               Produtos

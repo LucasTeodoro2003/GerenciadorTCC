@@ -2,15 +2,15 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button } from "@/shared/ui/components/button";
 import { useRouter } from "next/navigation";
-import { Services } from "@prisma/client";
-import { DataTableDemoServices } from '@/features/actions/servicesTable/table';
+import { Vehicle} from "@prisma/client";
 import { Toaster } from 'sonner';
+import { DataTableDemoCar } from '@/features/actions/carTable/table';
 
-interface TableServicePageProps {
-  services: Services[]
+interface TableCarPageProps {
+  vehicles: Vehicle[]
 }
 
-export default function TableServicePage({services}: TableServicePageProps) {
+export default function TableCarPage({vehicles}: TableCarPageProps) {
     const router = useRouter()
   return (
     <>
@@ -19,17 +19,17 @@ export default function TableServicePage({services}: TableServicePageProps) {
           <div className="flex-1 flex justify-center">
             <Toaster richColors position="top-center" />
             <h5 className="text-muted-foreground text-xl text-center">
-              Serviços
+              Veículos Cadastrados
             </h5>
           </div>
           <div className="flex-1 flex items-center justify-end space-x-4">
-            <h1>Adicionar Serviços</h1>
+            <h1>Adicionar Veículo</h1>
             <Button
               type="submit"
               variant="outline"
               className="bg-transparent rounded-full w-12 h-12 p-0 flex items-center justify-center"
               onClick={() => {
-                router.push("/dashboard/enterprise?table=products");
+                router.push("/dashboard/clients?table=vehicles");
               }}
             >
             <AddCircleOutlineIcon />
@@ -37,7 +37,7 @@ export default function TableServicePage({services}: TableServicePageProps) {
           </div>
         </div>
       <div>
-        <DataTableDemoServices services={services}/>
+        <DataTableDemoCar vehicles={vehicles}/>
       </div>
     </>
   );

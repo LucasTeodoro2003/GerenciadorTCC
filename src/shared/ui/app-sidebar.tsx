@@ -145,6 +145,10 @@ const data = !dataUserPage ? {
           title: "Agendar",
           page: "create",
         },
+        {
+          title: "Veículos",
+          page: "tableCar",
+        },
       ],
     },
     {
