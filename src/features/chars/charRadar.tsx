@@ -63,6 +63,7 @@ export function ChartRadarDots({servicesNames}:ChartRadarDotsProps) {
     })
     .sort((a, b) => new Date(`2025 ${a.month}`).getTime() - new Date(`2025 ${b.month}`).getTime());
 
+    console.log("Mensais: ",chartData);
 
   return (
     <Card>

@@ -60,7 +60,7 @@ const chartData = Array.from(combinedMap.values()).sort(
   (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 );
 
-console.log("GRAFICO COISAS DIARIAS: ", chartData);
+console.log("Diarios: ", chartData);
 
 
   return (

@@ -56,6 +56,7 @@ export function ChartRadialStacked({ servicesNames }: ChartRadialStackedProps) {
     },
   ];
 
+  console.log("Total: ",chartData);
 
   const totalVisitors = chartData[0].desktop + chartData[0].mobile
 

@@ -29,7 +29,6 @@ import { Prisma, Revenue } from "@prisma/client";
 
 export const description = "An interactive area chart";
 
-
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -52,57 +51,119 @@ interface ChartAreaInteractiveProps {
   }>[];
 }
 
-export function ChartAreaInteractive({ revenue, expense, services }: ChartAreaInteractiveProps) {
-    const receitas = [
-  ...expense.map((e) => ({
-    date: e.date, 
-    receita: Number(e.amount),
-    despesas: 0,
-  })),
-  ...services.map((s) => ({
-    date: s.dateTime ? s.dateTime.toISOString().split("T")[0] : null,
-    receita: Number(s.totalValue),
-    despesas: 0,
-  })).filter((s) => s.date !== null),
-];
+function isDateOnlyString(s: string) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(s);
+}
 
-const despesas = revenue.map((r) => ({
-  date: r.date.toISOString().split("T")[0],
-  receita: 0,
-  despesas: Number(r.amount),
-}));
-
-const combinedMap = new Map();
-
-[...receitas, ...despesas].forEach((item) => {
-  if (!combinedMap.has(item.date)) {
-    combinedMap.set(item.date, { date: item.date, receita: 0, despesas: 0 });
+function parseToDate(input: string | Date | undefined | null): Date | null {
+  if (!input) return null;
+  if (input instanceof Date) {
+    if (Number.isNaN(input.getTime())) return null;
+    return input;
   }
-  const entry = combinedMap.get(item.date);
-  entry.receita += item.receita;
-  entry.despesas += item.despesas;
-});
+  const s = String(input).trim();
+  if (isDateOnlyString(s)) {
+    const [y, m, d] = s.split("-").map((v) => Number(v));
+    return new Date(y, m - 1, d);
+  }
+  const parsed = new Date(s);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
 
-const chartData = Array.from(combinedMap.values()).sort(
-  (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-);
+function toNumber(val: string | number | undefined | null): number {
+  if (val == null) return 0;
+  if (typeof val === "number") return val;
+  const s = String(val).trim();
+  const n = Number(s);
+  if (!Number.isNaN(n)) return n;
+  const alt = Number(s.replace(/\./g, "").replace(",", "."));
+  if (!Number.isNaN(alt)) return alt;
+  return 0;
+}
+
+function formatDateKey(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function dateFromKey(key: string) {
+  const [y, m, d] = key.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+export function ChartAreaInteractive({
+  revenue,
+  expense,
+  services,
+}: ChartAreaInteractiveProps) {
+  const chartData = React.useMemo(() => {
+    const map = new Map<
+      string,
+      { date: string; receita: number; despesas: number }
+    >();
+
+    const add = (
+      rawDate: string | Date | null | undefined,
+      receita = 0,
+      despesas = 0
+    ) => {
+      const dt = parseToDate(rawDate);
+      if (!dt) return;
+      const key = formatDateKey(dt);
+      const cur = map.get(key) ?? { date: key, receita: 0, despesas: 0 };
+      cur.receita += receita;
+      cur.despesas += despesas;
+      map.set(key, cur);
+    };
+
+    (expense || []).forEach((e) => {
+      add(e.date, toNumber(e.amount), 0);
+    });
+
+    (services || []).forEach((s) => {
+      add(s.dateTime ?? null, toNumber(s.totalValue), 0);
+    });
+    (revenue || []).forEach((r) => {
+      add(r.date, 0, toNumber(r.amount));
+    });
+
+    const arr = Array.from(map.values()).sort(
+      (a, b) => dateFromKey(a.date).getTime() - dateFromKey(b.date).getTime()
+    );
+    return arr.map((it) => ({
+      date: it.date,
+      receita: Math.round((it.receita + Number.EPSILON) * 100) / 100,
+      despesas: Math.round((it.despesas + Number.EPSILON) * 100) / 100,
+    }));
+  }, [revenue, expense, services]);
 
   const [timeRange, setTimeRange] = React.useState("90d");
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date();
+  const filteredData = React.useMemo(() => {
+    if (!chartData || chartData.length === 0) return [];
+    const now = new Date();
+    const referenceDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
     let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
-    }
+    if (timeRange === "30d") daysToSubtract = 30;
+    else if (timeRange === "7d") daysToSubtract = 7;
+
     const startDate = new Date(referenceDate);
     startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
 
+    return chartData.filter((item) => {
+      const itemDate = dateFromKey(item.date);
+      return itemDate.getTime() >= startDate.getTime();
+    });
+  }, [chartData, timeRange]);
+
+  console.log("Despesas: ",chartData);
   return (
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -170,7 +231,8 @@ const chartData = Array.from(combinedMap.values()).sort(
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
+                const [y, m, d] = String(value).split("-").map(Number);
+                const date = new Date(y, m - 1, d);
                 return date.toLocaleDateString("pt-BR", {
                   month: "short",
                   day: "numeric",
@@ -182,7 +244,9 @@ const chartData = Array.from(combinedMap.values()).sort(
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("pt-BR", {
+                    const [y, m, d] = String(value).split("-").map(Number);
+                    const date = new Date(y, m - 1, d);
+                    return date.toLocaleDateString("pt-BR", {
                       month: "short",
                       day: "numeric",
                     });
