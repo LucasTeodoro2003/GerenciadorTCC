@@ -15,17 +15,18 @@ import { Label } from "@/shared/ui/components/label";
 import { User } from "@prisma/client";
 import { useState } from "react";
 
-interface ModalClientPromp {
+interface ModalClientPagePromp {
   openModal: boolean;
   user: User;
+  setOpenPerfil: (open: boolean) => void;
 }
 
-export default function ModalClient({
+export default function ModalClientPage({
   openModal,
   user,
-}: ModalClientPromp) {
+  setOpenPerfil,
+}: ModalClientPagePromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const firtsAcess = !user.emailVerified;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,6 +40,7 @@ export default function ModalClient({
       } else {
         await updateUser2(user.id || "", formData);
       }
+      setOpenPerfil(false);
       window.location.reload();
     } catch (err) {
       alert("Erro ao atualizar");
@@ -48,7 +50,7 @@ export default function ModalClient({
   };
 
   return (
-    <Dialog open={openModal}>
+    <Dialog open={openModal} onOpenChange={(open) => setOpenPerfil(open)}>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
