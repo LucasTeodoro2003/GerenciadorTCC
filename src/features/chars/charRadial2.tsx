@@ -21,8 +21,6 @@ import { Prisma } from "@prisma/client"
 
 export const description = "A radial chart with stacked sections"
 
-const chartData = [{ month: "january", desktop: 1260, mobile: 570 }]
-
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -100,7 +98,7 @@ export function ChartRadialStacked({ servicesNames }: ChartRadialStackedProps) {
                           y={(viewBox.cy || 0) + 4}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Serviços
                         </tspan>
                       </text>
                     )

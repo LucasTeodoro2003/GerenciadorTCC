@@ -1,9 +1,9 @@
 "use client"
-import { ChartRadarDots } from "@/features/chars/charRadar";
 import { ChartRadialShape } from "@/features/chars/charRadial";
 import { ChartTooltipIndicatorLine } from "@/features/chars/charTooltip"; 
 import { ChartAreaInteractive } from "@/features/chars/charMain"; 
 import { Prisma, Revenue } from "@prisma/client";
+import { ChartRadialStacked } from "@/features/chars/charRadial2";
 
 interface CharPageProps {
     revenue: Revenue[];
@@ -16,7 +16,7 @@ export default function CharPage({ revenue, expense, services, servicesNames }: 
     return (
         <div className="flex flex-col gap-4 p-4">
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <ChartRadarDots servicesNames={servicesNames} />
+      <ChartRadialStacked servicesNames={servicesNames} />
       <ChartRadialShape servicesNames={servicesNames} />
       <ChartTooltipIndicatorLine servicesNames={servicesNames}/>
   </div>
