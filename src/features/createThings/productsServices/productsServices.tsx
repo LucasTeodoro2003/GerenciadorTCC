@@ -38,7 +38,7 @@ interface CreateServiceProps{
     users: User[]
 }
 
-export function CreateServiceSomeProducts({users}:CreateServiceProps) {
+export function   CreateServiceSomeProducts({users}:CreateServiceProps) {
   const [servicePrice, setServicePrice] = useState("")
   const [serviceDescription, setServiceDescription] = useState("")
   const [productPrice, setProductPrice] = useState("")
@@ -340,8 +340,11 @@ const typeTable = params.get("description") ? true : false
                       id="product-price" 
                       placeholder="Ex: 45.90" 
                       value={productPrice}
-                      onChange={(e) => setProductPrice(e.target.value)}
-                      
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const validValue = value.replace(/[^\d.,]/g, '');
+                        setProductPrice(validValue);
+                      }}
                     />
                   </div>
                 </div>
