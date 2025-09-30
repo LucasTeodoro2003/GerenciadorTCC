@@ -249,12 +249,16 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       onClick={!typeTable ? handleCreateVehicle : handleEdityVehicle}
       disabled={isSubmittingVehicle || !vehicleOwner || !vehiclePlate || !vehicleType}
     >
-      {isSubmittingVehicle ? <CircularProgress size={20} /> : "Cadastrar Veículo"}
+      {isSubmittingVehicle 
+      ? <CircularProgress size={20} /> 
+      : typeTable 
+        ? "Editar Veículo" 
+        : "Cadastrar Veículo"}
     </Button>
   );
 
   const defaultTable = params.get("table") ? (params.get("table") === "vehicles" ? "car" : "user") : "user";
-  const typeTable = params.get("description") ? true : false
+  const typeTable = params.get("table") ? true : false
 
   {typeTable ? (
     defaultTable === "car" ? (
