@@ -50,7 +50,7 @@ export default function ModalClientPage({
   };
 
   return (
-    <Dialog open={openModal} onOpenChange={(open) => setOpenPerfil(open)}>
+    <Dialog open={openModal} onOpenChange={setOpenPerfil}>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
