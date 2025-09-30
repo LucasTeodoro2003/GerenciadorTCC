@@ -27,6 +27,8 @@ export default function ModalClient({
   setOpenPerfil,
 }: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+const firtsAcess = !user.emailVerified;
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,7 +52,12 @@ export default function ModalClient({
   };
 
   return (
-    <Dialog open={openModal} onOpenChange={setOpenPerfil}>
+    <Dialog
+  open={openModal} 
+  onOpenChange={(open) => {
+    if (!firtsAcess) setOpenPerfil(open)
+  }}
+>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
