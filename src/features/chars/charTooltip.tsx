@@ -15,20 +15,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/shared/ui/components/chart"
+import { Prisma } from "@prisma/client"
 
 export const description = "A stacked bar chart with a legend"
 export const iframeHeight = "600px"
 export const containerClassName =
   "[&>div]:w-full [&>div]:max-w-md flex items-center justify-center min-h-svh"
 
-const chartData = [
-  { date: "2024-07-15", running: 450, swimming: 300 },
-  { date: "2024-07-16", running: 380, swimming: 420 },
-  { date: "2024-07-17", running: 520, swimming: 120 },
-  { date: "2024-07-18", running: 140, swimming: 550 },
-  { date: "2024-07-19", running: 600, swimming: 350 },
-  { date: "2024-07-20", running: 480, swimming: 400 },
-]
 
 const chartConfig = {
   running: {
@@ -42,17 +35,39 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
+interface ChartTooltipIndicatorLineProps {
+  servicesNames: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{select:{description:true}},serviceVehicle:{select:{dateTime:true}}}}>[];
+}
+
+export function ChartTooltipIndicatorLine({servicesNames}:ChartTooltipIndicatorLineProps) {
+  const combinedMap = new Map();
+
+  servicesNames.forEach((s) => {
+  const date = s.serviceVehicle.dateTime ? new Date(s.serviceVehicle.dateTime).toISOString().split("T")[0] : null;
+  const serviceName = s.service.description;
+
+  if (!date || !serviceName) return;
+
+  if (!combinedMap.has(date)) {
+    combinedMap.set(date, { date });
+  }
+
+  const entry = combinedMap.get(date)!;
+  entry[serviceName] = (entry[serviceName] || 0) + 1;
+});
+
+const chartData = Array.from(combinedMap.values()).sort(
+  (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+);
+
+console.log("GRAFICO COISAS DIARIAS: ", chartData);
 
 
-
-
-
-export function ChartTooltipIndicatorLine() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tooltip - Line Indicator</CardTitle>
-        <CardDescription>Tooltip with line indicator.</CardDescription>
+        <CardTitle>Serviços Diários</CardTitle>
+        <CardDescription>Serviços realizados diariamente</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

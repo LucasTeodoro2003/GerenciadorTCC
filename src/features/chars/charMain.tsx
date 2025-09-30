@@ -87,15 +87,6 @@ const chartData = Array.from(combinedMap.values()).sort(
   (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 );
 
-console.log("Teste", chartData);
-
-
-
-
-
-
-
-
   const [timeRange, setTimeRange] = React.useState("90d");
 
   const filteredData = chartData.filter((item) => {

@@ -18,16 +18,13 @@ import {
   CardTitle,
 } from "@/shared/ui/components/card"
 import { ChartConfig, ChartContainer } from "@/shared/ui/components/chart"
+import { Prisma } from "@prisma/client"
 
 export const description = "A radial chart with a custom shape"
 
-const chartData = [
-  { browser: "safari", visitors: 1260, fill: "var(--color-safari)" },
-]
-
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "Serviços",
   },
   safari: {
     label: "Safari",
@@ -36,15 +33,37 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
+interface ChartRadialShapeProps {
+  servicesNames: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{select:{description:true}},serviceVehicle:{select:{dateTime:true}}}}>[];
+}
 
 
+export function ChartRadialShape({ servicesNames }: ChartRadialShapeProps) {
+  const chartColorVars = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
+    const counts = new Map();
 
-export function ChartRadialShape() {
+  servicesNames.forEach((item) => {
+    const service = item.service.description;
+    counts.set(service, (counts.get(service) || 0) + 1);
+  });
+
+  const chartData = Array.from(counts.entries()).map(([service, count], index) => ({
+    browser: service,
+    visitors: count,
+    fill: chartColorVars[index % chartColorVars.length],
+  }));
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Radial Chart - Shape</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Total de Serviços</CardTitle>
+        <CardDescription>Todos os serviços realizados</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -81,14 +100,14 @@ export function ChartRadialShape() {
                           y={viewBox.cy}
                           className="fill-foreground text-4xl font-bold"
                         >
-                          {chartData[0].visitors.toLocaleString()}
+                          {chartData.reduce((total, item) => total + item.visitors, 0).toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Serviços
                         </tspan>
                       </text>
                     )
@@ -99,14 +118,6 @@ export function ChartRadialShape() {
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
     </Card>
   )
 }

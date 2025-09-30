@@ -15,13 +15,9 @@ export default async function Page() {
     where: {id: userId}
   }) 
   const enterprise = user?.enterpriseId
-  // busca grafico principal (despesas x receitas)
-  //despesas - revenue
   const revenue = await db.revenue.findMany({
     where: {user:{enterpriseId:enterprise}},
   })
-
-  //receitas - expense + serviceVehicle
   const expense = await db.expense.findMany({
     where: {user: {enterpriseId:enterprise}},
     select:{date:true, amount:true}
@@ -31,7 +27,13 @@ export default async function Page() {
     select:{dateTime:true, totalValue:true}
   })
 
+  const servicesNames = await db.serviceVehicleService.findMany({
+    where: {serviceVehicle:{enterpriseId:enterprise}},
+    include:{service:{select:{description:true}},serviceVehicle:{select:{dateTime:true}}}
+  })
+
+
   return (
-    <CharPage expense={expense} revenue={revenue} services={services} />
+    <CharPage expense={expense} revenue={revenue} services={services} servicesNames={servicesNames}/>
   );
 }

@@ -17,25 +17,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/shared/ui/components/chart"
+import { Prisma } from "@prisma/client"
 
 export const description = "A radar chart with dots"
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 273 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
-
-
-
-
-
-
-
-
 
 
 const chartConfig = {
@@ -49,18 +33,43 @@ const chartConfig = {
 
 
 
+interface ChartRadarDotsProps {
+  servicesNames: Prisma.ServiceVehicleServiceGetPayload<{include:{service:{select:{description:true}},serviceVehicle:{select:{dateTime:true}}}}>[];
+}
 
 
 
 
+export function ChartRadarDots({servicesNames}:ChartRadarDotsProps) {
+  function getMonthName(monthIndex: number) {
+  return new Date(2025, monthIndex, 1).toLocaleString("pt-BR", { month: "long" });
+}
 
-export function ChartRadarDots() {
+  const counts = new Map<string, number>();
+
+  servicesNames.forEach((item) => {
+    const date = new Date(item.serviceVehicle.dateTime!);
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+
+  const chartData = Array.from(counts.entries())
+    .map(([key, count]) => {
+      const [year, monthIndex] = key.split("-").map(Number);
+      return {
+        month: getMonthName(monthIndex),
+        desktop: count,
+      };
+    })
+    .sort((a, b) => new Date(`2025 ${a.month}`).getTime() - new Date(`2025 ${b.month}`).getTime());
+
+
   return (
     <Card>
       <CardHeader className="items-center">
-        <CardTitle>Radar Chart - Dots</CardTitle>
+        <CardTitle>Serviços Mensais</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Serviços realizados mensalmente
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
@@ -84,14 +93,6 @@ export function ChartRadarDots() {
           </RadarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground flex items-center gap-2 leading-none">
-          January - June 2024
-        </div>
-      </CardFooter>
     </Card>
   )
 }
