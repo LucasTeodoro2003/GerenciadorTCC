@@ -31,7 +31,7 @@ export default function LayoutClient({
   users,
 }: LayoutClientProps) {
   const firtsAcess = !user.emailVerified;
-  const [openPerfil,setOpenPerfil] = useState(false)
+  const [openPerfil, setOpenPerfil] = useState(false);
   return (
     <SidebarProvider>
       <AppSidebar
@@ -58,7 +58,7 @@ export default function LayoutClient({
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
-          <ModalClient openModal={firtsAcess || openPerfil}  user={user} setOpenPerfil={setOpenPerfil}/>
+          <ModalClient openModal={firtsAcess}  user={user} setOpenPerfil={setOpenPerfil}/>
           {children}
         </div>
       </SidebarInset>

@@ -51,21 +51,8 @@ export default function ModalClient({
   };
 
   return (
-    <Dialog
-      open={openModal}
-      onOpenChange={(open) => {
-        if (!firtsAcess) setOpenPerfil(open);
-      }}
-    >
-      <DialogContent
-        className="sm:max-w-[425px] max-w-[90%] rounded-lg"
-        onInteractOutside={(e) => {
-          if (firtsAcess) e.preventDefault();
-        }}
-        onEscapeKeyDown={(e) => {
-          if (firtsAcess) e.preventDefault();
-        }}
-      >
+    <Dialog open={openModal} onOpenChange={setOpenPerfil}>
+      <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <div className="flex items-center justify-between">
