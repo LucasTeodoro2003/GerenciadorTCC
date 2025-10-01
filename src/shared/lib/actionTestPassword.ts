@@ -3,10 +3,10 @@
 import db from "@/shared/lib/prisma";
 import bcrypt from "bcryptjs";
 
-export async function testPassword(email: string, plainPassword: string) {
+export async function testPassword(userId: string, plainPassword: string) {
   try {
     const user = await db.user.findUnique({
-      where: { email },
+      where: { id : userId },
     });
 
     if (!user || !user.password) {
