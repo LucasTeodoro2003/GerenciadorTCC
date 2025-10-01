@@ -1,3 +1,4 @@
+"use client"
 import { testPassword } from "@/shared/lib/actionTestPassword";
 import { resetUserPassword } from "@/shared/lib/actionUpdatePassword";
 import { Button } from "@/shared/ui/components/button";

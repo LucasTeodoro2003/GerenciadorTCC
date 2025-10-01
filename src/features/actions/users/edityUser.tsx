@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/shared/ui/components/button";
 import {
   Card,
@@ -37,6 +38,8 @@ export interface EdityUserProps {
 }
 
 export function EdityUser({ user }: EdityUserProps) {
+    console.log("CLIENTE PAGE: ",user)
+
   const [userName, setUserName] = useState(user.name);
   const [userEmail, setUserEmail] = useState(user.email);
   const [userPhone, setUserPhone] = useState(user.phone);

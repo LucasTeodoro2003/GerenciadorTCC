@@ -1,8 +1,9 @@
+"use server"
 import { auth } from "@/shared/lib/auth";
 import { redirect } from "next/navigation";
 import db from "@/shared/lib/prisma";
 import EdityUserPage from "./page_client";
-import { Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export default async function Page() {
   const session = await auth();
@@ -14,6 +15,7 @@ export default async function Page() {
     where: { id: userId },
     include:{addresses:{where:{isPrimary:true}}}
   }) as Prisma.UserGetPayload<{include: {addresses:{where:{isPrimary:true}}}}>;
+  console.log("SERVIDOR: ",user)
 
   return <EdityUserPage user={user} />;
 }
