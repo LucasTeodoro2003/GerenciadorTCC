@@ -1,7 +1,8 @@
 import { auth } from "@/shared/lib/auth";
 import { redirect } from "next/navigation";
-import ClientsPageClient from "./page_client";
 import db from "@/shared/lib/prisma";
+import EdityUserPage from "./page_client";
+import { Prisma, User } from "@prisma/client";
 
 export default async function Page() {
   const session = await auth();
@@ -11,18 +12,8 @@ export default async function Page() {
   }
   const user = await db.user.findUnique({
     where: { id: userId },
-  });
-  const enterpriseId = user?.enterpriseId || "";
-  const users = await db.user.findMany({
-    where: {enterpriseId: enterpriseId},
-    include: {
-      vehicle: {
-        include: {
-          serviceVehicle: {},
-        },
-      },
-    },
-  });
+    include:{addresses:{where:{isPrimary:true}}}
+  }) as Prisma.UserGetPayload<{include: {addresses:{where:{isPrimary:true}}}}>;
 
-  return <ClientsPageClient users={users} />;
+  return <EdityUserPage user={user} />;
 }

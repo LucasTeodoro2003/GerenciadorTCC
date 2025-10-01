@@ -17,7 +17,6 @@ import { Prisma } from "@prisma/client";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import { useState } from "react";
-import ModalClientPage from "@/features/actions/edityPerfil/modalAcess";
 interface LayoutClientProps {
   children: React.ReactNode;
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;
@@ -32,13 +31,11 @@ export default function LayoutClient({
   users,
 }: LayoutClientProps) {
   const firtsAcess = !user.emailVerified;
-  const [openPerfil, setOpenPerfil] = useState(false);
   return (
     <SidebarProvider>
       <AppSidebar
         user={user}
         users={users}
-        setOpenPerfil={setOpenPerfil}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -60,7 +57,6 @@ export default function LayoutClient({
         </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
           <ModalClient openModal={firtsAcess}  user={user}/>
-          <ModalClientPage openModal={openPerfil} user={user} setOpenPerfil={setOpenPerfil}/>
           {children}
         </div>
       </SidebarInset>

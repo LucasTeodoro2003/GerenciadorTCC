@@ -1,7 +1,12 @@
 "use client"
 
-import { CreateServiceProps, CreateUserSomeVehicle } from "@/features/createThings/userVehicle/userVehicle";
+import { EdityUser } from "@/features/actions/users/edityUser";
+import { Prisma } from "@prisma/client";
 
-export default function ClientsPageClient({ users }: CreateServiceProps) {
-  return <CreateUserSomeVehicle users={users} />;
+interface EdityPageProps {
+  user: Prisma.UserGetPayload<{include: {addresses:{where:{isPrimary:true}}}}>;
+}
+
+export default function EdityUserPage({ user }: EdityPageProps) {
+  return <EdityUser user={user} />;
 }

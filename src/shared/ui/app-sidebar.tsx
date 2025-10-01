@@ -20,10 +20,9 @@ import { Prisma, User } from "@prisma/client"
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: Prisma.UserGetPayload<{include: {enterprise: {}}}>;  users: User[],
-  setOpenPerfil: (open: boolean) => void;
 }
 
-export function AppSidebar({user, users, setOpenPerfil, ...props }: AppSidebarProps) {
+export function AppSidebar({user, users, ...props }: AppSidebarProps) {
 const permissionUser = user.permission;
 const dataUserPage = permissionUser === 1;
 const firtNameEnterprise = user.enterprise?.name.split(" ")[0];
@@ -181,7 +180,7 @@ const data = !dataUserPage ? {
         <NavMain items={data.navMain}/>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} setOpenPerfil={setOpenPerfil}/>
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
