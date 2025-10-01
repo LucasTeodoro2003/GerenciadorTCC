@@ -217,7 +217,9 @@ export function EdityUser({ user }: EdityUserProps) {
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   </div>
+                  <div className="space-y-2 w-full">
                   <SheetPassword userId={user.id} />
+                  </div>
                 </div>
               </div>
               <div className="border-t pt-4">

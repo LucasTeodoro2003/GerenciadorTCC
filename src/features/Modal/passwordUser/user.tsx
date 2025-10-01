@@ -53,7 +53,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Button
       className="w-full flex items-center justify-center"
       onClick={handleTestPassword}
-      disabled
+      disabled={isSubmittingPassword}
     >
       {isSubmittingPassword ? <CircularProgress size={20} /> : "Alterar Senha"}
     </Button>
@@ -63,7 +63,9 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Sheet>
       <Toaster position="top-center" richColors />
       <SheetTrigger asChild>
-        <Button variant="outline">Muda Senha</Button>
+        <Button variant="outline" className="h-full w-full">Alterar Senha</Button>
+      </SheetTrigger>
+      <SheetTrigger >
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
