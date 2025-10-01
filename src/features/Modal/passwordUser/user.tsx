@@ -34,6 +34,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
       if (!valid) {
         toast.error("Senha atual incorreta");
         toast.error("Por favor, insira a senha correta para continuar.");
+        setIsSubmittingPassword(false);
         return;
       }
     }toast.error("Por favor, insira a senha atual para continuar.");
@@ -53,7 +54,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Button
       className="w-full flex items-center justify-center"
       onClick={handleTestPassword}
-      disabled={isSubmittingPassword}
+      disabled={isSubmittingPassword || userPassword === "" || userNewPassword === ""}
     >
       {isSubmittingPassword ? <CircularProgress size={20} /> : "Alterar Senha"}
     </Button>
