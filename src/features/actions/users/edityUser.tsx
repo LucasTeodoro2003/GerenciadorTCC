@@ -248,7 +248,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         <Input
                           id="street"
                           placeholder="Ex: Rua das Flores"
-                          value={street}
+                        value={street || "ERRO"}
                           onChange={(e) => setStreet(e.target.value)}
                         />
                       </div>
