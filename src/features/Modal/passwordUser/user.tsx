@@ -37,7 +37,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
         setIsSubmittingPassword(false);
         return;
       }
-    }toast.error("Por favor, insira a senha atual para continuar.");
+    }
     if (userNewPassword.length < 8) {
       toast.error("A nova senha deve ter no mínimo 8 caracteres.");
       setIsSubmittingPassword(false);
