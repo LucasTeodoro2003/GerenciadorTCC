@@ -39,7 +39,6 @@ export interface EdityUserProps {
 }
 
 export function EdityUser({ user }: EdityUserProps) {
-
   const [userName, setUserName] = useState(user.name);
   const [userEmail, setUserEmail] = useState(user.email);
   const [userPhone, setUserPhone] = useState(user.phone);
@@ -53,7 +52,7 @@ export function EdityUser({ user }: EdityUserProps) {
   const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
-  const [image, setImage] = useState(user.image);
+  const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     user.image || null
   );
@@ -86,7 +85,6 @@ export function EdityUser({ user }: EdityUserProps) {
     "SE",
     "TO",
   ];
-
 
   const ImagePreview = () => {
     if (imagePreview) {
@@ -142,7 +140,7 @@ export function EdityUser({ user }: EdityUserProps) {
 
       await updatePerfilUserPage(userFormData);
       toast.success("Usuário atualizado com sucesso!");
-      await updateAddress(addressFormData)
+      await updateAddress(addressFormData);
       toast.success("Endereço atualizado com sucesso!");
       setTimeout(() => {
         window.location.reload();
@@ -244,8 +242,14 @@ export function EdityUser({ user }: EdityUserProps) {
                     <input
                       type="file"
                       id="image"
-                      defaultValue={imagePreview || ""}
-                      onChange={(e) => setImage(e.target.value)}
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setImage(file);
+                          setImagePreview(URL.createObjectURL(file))
+                        }
+                      }}
                       className="file-input"
                     />
                   </div>
