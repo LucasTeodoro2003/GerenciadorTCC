@@ -32,6 +32,8 @@ import { SheetPassword } from "@/features/Modal/passwordUser/user";
 import { updatePerfilUserPage } from "@/shared/lib/actionUpdateUser";
 import { updateAddress } from "@/shared/lib/actionUpdateAdress";
 import { updatePerfilUserPageNoImage } from "@/shared/lib/actionUpdateUserNoImage";
+import imageCompression from "browser-image-compression";
+
 
 export interface EdityUserProps {
   user: Prisma.UserGetPayload<{
@@ -54,9 +56,7 @@ export function EdityUser({ user }: EdityUserProps) {
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    user.image || "/usuario.png"
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(user.image || "/usuario.png");
 
   const brazilianStates = [
     "AC",
@@ -87,6 +87,24 @@ export function EdityUser({ user }: EdityUserProps) {
     "SE",
     "TO",
   ];
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(file, options);
+      setImage(compressedFile);
+      setImagePreview(URL.createObjectURL(compressedFile)); 
+    } catch (error) {
+      console.error("Erro ao comprimir imagem:", error);
+    }
+  }
+};
 
   const ImagePreview = () => {
     if (imagePreview) {
@@ -251,13 +269,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       id="image"
                       accept="image/*"
                       defaultValue={user.image || "/usuario.png"}
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          setImage(file);
-                          setImagePreview(URL.createObjectURL(file));
-                        }
-                      }}
+                      onChange={handleFileChange}
                       className="file-input"
                     />
                   </div>
