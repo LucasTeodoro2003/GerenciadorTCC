@@ -52,10 +52,11 @@ export function EdityUser({ user }: EdityUserProps) {
   const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
-  const [image, setImage] = useState<File | null>(user.image ? new File([user.image], "user-image") : new File(["/usuario.png"], "user-image"));
+  const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
-    user.image || null
+    user.image || "/usuario.png"
   );
+
   const brazilianStates = [
     "AC",
     "AL",
@@ -125,7 +126,11 @@ export function EdityUser({ user }: EdityUserProps) {
       userFormData.append("name", userName);
       userFormData.append("phone", userPhone || "");
       userFormData.append("userId", user.id || "");
-      userFormData.append("image", image || "");
+      if (image) {
+        userFormData.append("image", image);
+      } else {
+        userFormData.append("image", user.image || "");
+      }
 
       const addressFormData = new FormData();
       addressFormData.append("street", street);
@@ -248,7 +253,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         const file = e.target.files?.[0];
                         if (file) {
                           setImage(file);
-                          setImagePreview(URL.createObjectURL(file))
+                          setImagePreview(URL.createObjectURL(file));
                         }
                       }}
                       className="file-input"
