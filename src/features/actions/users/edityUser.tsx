@@ -52,7 +52,7 @@ export function EdityUser({ user }: EdityUserProps) {
   const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | null>(user.image ? new File([user.image], "user-image") : new File(["/usuario.png"], "user-image"));
   const [imagePreview, setImagePreview] = useState<string | null>(
     user.image || null
   );
