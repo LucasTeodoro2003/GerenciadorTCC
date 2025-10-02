@@ -31,6 +31,7 @@ import { MapPin } from "lucide-react";
 import { SheetPassword } from "@/features/Modal/passwordUser/user";
 import { updatePerfilUserPage } from "@/shared/lib/actionUpdateUser";
 import { updateAddress } from "@/shared/lib/actionUpdateAdress";
+import { updatePerfilUserPageNoImage } from "@/shared/lib/actionUpdateUserNoImage";
 
 export interface EdityUserProps {
   user: Prisma.UserGetPayload<{
@@ -126,11 +127,7 @@ export function EdityUser({ user }: EdityUserProps) {
       userFormData.append("name", userName);
       userFormData.append("phone", userPhone || "");
       userFormData.append("userId", user.id || "");
-      if (image) {
-        userFormData.append("image", image);
-      } else {
-        userFormData.append("image", user.image || "");
-      }
+      userFormData.append("image", image || "");
 
       const addressFormData = new FormData();
       addressFormData.append("street", street);
@@ -143,7 +140,12 @@ export function EdityUser({ user }: EdityUserProps) {
       addressFormData.append("number", number || "");
       addressFormData.append("complement", complement || "");
 
+
+      if(image){
       await updatePerfilUserPage(userFormData);
+      }else{
+        await updatePerfilUserPageNoImage(userFormData);
+      }
       toast.success("Usuário atualizado com sucesso!");
       await updateAddress(addressFormData);
       toast.success("Endereço atualizado com sucesso!");
