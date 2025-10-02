@@ -53,7 +53,7 @@ export function EdityUser({ user }: EdityUserProps) {
   const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState(user.image);
   const [imagePreview, setImagePreview] = useState<string | null>(
     user.image || null
   );
@@ -87,17 +87,6 @@ export function EdityUser({ user }: EdityUserProps) {
     "TO",
   ];
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const ImagePreview = () => {
     if (imagePreview) {
@@ -238,22 +227,6 @@ export function EdityUser({ user }: EdityUserProps) {
                     />
                   </div>
                 </div>
-
-                {/* <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
-                    <Input
-                      id="phone"
-                      placeholder="Ex: 34999999999"
-                      maxLength={11}
-                      value={userPhone || "ERRO"}
-                      onChange={(e) => setUserPhone(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-7 w-full ">
-                  <SheetPassword userId={user.id} />
-                  </div>
-                </div> */}
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Telefone</Label>
@@ -271,8 +244,8 @@ export function EdityUser({ user }: EdityUserProps) {
                     <input
                       type="file"
                       id="image"
-                      accept="image/*"
-                      onChange={handleImageChange}
+                      defaultValue={imagePreview || ""}
+                      onChange={(e) => setImage(e.target.value)}
                       className="file-input"
                     />
                   </div>
@@ -280,7 +253,7 @@ export function EdityUser({ user }: EdityUserProps) {
                     <ImagePreview />
                   </div>
                 </div>
-                <div className="space-y-6 w-full ">
+                <div className="space-y-7 w-full ">
                   <SheetPassword userId={user.id} />
                 </div>
               </div>

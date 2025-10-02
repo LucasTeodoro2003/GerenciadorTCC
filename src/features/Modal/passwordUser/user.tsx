@@ -64,7 +64,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Sheet>
       <Toaster position="top-center" richColors />
       <SheetTrigger asChild>
-        <Button variant="outline" className="h-full w-full">Alterar Senha</Button>
+        <Button variant="outline" className="h-min w-full border-red-300 dark:border-red-400">Alterar Senha</Button>
       </SheetTrigger>
       <SheetTrigger >
       </SheetTrigger>
