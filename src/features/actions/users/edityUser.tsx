@@ -243,6 +243,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       type="file"
                       id="image"
                       accept="image/*"
+                      defaultValue={user.image || "/usuario.png"}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
