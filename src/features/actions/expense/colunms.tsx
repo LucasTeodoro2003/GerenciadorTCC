@@ -221,7 +221,6 @@ export function getColumns(
               </AlertDialogContent>
             </AlertDialog>
 
-            {/* Modal de Edição */}
             <EditExpenseModal
               expense={expense}
               open={editModalOpen}

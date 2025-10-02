@@ -434,7 +434,6 @@ export default function CalendarIcons({
 
                 <Separator />
 
-                {/* Resumo */}
                 <div className="space-y-2">
                   <h3 className="font-medium">Resumo</h3>
                   <div className="space-y-1">
@@ -470,7 +469,7 @@ export default function CalendarIcons({
             <Button variant="outline" onClick={() => setEditMode(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveChanges} disabled={!isLoading}>
+            <Button onClick={handleSaveChanges} disabled={isLoading}>
               {!isLoading ? (
                 <>
                   <Save className="h-4 w-4 mr-2" /> Salvar Alterações
@@ -485,7 +484,6 @@ export default function CalendarIcons({
         </Card>
       )}
 
-      {/* Modal de detalhes do serviço */}
       <Dialog
         open={selectedEvent !== null && !editMode}
         onOpenChange={(open) => !open && setSelectedEvent(null)}
@@ -554,7 +552,6 @@ export default function CalendarIcons({
                 </div>
               </div>
 
-              {/* Endereço em vez da cor do veículo */}
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">
                   Endereço
@@ -579,7 +576,6 @@ export default function CalendarIcons({
                 )}
               </div>
 
-              {/* Seção de serviços */}
               <div className="space-y-2 p-3 rounded-lg bg-muted/50">
                 <p className="text-sm font-medium text-muted-foreground">
                   Serviços Incluídos

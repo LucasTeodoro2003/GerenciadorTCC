@@ -188,7 +188,6 @@ export default function TableRevenue({
         </Button>
       </div>
 
-      {/* Resto do componente permanece igual */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Button

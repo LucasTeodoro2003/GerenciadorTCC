@@ -40,7 +40,6 @@ export default function ThemeToggleV2() {
           className="absolute opacity-0 w-0 h-0"
         />
 
-        {/* Toggle Slot */}
         <motion.div
           className={`absolute w-full h-full rounded-full border-[1.2px] transition-colors`}
           style={{
@@ -49,7 +48,6 @@ export default function ThemeToggleV2() {
             boxShadow: `0 3px 7px ${COLORS.shadow}`,
           }}
         >
-          {/* Sun Icon */}
           <motion.span
             className="absolute"
             style={{ height: "1.462em", width: "1.462em" }}
@@ -68,7 +66,6 @@ export default function ThemeToggleV2() {
             <FaSun size="1.462em" color={COLORS.sun} />
           </motion.span>
 
-          {/* Moon Icon */}
           <motion.span
             className="absolute"
             style={{ height: "1.462em", width: "1.462em" }}
@@ -87,7 +84,6 @@ export default function ThemeToggleV2() {
             <FaMoon size="1.462em" color={COLORS.moon} />
           </motion.span>
 
-          {/* Toggle Button */}
           <motion.div
             className="absolute rounded-full"
             initial={false}

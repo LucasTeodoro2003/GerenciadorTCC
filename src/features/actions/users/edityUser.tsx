@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/shared/ui/components/button";
 import {
   Card,
@@ -30,6 +30,7 @@ import { CircularProgress } from "@mui/material";
 import { MapPin } from "lucide-react";
 import { SheetPassword } from "@/features/Modal/passwordUser/user";
 import { updatePerfilUserPage } from "@/shared/lib/actionUpdateUser";
+import { updateAddress } from "@/shared/lib/actionUpdateAdress";
 
 export interface EdityUserProps {
   user: Prisma.UserGetPayload<{
@@ -38,7 +39,6 @@ export interface EdityUserProps {
 }
 
 export function EdityUser({ user }: EdityUserProps) {
-    console.log("CLIENTE PAGE: ",user)
 
   const [userName, setUserName] = useState(user.name);
   const [userEmail, setUserEmail] = useState(user.email);
@@ -53,6 +53,10 @@ export function EdityUser({ user }: EdityUserProps) {
   const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user.image || null
+  );
   const brazilianStates = [
     "AC",
     "AL",
@@ -83,6 +87,35 @@ export function EdityUser({ user }: EdityUserProps) {
     "TO",
   ];
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const ImagePreview = () => {
+    if (imagePreview) {
+      return (
+        <img
+          src={imagePreview}
+          alt={`Imagem de ${user.name}`}
+          className="w-32 h-32 object-cover rounded-full"
+        />
+      );
+    }
+    return (
+      <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+        Sem imagem
+      </div>
+    );
+  };
+
   const handleEditUser = async () => {
     try {
       if (
@@ -103,8 +136,9 @@ export function EdityUser({ user }: EdityUserProps) {
       const userFormData = new FormData();
       userFormData.append("email", userEmail);
       userFormData.append("name", userName);
-      userFormData.append("enterpriseId", user.enterpriseId || "");
       userFormData.append("phone", userPhone || "");
+      userFormData.append("userId", user.id || "");
+      userFormData.append("image", image || "");
 
       const addressFormData = new FormData();
       addressFormData.append("street", street);
@@ -117,13 +151,10 @@ export function EdityUser({ user }: EdityUserProps) {
       addressFormData.append("number", number || "");
       addressFormData.append("complement", complement || "");
 
-
       await updatePerfilUserPage(userFormData);
-      toast.success(
-        `Usuário cadastrado com sucesso!${
-          addAddress ? " Endereço adicionado." : ""
-        }`
-      );
+      toast.success("Usuário atualizado com sucesso!");
+      await updateAddress(addressFormData)
+      toast.success("Endereço atualizado com sucesso!");
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -139,6 +170,8 @@ export function EdityUser({ user }: EdityUserProps) {
       setState("");
       setPostalCode("");
       setIsPrimaryAddress(true);
+      setImage(null);
+      setImagePreview(null);
     } catch (error) {
       console.error("Erro geral ao editar usuário:", error);
       toast.error("Ocorreu um erro ao editar o usuário: ");
@@ -178,7 +211,7 @@ export function EdityUser({ user }: EdityUserProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-3">
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">
@@ -206,6 +239,21 @@ export function EdityUser({ user }: EdityUserProps) {
                   </div>
                 </div>
 
+                {/* <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Telefone</Label>
+                    <Input
+                      id="phone"
+                      placeholder="Ex: 34999999999"
+                      maxLength={11}
+                      value={userPhone || "ERRO"}
+                      onChange={(e) => setUserPhone(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-7 w-full ">
+                  <SheetPassword userId={user.id} />
+                  </div>
+                </div> */}
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Telefone</Label>
@@ -217,9 +265,23 @@ export function EdityUser({ user }: EdityUserProps) {
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-6 w-full ">
-                  <SheetPassword userId={user.id} />
+
+                  <div className="space-y-2">
+                    <Label htmlFor="image">Imagem do usuário</Label>
+                    <input
+                      type="file"
+                      id="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="file-input"
+                    />
                   </div>
+                  <div className="mt-4">
+                    <ImagePreview />
+                  </div>
+                </div>
+                <div className="space-y-6 w-full ">
+                  <SheetPassword userId={user.id} />
                 </div>
               </div>
               <div className="border-t pt-4">
@@ -250,7 +312,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         <Input
                           id="street"
                           placeholder="Ex: Rua das Flores"
-                        value={street || "ERRO"}
+                          value={street || "ERRO"}
                           onChange={(e) => setStreet(e.target.value)}
                         />
                       </div>

@@ -8,7 +8,6 @@ interface EdityPageProps {
 }
 
 export default function EdityUserPage({ user }: EdityPageProps) {
-    console.log("CLIENTE: ",user)
 
   return <EdityUser user={user} />;
 }

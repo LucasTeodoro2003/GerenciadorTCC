@@ -15,7 +15,6 @@ export default async function Page() {
     where: { id: userId },
     include:{addresses:{where:{isPrimary:true}}}
   }) as Prisma.UserGetPayload<{include: {addresses:{where:{isPrimary:true}}}}>;
-  console.log("SERVIDOR: ",user)
 
   return <EdityUserPage user={user} />;
 }

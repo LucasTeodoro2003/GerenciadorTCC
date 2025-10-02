@@ -93,7 +93,6 @@ export function DataTable<TData, TValue>({
     <div className="h-full flex flex-col">
       <div className="rounded-xl border p-1 flex flex-col">
         <div className="space-y-4 mb-4">
-          {/* Filtros de Status */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">Status:</span>
             <Button 
@@ -131,7 +130,6 @@ export function DataTable<TData, TValue>({
             )}
           </div>
           
-          {/* Filtros de Categoria */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">Categoria:</span>
             {uniqueCategories.map(category => (
@@ -155,7 +153,6 @@ export function DataTable<TData, TValue>({
             )}
           </div>
           
-          {/* Resumo dos filtros ativos */}
           {(statusFilter || categoryFilter) && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium">Filtros ativos:</span>

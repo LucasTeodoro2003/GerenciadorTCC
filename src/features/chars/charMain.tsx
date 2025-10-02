@@ -163,7 +163,6 @@ export function ChartAreaInteractive({
     });
   }, [chartData, timeRange]);
 
-  console.log("Despesas: ",chartData);
 
   return (
     <Card className="pt-0">

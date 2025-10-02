@@ -89,7 +89,6 @@ export default function PageUsers({ users }: { users: User[] }) {
         </div>
       </div>
 
-      {/* Accordion */}
       <button
         onClick={() => setIsAccordionOpen(!isAccordionOpen)}
         className="flex items-center justify-between w-full p-2 border rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white mb-2 transition"
@@ -104,7 +103,6 @@ export default function PageUsers({ users }: { users: User[] }) {
 
       {isAccordionOpen && (
         <div className="mb-4 h-64 flex flex-col justify-between">
-          {/* Paginação */}
           <div className="flex justify-between items-center mb-2">
             <button
               onClick={goToPreviousPage}
@@ -130,7 +128,6 @@ export default function PageUsers({ users }: { users: User[] }) {
             </button>
           </div>
 
-          {/* Lista fixa */}
           <div className="flex-1 overflow-hidden">
             <ul className="border dark:border-gray-600 rounded-lg h-full overflow-hidden flex flex-col">
               {paginatedUsers.map((user) => (
@@ -157,7 +154,6 @@ export default function PageUsers({ users }: { users: User[] }) {
         </div>
       )}
 
-      {/* Drawer lateral */}
       {selectedUser && (
         <div className="fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-800 shadow-lg border-l dark:border-gray-700 p-4 flex flex-col transition-transform duration-300 z-50">
           <div className="flex justify-between items-center mb-4">

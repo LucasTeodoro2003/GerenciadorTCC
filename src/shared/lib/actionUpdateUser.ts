@@ -7,7 +7,7 @@ import { fileToBase64 } from "./convertImage";
 export async function updatePerfilUserPage(formData: FormData) {
   try {
     await db.user.update({
-      where: { id: formData.get("id")?.toString() },
+      where: { id: formData.get("userId")?.toString() },
       data: {
         name: formData.get("name")?.toString(),
         image: await fileToBase64(formData.get("image") as File),

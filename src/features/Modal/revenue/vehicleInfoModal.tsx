@@ -75,10 +75,8 @@ export function VehicleInfoModal({
           </div>
         </DialogHeader>
 
-        {/* Dados principais do veículo */}
 <Card className="shadow-sm border w-full">
   <CardContent className="grid gap-6 py-6 text-gray-800 dark:text-gray-100 w-full">
-    {/* Linha 1 - Principais dados */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="flex flex-col">
         <span className="text-sm text-muted-foreground font-medium">Placa</span>
@@ -102,7 +100,6 @@ export function VehicleInfoModal({
       </div>
     </div>
 
-    {/* Linha 2 - Metadados */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
       <div className="flex flex-col">
         <span className="text-sm text-muted-foreground font-medium">Usuário</span>
@@ -122,7 +119,6 @@ export function VehicleInfoModal({
   </CardContent>
 </Card>
 
-        {/* Lista de serviços realizados */}
 <section className="mt-6">
   <h3 className="font-semibold text-base mb-4">Serviços Realizados:</h3>
 
@@ -154,7 +150,6 @@ export function VehicleInfoModal({
             <Separator />
 
             <CardContent className="pt-3 space-y-3">
-              {/* Lista de serviços */}
               <div>
                 <b>Serviços:</b>
                 <ul className="list-disc list-inside mt-1 text-sm space-y-1">
@@ -192,7 +187,6 @@ export function VehicleInfoModal({
 
               <Separator />
 
-              {/* Data */}
               <div className="text-xs text-muted-foreground text-right">
                 {formatDate(serviceVehicle.dateTime || "")}
               </div>
