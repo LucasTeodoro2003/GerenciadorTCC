@@ -262,7 +262,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
   );
 
   const defaultTable = params.get("table") ? (params.get("table") === "vehicles" ? "car" : "user") : "user";
-  const typeTable = params.get("table") ? true : false
+  const typeTable = params.get("idvehicle") ? true : false
 
   {typeTable ? (
     defaultTable === "car" ? (

@@ -23,16 +23,16 @@ export default function TableServicePage({services}: TableServicePageProps) {
             </h5>
           </div>
           <div className="flex-1 flex items-center justify-end space-x-4">
-            <h1>Adicionar Serviços</h1>
             <Button
               type="submit"
               variant="outline"
-              className="bg-transparent rounded-full w-12 h-12 p-0 flex items-center justify-center"
+              className="bg-transparent rounded-full p-2 flex items-center justify-center"
               onClick={() => {
                 router.push("/dashboard/enterprise?table=products");
               }}
-            >
+              >
             <AddCircleOutlineIcon />
+              <h1>Adicionar Serviços</h1>
             </Button>
           </div>
         </div>

@@ -402,8 +402,8 @@ export default function CreateServiceVehiclePage({
             )}
           </div>
 
-          <Button className="w-full mt-4" onClick={handleSend} disabled={isLoading}>
-            {isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "ENVIAR"}
+          <Button className="w-full mt-4" onClick={handleSend} disabled={!selectedVehicleId || isLoading || !selectedHour || !selectedUserId}>
+            {isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "AGENDAR"}
           </Button>
         </div>
       </div>

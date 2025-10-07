@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { testPassword } from "@/shared/lib/actionTestPassword";
 import { resetUserPassword } from "@/shared/lib/actionUpdatePassword";
 import { Button } from "@/shared/ui/components/button";
@@ -17,6 +17,8 @@ import {
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { toast, Toaster } from "sonner";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface SheetPasswordProps {
   userId: string;
@@ -26,6 +28,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
   const [userPassword, setUserPassword] = useState("");
   const [userNewPassword, setUserNewPassword] = useState("");
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
 
   const handleTestPassword = async () => {
     setIsSubmittingPassword(true);
@@ -64,9 +67,9 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Sheet>
       <Toaster position="top-center" richColors />
       <SheetTrigger asChild>
-        <Button variant="outline" className="h-min w-full border-red-300 dark:border-red-400">Alterar Senha</Button>
-      </SheetTrigger>
-      <SheetTrigger >
+        <Button variant="outline" className="h-min w-full border-red-300 dark:border-red-400">
+          Alterar Senha
+        </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -76,13 +79,28 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
           </SheetDescription>
         </SheetHeader>
         <div className="grid flex-1 auto-rows-min gap-6 px-4">
-          <div className="grid gap-3">
+          <div className="grid gap-3 mt-4">
             <Label htmlFor="password">Senha Antiga</Label>
-            <Input
-              id="password"
-              value={userPassword}
-              onChange={(e) => setUserPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                value={userPassword}
+                onChange={(e) => setUserPassword(e.target.value)}
+                type={showOldPassword ? "text" : "password"}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                onMouseDown={() => setShowOldPassword(true)}
+                onMouseUp={() => setShowOldPassword(false)}
+                onMouseLeave={() => setShowOldPassword(false)}
+                aria-label={showOldPassword ? "Esconder senha" : "Mostrar senha"}
+              >
+                {showOldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </button>
+            </div>
           </div>
           <div className="grid gap-3">
             <Label htmlFor="passwordnew">Nova Senha</Label>
@@ -90,11 +108,12 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
               id="passwordnew"
               value={userNewPassword}
               onChange={(e) => setUserNewPassword(e.target.value)}
+              type="password"
             />
             <SheetFooter>Minimo 8 caracteres</SheetFooter>
           </div>
         </div>
-        <SheetFooter>
+        <SheetFooter className="mt-4">
           <UserSubmitButton />
           <SheetClose asChild>
             <Button variant="outline">Fechar</Button>

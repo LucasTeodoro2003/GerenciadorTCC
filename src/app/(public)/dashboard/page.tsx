@@ -2,7 +2,7 @@
 
 import { auth } from "@/shared/lib/auth";
 import db from "@/shared/lib/prisma";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import CharPage from "./page_client";
 
 export default async function Page() {

@@ -42,17 +42,17 @@ export interface EdityUserProps {
 }
 
 export function EdityUser({ user }: EdityUserProps) {
-  const [userName, setUserName] = useState(user.name);
-  const [userEmail, setUserEmail] = useState(user.email);
-  const [userPhone, setUserPhone] = useState(user.phone);
+  const [userName, setUserName] = useState(user.name || "Nome não definido");
+  const [userEmail, setUserEmail] = useState(user.email || "Email não definido");
+  const [userPhone, setUserPhone] = useState(user.phone || "Telefone não definido");
   const [addAddress, setAddAddress] = useState(true);
-  const [street, setStreet] = useState(user.addresses[0].street);
-  const [number, setNumber] = useState(user.addresses[0].number);
-  const [complement, setComplement] = useState(user.addresses[0].complement);
-  const [district, setDistrict] = useState(user.addresses[0].district);
-  const [city, setCity] = useState(user.addresses[0].city);
-  const [state, setState] = useState(user.addresses[0].state);
-  const [postalCode, setPostalCode] = useState(user.addresses[0].postalCode);
+  const [street, setStreet] = useState(user.addresses[0]?.street || "Rua não definida");
+  const [number, setNumber] = useState(user.addresses[0]?.number || "Número não definido");
+  const [complement, setComplement] = useState(user.addresses[0]?.complement || "Complemento não definido");
+  const [district, setDistrict] = useState(user.addresses[0]?.district || "Bairro não definido");
+  const [city, setCity] = useState(user.addresses[0]?.city || "Cidade não definida");
+  const [state, setState] = useState(user.addresses[0]?.state || "MG");
+  const [postalCode, setPostalCode] = useState(user.addresses[0]?.postalCode || "00000000");
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
   const [image, setImage] = useState<File | null>(null);
@@ -232,7 +232,7 @@ export function EdityUser({ user }: EdityUserProps) {
                     <Input
                       id="name"
                       placeholder="Digite o nome completo"
-                      value={userName || "Erro"}
+                      value={userName || "Nome não definido"}
                       onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
@@ -245,7 +245,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       id="email"
                       placeholder="Digite o e-mail"
                       type="email"
-                      value={userEmail || "Erro"}
+                      value={userEmail || "Email não definido"}
                       onChange={(e) => setUserEmail(e.target.value)}
                     />
                   </div>
@@ -257,7 +257,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       id="phone"
                       placeholder="Ex: 34999999999"
                       maxLength={11}
-                      value={userPhone || "ERRO"}
+                      value={userPhone || "Número não definido"}
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   </div>
@@ -268,7 +268,6 @@ export function EdityUser({ user }: EdityUserProps) {
                       type="file"
                       id="image"
                       accept="image/*"
-                      defaultValue={user.image || "/usuario.png"}
                       onChange={handleFileChange}
                       className="file-input"
                     />
@@ -309,7 +308,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         <Input
                           id="street"
                           placeholder="Ex: Rua das Flores"
-                          value={street || "ERRO"}
+                          value={street || "Rua não definida"}
                           onChange={(e) => setStreet(e.target.value)}
                         />
                       </div>
@@ -330,7 +329,7 @@ export function EdityUser({ user }: EdityUserProps) {
                           <Input
                             id="complement"
                             placeholder="Ex: Apto 101"
-                            value={complement || "ERRO"}
+                            value={complement || "Complemento não definido"}
                             onChange={(e) => setComplement(e.target.value)}
                           />
                         </div>
