@@ -34,11 +34,11 @@ const chartConfig = {
     label: "Visitors",
   },
   receita: {
-    label: "Despesas",
+    label: "Receitas",
     color: "var(--chart-1)",
   },
   despesas: {
-    label: "Receitas",
+    label: "Despesas",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
@@ -94,6 +94,13 @@ function dateFromKey(key: string) {
   return new Date(y, m - 1, d);
 }
 
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value);
+}
+
 export function ChartAreaInteractive({
   revenue,
   expense,
@@ -118,18 +125,15 @@ export function ChartAreaInteractive({
       cur.despesas += despesas;
       map.set(key, cur);
     };
-
     (expense || []).forEach((e) => {
-      add(e.date, toNumber(e.amount), 0);
+      add(e.date, 0, toNumber(e.amount));
     });
-
     (services || []).forEach((s) => {
       add(s.dateTime ?? null, toNumber(s.totalValue), 0);
     });
     (revenue || []).forEach((r) => {
-      add(r.date, 0, toNumber(r.amount));
+      add(r.date, toNumber(r.amount), 0);
     });
-
     const arr = Array.from(map.values()).sort(
       (a, b) => dateFromKey(a.date).getTime() - dateFromKey(b.date).getTime()
     );
@@ -163,13 +167,31 @@ export function ChartAreaInteractive({
     });
   }, [chartData, timeRange]);
 
+  const totals = React.useMemo(() => {
+    if (!filteredData || filteredData.length === 0) return { receita: 0, despesas: 0 };
+    
+    return filteredData.reduce(
+      (acc, item) => {
+        acc.receita += item.receita;
+        acc.despesas += item.despesas;
+        return acc;
+      },
+      { receita: 0, despesas: 0 }
+    );
+  }, [filteredData]);
+
+  const isPositiveBalance = totals.receita - totals.despesas >= 0;
 
   return (
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle>Despesas x Receitas</CardTitle>
-          <CardDescription>Relação entre despesas e receitas</CardDescription>
+          <CardDescription className="flex flex-col sm:flex-row sm:gap-4">
+            <span>Despesas Totais: <span className="text-red-400 font-bold">{formatCurrency(totals.despesas)}</span></span>
+            <span>Receitas Totais: <span className="text-blue-400 font-bold">{formatCurrency(totals.receita)}</span></span>
+            <span>Saldo: <span className={isPositiveBalance ? "text-green-400 font-bold" : "text-red-400 font-bold"}>{formatCurrency(totals.receita - totals.despesas)}</span></span>
+          </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
