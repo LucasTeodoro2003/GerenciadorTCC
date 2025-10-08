@@ -5,7 +5,7 @@ import { TableMessage } from "@/features/actions/userMessage/tableMessage";
 import { Button } from "@/shared/ui/components/button";
 import { Input } from "@/shared/ui/components/input";
 import { Toaster } from "@/shared/ui/components/sonner";
-import { Prisma, User } from "@prisma/client";
+import { Prisma, Products, User } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -35,11 +35,13 @@ export interface PageMessageProps {
       };
     };
   }>[];
+  products: Products[]
 }
 
 export default function PageMessage({
   user,
   serviceTableMessage,
+  products,
 }: PageMessageProps) {
   const [message, setMessage] = useState("Esta enviando esta mensagem aqui");
   const [openModal, setOpenModal] = useState(false);
@@ -91,7 +93,7 @@ export default function PageMessage({
         </div>
       )}
       <div>
-        <TableMessage serviceTableMessage={serviceTableMessage} />
+        <TableMessage serviceTableMessage={serviceTableMessage} products={products}/>
       </div>
     </>
   );

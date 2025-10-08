@@ -33,7 +33,7 @@ import { updatePerfilUserPage } from "@/shared/lib/actionUpdateUser";
 import { updateAddress } from "@/shared/lib/actionUpdateAdress";
 import { updatePerfilUserPageNoImage } from "@/shared/lib/actionUpdateUserNoImage";
 import imageCompression from "browser-image-compression";
-
+import { createAddress } from "@/shared/lib/actionCreateAddress";
 
 export interface EdityUserProps {
   user: Prisma.UserGetPayload<{
@@ -43,20 +43,38 @@ export interface EdityUserProps {
 
 export function EdityUser({ user }: EdityUserProps) {
   const [userName, setUserName] = useState(user.name || "Nome não definido");
-  const [userEmail, setUserEmail] = useState(user.email || "Email não definido");
-  const [userPhone, setUserPhone] = useState(user.phone || "Telefone não definido");
+  const [userEmail, setUserEmail] = useState(
+    user.email || "Email não definido"
+  );
+  const [userPhone, setUserPhone] = useState(
+    user.phone || "Telefone não definido"
+  );
   const [addAddress, setAddAddress] = useState(true);
-  const [street, setStreet] = useState(user.addresses[0]?.street || "Rua não definida");
-  const [number, setNumber] = useState(user.addresses[0]?.number || "Número não definido");
-  const [complement, setComplement] = useState(user.addresses[0]?.complement || "Complemento não definido");
-  const [district, setDistrict] = useState(user.addresses[0]?.district || "Bairro não definido");
-  const [city, setCity] = useState(user.addresses[0]?.city || "Cidade não definida");
+  const [street, setStreet] = useState(
+    user.addresses[0]?.street || "Rua não definida"
+  );
+  const [number, setNumber] = useState(
+    user.addresses[0]?.number || "Número não definido"
+  );
+  const [complement, setComplement] = useState(
+    user.addresses[0]?.complement || "Complemento não definido"
+  );
+  const [district, setDistrict] = useState(
+    user.addresses[0]?.district || "Bairro não definido"
+  );
+  const [city, setCity] = useState(
+    user.addresses[0]?.city || "Cidade não definida"
+  );
   const [state, setState] = useState(user.addresses[0]?.state || "MG");
-  const [postalCode, setPostalCode] = useState(user.addresses[0]?.postalCode || "00000000");
+  const [postalCode, setPostalCode] = useState(
+    user.addresses[0]?.postalCode || "00000000"
+  );
   const [isPrimaryAddress, setIsPrimaryAddress] = useState(true);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(user.image || "/usuario.png");
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user.image || "/usuario.png"
+  );
 
   const brazilianStates = [
     "AC",
@@ -89,22 +107,22 @@ export function EdityUser({ user }: EdityUserProps) {
   ];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    try {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1024,
-        useWebWorker: true,
-      };
-      const compressedFile = await imageCompression(file, options);
-      setImage(compressedFile);
-      setImagePreview(URL.createObjectURL(compressedFile)); 
-    } catch (error) {
-      console.error("Erro ao comprimir imagem:", error);
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+        const compressedFile = await imageCompression(file, options);
+        setImage(compressedFile);
+        setImagePreview(URL.createObjectURL(compressedFile));
+      } catch (error) {
+        console.error("Erro ao comprimir imagem:", error);
+      }
     }
-  }
-};
+  };
 
   const ImagePreview = () => {
     if (imagePreview) {
@@ -154,19 +172,24 @@ export function EdityUser({ user }: EdityUserProps) {
       addressFormData.append("state", state);
       addressFormData.append("postalCode", postalCode);
       addressFormData.append("isPrimary", isPrimaryAddress.toString());
-      addressFormData.append("id", user.addresses[0].id);
+      addressFormData.append("id", user.addresses[0]?.id);
       addressFormData.append("number", number || "");
       addressFormData.append("complement", complement || "");
+      addressFormData.append("userId", user.id || "")
 
-
-      if(image){
-      await updatePerfilUserPage(userFormData);
-      }else{
+      if (image) {
+        await updatePerfilUserPage(userFormData);
+      } else {
         await updatePerfilUserPageNoImage(userFormData);
       }
       toast.success("Usuário atualizado com sucesso!");
-      await updateAddress(addressFormData);
-      toast.success("Endereço atualizado com sucesso!");
+      if (!user.addresses?.[0]) {
+        await createAddress(addressFormData)
+        toast.success("Endereço criado com Sucesso")
+      } else {
+        await updateAddress(addressFormData);
+        toast.success("Endereço atualizado com Sucesso!");
+      }
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -232,7 +255,7 @@ export function EdityUser({ user }: EdityUserProps) {
                     <Input
                       id="name"
                       placeholder="Digite o nome completo"
-                      value={userName || "Nome não definido"}
+                      value={userName}
                       onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
@@ -245,7 +268,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       id="email"
                       placeholder="Digite o e-mail"
                       type="email"
-                      value={userEmail || "Email não definido"}
+                      value={userEmail}
                       onChange={(e) => setUserEmail(e.target.value)}
                     />
                   </div>
@@ -257,7 +280,7 @@ export function EdityUser({ user }: EdityUserProps) {
                       id="phone"
                       placeholder="Ex: 34999999999"
                       maxLength={11}
-                      value={userPhone || "Número não definido"}
+                      value={userPhone}
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   </div>
@@ -308,7 +331,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         <Input
                           id="street"
                           placeholder="Ex: Rua das Flores"
-                          value={street || "Rua não definida"}
+                          value={street}
                           onChange={(e) => setStreet(e.target.value)}
                         />
                       </div>
@@ -329,7 +352,7 @@ export function EdityUser({ user }: EdityUserProps) {
                           <Input
                             id="complement"
                             placeholder="Ex: Apto 101"
-                            value={complement || "Complemento não definido"}
+                            value={complement}
                             onChange={(e) => setComplement(e.target.value)}
                           />
                         </div>

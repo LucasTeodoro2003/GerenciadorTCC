@@ -39,12 +39,18 @@ export default async function Layout({
   const firstname = user.name?.split(" ")[0] ?? "Sem Nome";
 
 
+  const products = await db.products.findMany({
+    where: {enterpriseId: user.enterpriseId},
+  })
+
+
 
   return (
     <LayoutClient
       firtsname={firstname}
       user={user}
       users={usersWithServices}
+      products={products}
     >
       {children}
     </LayoutClient>

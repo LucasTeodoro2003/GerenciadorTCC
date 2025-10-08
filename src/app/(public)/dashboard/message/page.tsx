@@ -44,5 +44,9 @@ const enterprise = user.enterpriseId
     },
   });
 
-  return <MessagePageClient serviceTableMessage={service} user={user} />;
+  const products = await db.products.findMany({
+    where: {enterpriseId: enterprise}
+  })
+
+  return <MessagePageClient serviceTableMessage={service} user={user} products={products}/>;
 }

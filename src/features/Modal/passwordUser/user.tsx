@@ -57,7 +57,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
     <Button
       className="w-full flex items-center justify-center"
       onClick={handleTestPassword}
-      disabled={isSubmittingPassword || userPassword === "" || userNewPassword === ""}
+      disabled={isSubmittingPassword || userPassword === "" || userNewPassword === "" ||userNewPassword.length < 8}
     >
       {isSubmittingPassword ? <CircularProgress size={20} /> : "Alterar Senha"}
     </Button>
@@ -98,7 +98,7 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
                 onMouseLeave={() => setShowOldPassword(false)}
                 aria-label={showOldPassword ? "Esconder senha" : "Mostrar senha"}
               >
-                {showOldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                {showOldPassword ? <VisibilityOffIcon className="text-cyan-500"/> : <VisibilityIcon />}
               </button>
             </div>
           </div>
@@ -108,7 +108,6 @@ export function SheetPassword({ userId }: SheetPasswordProps) {
               id="passwordnew"
               value={userNewPassword}
               onChange={(e) => setUserNewPassword(e.target.value)}
-              type="password"
             />
             <SheetFooter>Minimo 8 caracteres</SheetFooter>
           </div>
