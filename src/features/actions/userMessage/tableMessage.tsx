@@ -28,13 +28,26 @@ import { CircularProgress } from "@mui/material";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/components/select";
 import { NumberProducts } from "@/shared/lib/actionNumberProducts";
+import { Button } from "@/shared/ui/components/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/ui/components/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/ui/components/dialog";
+import { Input } from "@/shared/ui/components/input";
 
 interface TableMessageProps {
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
@@ -72,14 +85,12 @@ export function TableMessage({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [servicesCompleted, setServicesCompleted] = useState<string[]>([]);
   const [isClient, setIsClient] = useState(false);
-  const [productsUsage, setproductsUsage] = useState(false);
   const [finishedService, setFinishedService] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>("");
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
-  const [addProducts, setAddProducts] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -128,7 +139,6 @@ export function TableMessage({
         await FinishedService(pendingServiceId, formData);
 
         toast.success(`Serviço finalizado com sucesso!`);
-        setproductsUsage(true);
         setOpenProducts(true);
       } catch (error) {
         console.error("Erro ao finalizar serviço:", error);
@@ -146,16 +156,25 @@ export function TableMessage({
     setPendingServiceId(null);
   };
 
-  const updateProduct = async () => {
-    console.log("AQUI : ", addProducts)
-    if(addProducts){
-      setLoadingAdd(true)
-      console.log("AQUI PRODUTOS : ", selectedProductId)
-    }else{
-      setLoading(true);
-      console.log("AQUI FINAL : ", selectedProductId)
+  const verifyProducts = () => {
+    if (!selectedProductId) {
+      toast.info("Primeiro Selecione um produto");
+      return;
     }
+    if (quantity === 0) {
+      toast.info("Coloque a quantidade utilizado do produto");
+      return;
+    }
+    handleProductUpdate(true);
+  };
+
+  const handleProductUpdate = async (isAddMore = false) => {
     try {
+      if (isAddMore) {
+        setLoadingAdd(true);
+      } else {
+        setLoading(true);
+      }
       const newAmount =
         Number(products.find((p) => p.id === selectedProductId)?.amount) -
         Number(quantity);
@@ -163,25 +182,19 @@ export function TableMessage({
       formProducts.append("id", selectedProductId || "");
       formProducts.append("value", newAmount.toString() || "");
       await NumberProducts(formProducts);
-      setLoading(false);
+      toast.success("Produto Atualizado com Sucesso");
       setSelectedProductId(null);
       setQuantity(0);
-      toast.success("Produto Atualizado com Sucesso");
+      if (!isAddMore) {
+        setOpenProducts(false);
+      }
     } catch (error) {
       console.error("Erro ao atualizar produtos:", error);
       toast.error("Erro ao atualizar produtos.");
+    } finally {
       setLoading(false);
+      setLoadingAdd(false);
     }
-
-    if (addProducts) {
-      setOpenProducts(true);
-      toast.info("Adicione os dados do Produto");
-      setAddProducts(false);
-    } else {
-      setOpenProducts(false);
-    }
-    setLoading(false)
-    setLoadingAdd(false)
   };
 
   return (
@@ -284,8 +297,6 @@ export function TableMessage({
         </TableFooter>
       </Table>
 
-
-
       <AlertDialog open={isDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -313,84 +324,94 @@ export function TableMessage({
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* <AlertDialog open={openProducts}> */}
+      <Dialog open={openProducts}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold">
+              Quantidade Utilizada
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div className="mt-2">
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-2 w-full">
+                      <label className="text-sm font-medium text-foreground">
+                        Produto
+                      </label>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-9 w-9 rounded-full bg-primary text-primary-foreground border-2 border-background hover:bg-primary/40"
+                            onClick={verifyProducts}
+                            disabled={loadingAdd}
+                          >
+                            {loadingAdd ? <CircularProgress size={16} /> : "+"}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Adicionar Produto</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <Select
+                      onValueChange={(value) => setSelectedProductId(value)}
+                      value={selectedProductId || ""}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione o produto" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {products.map((p) => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.description}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-foreground">
+                      Quantidade
+                    </label>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      className="w-full"
+                      placeholder="Informe a quantidade utilizada"
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      value={quantity || ""}
+                    />
+                  </div>
 
-
-      <AlertDialog open={true}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Quantidade Utilizada</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Produto
-                  </label>
-                  <Select
-                    onValueChange={(value) => setSelectedProductId(value)}
-                    value={selectedProductId || ""}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione o produto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {products.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>
-                          {p.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Quantidade
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    className="w-full px-3 py-2 border rounded-md"
-                    placeholder="Informe a quantidade utilizada"
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    value={quantity}
-                  />
-                </div>
-
-                <div className="mt-4 text-sm text-muted-foreground">
-                  <span className="dark:text-red-400 text-red-500">
-                    Obs: Clique em 'Adicionar mais' caso tenham sido utilizados
-                    mais produtos no serviço!
-                  </span>
+                  <div className="pt-2">
+                    <p className="text-sm text-muted-foreground">
+                      <span className="text-destructive">
+                        Obs: Descreva os dados do Produto e clique em '+' caso
+                        tenham sido utilizados mais produtos no serviço!
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <div className="justify-start">
-            <AlertDialogAction
-            disabled={loading || !selectedProductId || !quantity}
-              onClick={() => {
-                setAddProducts(true);
-                updateProduct();
-              }}
-            >
-              {loadingAdd ? <CircularProgress size={20} /> : "Adicionar Mais"}
-            </AlertDialogAction>
-            </div>
-            <div className="justify-end">
-            <AlertDialogAction
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-between items-center sm:justify-between mt-6">
+            <div></div>
+            <Button
+              variant="default"
               disabled={loading || !selectedProductId || !quantity}
-              onClick={() => {
-                updateProduct();
-              }}
+              onClick={() => handleProductUpdate(false)}
+              className="min-w-[90px]"
             >
-              {loading ? <CircularProgress size={20} /> : "Concluir"}
-            </AlertDialogAction>
-            </div>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              {loading ? <CircularProgress size={16} /> : "Concluir"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

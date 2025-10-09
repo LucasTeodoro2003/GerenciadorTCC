@@ -45,7 +45,8 @@ const enterprise = user.enterpriseId
   });
 
   const products = await db.products.findMany({
-    where: {enterpriseId: enterprise}
+    where: {enterpriseId: enterprise},
+    orderBy: {description: "asc"}
   })
 
   return <MessagePageClient serviceTableMessage={service} user={user} products={products}/>;

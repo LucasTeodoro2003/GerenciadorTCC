@@ -4,7 +4,6 @@ import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function NumberProducts(formData: FormData) {
-    console.log("ID AQUI: ", formData.get("id")?.toString())
   try {
     await db.products.update({
       where: { id: formData.get("id")?.toString()},

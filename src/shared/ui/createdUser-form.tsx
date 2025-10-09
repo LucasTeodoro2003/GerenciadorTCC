@@ -1,5 +1,4 @@
 import { cn } from "@/shared/lib/utils";
-import { Button } from "./components/button";
 import {
   Card,
   CardContent,
@@ -10,8 +9,11 @@ import {
 import { Input } from "./components/input";
 import { Label } from "./components/label";
 import { signUp } from "../lib/actionsCreateuser";
-import { redirect } from "next/navigation";
+import { redirect} from "next/navigation";
 import { HomeIcon } from "lucide-react";
+import ButtonCreateUser from "./components/buttonCreate";
+import { CreateErrorMessage } from "@/features/actions/createUser/errorMensage";
+import { Suspense } from "react";
 
 export function CreatedUser({
   className,
@@ -24,6 +26,7 @@ export function CreatedUser({
       </div>
       <Card>
         <CardHeader>
+          <CardDescription className="justify-center text-center"><Suspense><CreateErrorMessage /></Suspense></CardDescription>
           <CardTitle className="text-2xl">Criar Conta</CardTitle>
           <CardDescription>
             Entre com seu email para criar uma conta
@@ -36,6 +39,12 @@ export function CreatedUser({
               const res = await signUp(formData);
               if (res.success) {
                 redirect("/login");
+              }if(res.message !== "Senha deve conter no minimo 8 caracteres!"){                
+                console.error(res.message)
+                redirect("/createUser?error=" + "Email j%C3%A1 cadastrado")
+              }else{
+                console.error("AQUI: ", res.message)
+                redirect("/createUser?error=" + res.message)
               }
             }}
           >
@@ -61,10 +70,9 @@ export function CreatedUser({
                   placeholder="Digite sua senha"
                   required
                 />
+                <span className="text-right text-sm">Minimo de 8 caracteres</span>
               </div>
-              <Button type="submit" className="w-full">
-                CRIAR
-              </Button>
+              <ButtonCreateUser/>
             </div>
           </form>
         </CardContent>
