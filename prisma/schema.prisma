@@ -31,6 +31,7 @@ model User {
   emailVerified DateTime?
   image         String?
   phone         String?
+  message       String? @default("Olá! Tudo bem? \nQueremos agradecer pela confiança em escolher a Alvorada Estética Automotiva para cuidar do seu veículo. \nJá se passaram 30 dias desde o serviço realizado: [serviço aqui]. Esse é o momento ideal para fazer uma revisão preventiva ou até mesmo potencializar os resultados do serviço com um novo cuidado complementar — mantendo seu carro sempre com aparência de novo e protegido por muito mais tempo. Estamos à disposição para te orientar sobre o que é mais indicado para o seu veículo neste momento. \nConte com a gente para manter seu carro sempre impecável!\n\nEquipe Alvorada Estética Automotiva")
   accounts      Account[]
   sessions      Session[]
   vehicle       Vehicle[]
@@ -147,6 +148,8 @@ model ServiceVehicleService {
   service          Services       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId        String
   finished         Boolean              @default(false)
+  message          String?
+  sendMessage      Boolean @default(false)
 
   @@unique([serviceVehicleId, serviceId])
   createdAt  DateTime               @default(now())

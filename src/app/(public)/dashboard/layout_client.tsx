@@ -13,11 +13,13 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/shared/ui/components/sidebar";
-import { Prisma, Products } from "@prisma/client";
+import { Prisma, Products, ServiceVehicleService } from "@prisma/client";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import ModalClient from "@/features/actions/firstAcess/modalAcess";
 import { toast, Toaster } from "sonner";
 import { useCallback, useEffect } from "react";
+import { finalyMessage } from "@/shared/lib/actionFinalyMessage";
+import { updateMessageService } from "@/shared/lib/actionUpdateMessageService";
 interface LayoutClientProps {
   children: React.ReactNode;
   user: Prisma.UserGetPayload<{ include: { enterprise: {} } }>;
@@ -26,6 +28,7 @@ interface LayoutClientProps {
     include: { vehicle: { include: { serviceVehicle: {} } } };
   }>[];
   products: Products[];
+  services: ServiceVehicleService[];
 }
 
 export default function LayoutClient({
@@ -34,10 +37,11 @@ export default function LayoutClient({
   user,
   users,
   products,
+  services,
 }: LayoutClientProps) {
   const firtsAcess = !user.emailVerified;
 
-const checkInventory = useCallback(() => {
+  const checkInventory = useCallback(() => {
     if (products && products.length > 0) {
       products.forEach((product) => {
         const amount = parseInt(product.amount, 10);
@@ -50,7 +54,7 @@ const checkInventory = useCallback(() => {
               <strong>{product.description}</strong>
               <p>Quantidade restante: {amount}</p>
               <p>Quantidade mínima: {minAmount}</p>
-            </div>,
+            </div>
           );
         }
       });
@@ -62,6 +66,46 @@ const checkInventory = useCallback(() => {
     const intervalId = setInterval(checkInventory, 900000); //15minutos
     return () => clearInterval(intervalId);
   }, [checkInventory]);
+
+  useEffect(() => {
+    const checkForFollowUps = async () => {
+      if (!services || services.length === 0) return;
+
+      const today = new Date();
+
+      for (const serviceItem of services) {
+        if (
+          serviceItem.finished &&
+          serviceItem.updatedAt &&
+          serviceItem.sendMessage === false
+        ) {
+          const completionDate = new Date(serviceItem.updatedAt);
+          const diffTime = today.getTime() - completionDate.getTime();
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          if (diffDays >= 30) {
+            const followUpMessage = serviceItem.message || "erro";
+            if (followUpMessage === "erro") {
+              toast.error(
+                `Mensagem de ${user.name} sobre os serviços com algum erro`
+              );
+            } else {
+              const formMessageService = new FormData();
+              formMessageService.append("serviceid", serviceItem.id);
+              formMessageService.append("message", `FINALIZADO - DIA:${new Date().toLocaleDateString()}`);
+              await updateMessageService(formMessageService);
+
+              //mensagem enviado com sucesso whatsapp
+              toast.success(`Mensagem para ${user.name} enviada com sucesso`)
+
+              await finalyMessage(serviceItem.id);
+            }
+          }
+        }
+      }
+    };
+
+    checkForFollowUps();
+  }, [services]);
 
   return (
     <SidebarProvider>
@@ -86,7 +130,7 @@ const checkInventory = useCallback(() => {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-5 pt-0">
           <ModalClient openModal={firtsAcess} user={user} />
-          <Toaster richColors position="top-center" closeButton/>
+          <Toaster richColors position="top-center" closeButton />
           {children}
         </div>
       </SidebarInset>

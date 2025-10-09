@@ -43,14 +43,7 @@ export default function PageMessage({
   serviceTableMessage,
   products,
 }: PageMessageProps) {
-  const [message, setMessage] = useState("Esta enviando esta mensagem aqui");
   const [openModal, setOpenModal] = useState(false);
-
-  // async function Test(message: string){
-  //     console.log("Recebido => ",message)
-  //     toast.success(`${message}`)
-  //     console.log("EXECUTADO \n\n\n\n")
-  // }
 
   return (
     <>
@@ -93,7 +86,7 @@ export default function PageMessage({
         </div>
       )}
       <div>
-        <TableMessage serviceTableMessage={serviceTableMessage} products={products}/>
+        <TableMessage user={user} serviceTableMessage={serviceTableMessage} products={products}/>
       </div>
     </>
   );

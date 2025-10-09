@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/components/table";
-import { Prisma, Products } from "@prisma/client";
+import { Prisma, Products, User } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
@@ -48,6 +48,7 @@ import {
   DialogTitle,
 } from "@/shared/ui/components/dialog";
 import { Input } from "@/shared/ui/components/input";
+import { updateMessageService } from "@/shared/lib/actionUpdateMessageService";
 
 interface TableMessageProps {
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
@@ -75,13 +76,16 @@ interface TableMessageProps {
     };
   }>[];
   products: Products[];
+  user: User;
 }
 
 export function TableMessage({
   serviceTableMessage,
   products,
+  user,
 }: TableMessageProps) {
   const [pendingServiceId, setPendingServiceId] = useState<string | null>(null);
+  const [pendingServiceInfo, setPendingServiceInfo] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [servicesCompleted, setServicesCompleted] = useState<string[]>([]);
   const [isClient, setIsClient] = useState(false);
@@ -91,10 +95,13 @@ export function TableMessage({
   const [loading, setLoading] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
+  const [message, setMessage] = useState(user.message || "");
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  console.log("MENSAGEM CHEGANDO ", message)
 
   const formatPhoneNumber = (phoneNumber: string | null) => {
     if (!phoneNumber || typeof phoneNumber !== "string") return phoneNumber;
@@ -123,11 +130,19 @@ export function TableMessage({
     }
   };
 
-  const handleSwitchChange = (serviceId: string, completed: boolean) => {
+  const handleSwitchChange = (
+    serviceId: string,
+    completed: boolean,
+    serviceDescription: string
+  ) => {
     if (completed) return;
     setPendingServiceId(serviceId);
+    setPendingServiceInfo(serviceDescription);
+    const filledMessage = message.replace("[serviço aqui]", pendingServiceInfo);
+    setMessage(filledMessage);
     setIsDialogOpen(true);
   };
+
 
   const confirmServiceCompletion = async () => {
     if (pendingServiceId) {
@@ -137,6 +152,15 @@ export function TableMessage({
         const formData = new FormData();
         formData.append("finished", "true");
         await FinishedService(pendingServiceId, formData);
+
+        const formMessageService = new FormData();
+        formMessageService.append("serviceid", pendingServiceId);
+        formMessageService.append("message", message);
+        console.log("MENSAGEM atualizada: ", message)
+        console.log("ID: ", pendingServiceId)
+        await updateMessageService(formMessageService)
+
+         //logica da api de enviar mensagem para o cliente falando que terminou
 
         toast.success(`Serviço finalizado com sucesso!`);
         setOpenProducts(true);
@@ -261,7 +285,11 @@ export function TableMessage({
                     <Switch
                       checked={isCompleted}
                       onCheckedChange={() =>
-                        handleSwitchChange(serviceId, isCompleted)
+                        handleSwitchChange(
+                          serviceId,
+                          isCompleted,
+                          serviceItem.service?.description || ""
+                        )
                       }
                       disabled={isCompleted}
                       className={

@@ -43,6 +43,10 @@ export default async function Layout({
     where: {enterpriseId: user.enterpriseId},
   })
 
+  const services = await db.serviceVehicleService.findMany({
+    where: {service: {enterpriseId: user.enterpriseId}}
+  })
+
 
 
   return (
@@ -51,6 +55,7 @@ export default async function Layout({
       user={user}
       users={usersWithServices}
       products={products}
+      services={services}
     >
       {children}
     </LayoutClient>
