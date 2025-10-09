@@ -70,9 +70,7 @@ export default function LayoutClient({
   useEffect(() => {
     const checkForFollowUps = async () => {
       if (!services || services.length === 0) return;
-
       const today = new Date();
-
       for (const serviceItem of services) {
         if (
           serviceItem.finished &&
