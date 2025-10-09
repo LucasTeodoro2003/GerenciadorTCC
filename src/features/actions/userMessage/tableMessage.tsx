@@ -85,7 +85,6 @@ export function TableMessage({
   user,
 }: TableMessageProps) {
   const [pendingServiceId, setPendingServiceId] = useState<string | null>(null);
-  const [pendingServiceInfo, setPendingServiceInfo] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [servicesCompleted, setServicesCompleted] = useState<string[]>([]);
   const [isClient, setIsClient] = useState(false);
@@ -100,8 +99,6 @@ export function TableMessage({
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  console.log("MENSAGEM CHEGANDO ", message)
 
   const formatPhoneNumber = (phoneNumber: string | null) => {
     if (!phoneNumber || typeof phoneNumber !== "string") return phoneNumber;
@@ -137,8 +134,7 @@ export function TableMessage({
   ) => {
     if (completed) return;
     setPendingServiceId(serviceId);
-    setPendingServiceInfo(serviceDescription);
-    const filledMessage = message.replace("[serviço aqui]", pendingServiceInfo);
+    const filledMessage = message.replace("[serviço aqui]", serviceDescription);
     setMessage(filledMessage);
     setIsDialogOpen(true);
   };
@@ -156,11 +152,13 @@ export function TableMessage({
         const formMessageService = new FormData();
         formMessageService.append("serviceid", pendingServiceId);
         formMessageService.append("message", message);
-        console.log("MENSAGEM atualizada: ", message)
-        console.log("ID: ", pendingServiceId)
-        await updateMessageService(formMessageService)
-
-         //logica da api de enviar mensagem para o cliente falando que terminou
+        try{
+          await updateMessageService(formMessageService)
+        }catch(error){
+          toast.error("Erro ao salvar Mensagem no Banco")
+        }
+        
+        //logica da api de enviar mensagem para o cliente falando que terminou
 
         toast.success(`Serviço finalizado com sucesso!`);
         setOpenProducts(true);
