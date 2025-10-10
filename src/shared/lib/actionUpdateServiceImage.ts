@@ -4,21 +4,20 @@ import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { fileToBase64 } from "./convertImage";
 
-export async function createService(formData: FormData) {
+export async function updateServiceImage(formData: FormData) {
   try {
-    await db.services.create({
+    await db.services.update({
+      where: { id: formData.get("idservice")?.toString() || "" },
       data: {
-        price: formData.get("price")?.toString() || "",
         description: formData.get("description")?.toString() || "",
-        enterpriseId: formData.get("enterpriseId")?.toString() || "",
+        price: formData.get("price")?.toString() || "",
         image: await fileToBase64(formData.get("image") as File) || "",
-        createdAt: new Date(),
         updatedAt: new Date(),
       },
     });
     revalidatePath("/dashboard");
   } catch (error) {
-    console.error("Erro ao criar serviço:", error);
-    throw new Error("Falha ao criar serviço.");
+    console.error("Erro ao atualizar serviço:", error);
+    throw new Error("Falha ao atualizar o serviço.");
   }
 }

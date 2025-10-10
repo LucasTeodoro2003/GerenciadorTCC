@@ -41,69 +41,70 @@ export default function LayoutClient({
 }: LayoutClientProps) {
   const firtsAcess = !user.emailVerified;
 
-  const checkInventory = useCallback(() => {
-    if (products && products.length > 0) {
-      products.forEach((product) => {
-        const amount = parseInt(product.amount, 10);
-        const minAmount = product.minAmout
-          ? parseInt(product.minAmout, 10)
-          : null;
-        if (minAmount !== null && amount <= minAmount) {
-          toast.info(
-            <div>
-              <strong>{product.description}</strong>
-              <p>Quantidade restante: {amount}</p>
-              <p>Quantidade mínima: {minAmount}</p>
-            </div>
-          );
-        }
-      });
-    }
-  }, [products]);
+  // const checkInventory = useCallback(() => {
+  //   if (products && products.length > 0) {
+  //     products.forEach((product) => {
+  //       const amount = parseInt(product.amount, 10);
+  //       const minAmount = product.minAmout
+  //         ? parseInt(product.minAmout, 10)
+  //         : null;
+  //       if (minAmount !== null && amount <= minAmount) {
+  //         toast.info(
+  //           <div>
+  //             <strong>{product.description}</strong>
+  //             <p>Quantidade restante: {amount}</p>
+  //             <p>Quantidade mínima: {minAmount}</p>
+  //           </div>
+  //         );
+  //       }
+  //     });
+  //   }
+  // }, [products]);
 
-  useEffect(() => {
-    checkInventory();
-    const intervalId = setInterval(checkInventory, 900000); //15minutos
-    return () => clearInterval(intervalId);
-  }, [checkInventory]);
+  // useEffect(() => {
+  //   checkInventory();
+  //   const intervalId = setInterval(checkInventory, 900000); //15minutos
+  //   return () => clearInterval(intervalId);
+  // }, [checkInventory]);
 
-  useEffect(() => {
-    const checkForFollowUps = async () => {
-      if (!services || services.length === 0) return;
-      const today = new Date();
-      for (const serviceItem of services) {
-        if (
-          serviceItem.finished &&
-          serviceItem.updatedAt &&
-          serviceItem.sendMessage === false
-        ) {
-          const completionDate = new Date(serviceItem.updatedAt);
-          const diffTime = today.getTime() - completionDate.getTime();
-          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-          if (diffDays >= 30) {
-            const followUpMessage = serviceItem.message || "erro";
-            if (followUpMessage === "erro") {
-              toast.error(
-                `Mensagem de ${user.name} sobre os serviços com algum erro`
-              );
-            } else {
-              const formMessageService = new FormData();
-              formMessageService.append("serviceid", serviceItem.id);
-              formMessageService.append("message", `FINALIZADO - DIA:${new Date().toLocaleDateString()}`);
-              await updateMessageService(formMessageService);
+  // useEffect(() => {
+  //   const checkForFollowUps = async () => {
+  //     if (!services || services.length === 0) return;
+  //     const today = new Date();
+  //     for (const serviceItem of services) {
+  //       if (
+  //         serviceItem.finished &&
+  //         serviceItem.updatedAt &&
+  //         serviceItem.sendMessage === false
+  //       ) {
+  //         const completionDate = new Date(serviceItem.updatedAt);
+  //         const diffTime = today.getTime() - completionDate.getTime();
+  //         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  //         if (diffDays >= 30) {
+  //           const followUpMessage = serviceItem.message || "erro";
+  //           if (followUpMessage === "erro") {
+  //             toast.error(
+  //               `Mensagem de ${user.name} sobre os serviços com algum erro`
+  //             );
+  //           } else {
+  //             const formMessageService = new FormData();
+  //             formMessageService.append("serviceid", serviceItem.id);
+  //             formMessageService.append("message", `FINALIZADO - DIA:${new Date().toLocaleDateString()}`);
+  //             await updateMessageService(formMessageService);
 
-              //mensagem enviado com sucesso whatsapp
-              toast.success(`Mensagem para ${user.name} enviada com sucesso`)
+  //             //mensagem enviado com sucesso whatsapp
+  //             toast.success(`Mensagem para ${user.name} enviada com sucesso`)
 
-              await finalyMessage(serviceItem.id);
-            }
-          }
-        }
-      }
-    };
+  //             await finalyMessage(serviceItem.id);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
 
-    checkForFollowUps();
-  }, [services]);
+  //   checkForFollowUps();
+  // }, [services]);
+
 
   return (
     <SidebarProvider>
