@@ -1,4 +1,4 @@
-import { Prisma, Services, ServiceVehicle } from "@prisma/client";
+import { User } from "@prisma/client";
 import CalendarClient from "./page.client";
 import db from "@/shared/lib/prisma";
 import { auth } from "@/shared/lib/auth";
@@ -7,11 +7,12 @@ export default async function Home() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
-    redirect("/clientApp/loginApp?tabs=login")
+    redirect("/clientApp")
   }
   const user = await db.user.findUnique({
     where: { id: userId },
-  });
+  }) as User
+
   const enterprise = user?.enterpriseId;
   const disableDate = await db.serviceVehicle.findMany({
     where: { enterpriseId: enterprise },
@@ -31,6 +32,7 @@ export default async function Home() {
       disableDate={disableDate}
       services={services}
       users={users}
+      user={user}
     />
   );
 }

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 import { Button } from "@/shared/ui/components/button";
 import { Calendar } from "@/shared/ui/components/calendar";
 import { Label } from "@/shared/ui/components/label";
 import { Toaster } from "@/shared/ui/components/sonner";
-import { Prisma, Services, ServiceVehicle } from "@prisma/client";
+import { Prisma, Services, ServiceVehicle, User } from "@prisma/client";
 import { ptBR } from "date-fns/locale";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import {
   Select,
@@ -14,26 +14,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/components/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/ui/components/popover";
-import { Check, ChevronsUpDown, X } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/shared/ui/components/command";
+import { X } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 import { CircularProgress } from "@mui/material";
 import signOutFunction from "@/shared/ui/signOut";
+import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/ui/components/tooltip";
 
 export interface CalendarClientProps {
   disableDate: ServiceVehicle[];
@@ -41,24 +36,39 @@ export interface CalendarClientProps {
     include: { vehicle: { include: { serviceVehicle: {} } } };
   }>[];
   services: Services[];
+  user: User;
 }
 
 export default function CalendarClient({
   disableDate,
   users,
   services,
+  user,
 }: CalendarClientProps) {
   const maxCarDay = 20;
   const maxCarHour = 2;
 
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string>(user.id);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>("");
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
-  const [openUserCombobox, setOpenUserCombobox] = useState(false);
-  const [openServiceCombobox, setOpenServiceCombobox] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedServiceIds = localStorage.getItem("selectedServiceIds");
+      if (savedServiceIds) {
+        const parsedIds = JSON.parse(savedServiceIds);
+        if (Array.isArray(parsedIds)) {
+          setSelectedServiceIds(parsedIds);
+          console.log("AQUI: ", parsedIds);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar serviços do localStorage:", error);
+    }
+  }, []);
 
   const userVehicles = selectedUserId
     ? users.find((user) => user.id === selectedUserId)?.vehicle || []
@@ -119,8 +129,6 @@ export default function CalendarClient({
     return disabledHours.get(dayKey)?.has(hour) || false;
   };
 
-
-
   const handleSend = async () => {
     setIsLoading(true);
     if (
@@ -131,6 +139,7 @@ export default function CalendarClient({
       selectedServiceIds.length === 0
     ) {
       toast.error("Preencha todos os campos obrigatórios");
+      setIsLoading(false);
       return;
     }
 
@@ -162,6 +171,9 @@ export default function CalendarClient({
       Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
       });
 
+      // Limpar o localStorage após agendamento bem-sucedido
+      localStorage.removeItem("selectedServiceIds");
+
       setDate(new Date());
       setSelectedHour(null);
       setSelectedUserId("");
@@ -184,231 +196,170 @@ export default function CalendarClient({
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 w-full">
-      <div className="w-full md:w-2/3">
-      <Button className="hover:bg-red-500" onClick={signOutFunction}>SAIR</Button>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(newDate) => {
-            setDate(newDate);
-            setSelectedHour(null);
-          }}
-          className="rounded-md border shadow-sm w-full h-full"
-          captionLayout="dropdown"
-          disabled={[
-            ...disabledDays,
-            { dayOfWeek: [6] },
-            { before: new Date() },
-          ]}
-          locale={ptBR}
-          classNames={{ disabled: "text-gray-600" }}
-        />
+    <div className="container mx-auto px-4 py-4">
+      {/* Header com Nome do Cliente, Seletor de Veículo e Botão de Sair */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-4">
+            <TooltipProvider>
+              <Tooltip >
+                <TooltipTrigger asChild>
+                  <Button className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200">
+                    <ExitToAppIcon
+                      className="text-black dark:text-white"
+                      fontSize="large"
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Sair</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <h1 className="text-3xl font-bold">{user.name || "Cliente"}</h1>
+          </div>
+          <ThemeToggleV2 />
+        </div>
+        {/* Seletor de Veículo ao lado do nome */}
+        <div className="flex flex-col md:flex-row gap-4 items-center md:items-end mt-2">
+          <div className="w-full md:w-1/2">
+            <Label className="text-md font-medium block mb-1">
+              Selecione seu veículo
+            </Label>
+            <Select
+              value={selectedVehicleId}
+              onValueChange={(value) => {
+                setSelectedVehicleId(value);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Escolha um veículo para agendamento" />
+              </SelectTrigger>
+              <SelectContent>
+                {userVehicles.length > 0 ? (
+                  userVehicles.map((vehicle) => (
+                    <SelectItem key={vehicle.id} value={vehicle.id}>
+                      {vehicle.type} - {vehicle.plate}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="no-vehicles" disabled>
+                    Nenhum veículo cadastrado
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
 
-      <div className="w-full md:w-1/3 flex flex-col">
-        <div className="border-2 border-gray-200 dark:border-gray-200 dark:border-opacity-10 rounded-md p-4 h-full flex flex-col justify-between">
-          <div className="space-y-4">
-            <div>
-              <Label className="block mb-2 font-medium">Hora</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {Array.from({ length: 13 }, (_, i) => i + 6).map((hour) => (
-                  <Button
-                    key={hour}
-                    variant="outline"
-                    className={cn(
-                      "py-2",
-                      selectedHour === hour &&
-                        "bg-primary text-primary-foreground",
-                      isHourDisabled(hour) && "opacity-50 cursor-not-allowed"
-                    )}
-                    onClick={() =>
-                      !isHourDisabled(hour) && setSelectedHour(hour)
-                    }
-                    disabled={isHourDisabled(hour)}
-                  >
-                    {hour}:00
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label className="block mb-2 font-medium">Usuário</Label>
-              <Popover
-                open={openUserCombobox}
-                onOpenChange={setOpenUserCombobox}
+      {/* Serviços Selecionados */}
+      {selectedServiceIds.length > 0 && (
+        <div className="mb-8 p-4 border rounded-lg bg-background shadow-sm">
+          <Label className="text-xl font-medium block mb-3">
+            Serviços Selecionados
+          </Label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {selectedServices.map((service) => (
+              <Badge
+                key={service.id}
+                variant="secondary"
+                className="flex items-center gap-1 text-sm py-2 px-3"
               >
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={openUserCombobox}
-                    className="w-full justify-between"
-                  >
-                    {selectedUserId
-                      ? users.find((user) => user.id === selectedUserId)
-                          ?.name ||
-                        users.find((user) => user.id === selectedUserId)
-                          ?.email ||
-                        "SEM NOME"
-                      : "Selecione um usuário"}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
-                  <Command>
-                    <CommandInput placeholder="Buscar usuário..." />
-                    <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
-                    <CommandList>
-                      <CommandGroup>
-                        {users.map((user) => (
-                          <CommandItem
-                            key={user.id}
-                            value={user.name || user.email || ""}
-                            onSelect={() => {
-                              setSelectedUserId(user.id);
-                              setSelectedVehicleId("");
-                              setSelectedServiceIds([]);
-                              setOpenUserCombobox(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                selectedUserId === user.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {user.name || "SEM NOME"} - {user.email}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            {selectedUserId && (
-              <div>
-                <Label className="block mb-2 font-medium">Veículo</Label>
-                <Select
-                  value={selectedVehicleId}
-                  onValueChange={(value) => {
-                    setSelectedVehicleId(value);
-                    setSelectedServiceIds([]);
-                  }}
+                {service.description || "Sem descrição"}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-4 w-4 p-0 hover:bg-transparent"
+                  onClick={() => toggleService(service.id)}
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um veículo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {userVehicles.length > 0 ? (
-                      userVehicles.map((vehicle) => (
-                        <SelectItem key={vehicle.id} value={vehicle.id}>
-                          {vehicle.type} - {vehicle.plate}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value="no-vehicles" disabled>
-                        Nenhum veículo cadastrado
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {selectedVehicleId && (
-              <div>
-                <Label className="block mb-2 font-medium">Serviços</Label>
-                <Popover
-                  open={openServiceCombobox}
-                  onOpenChange={setOpenServiceCombobox}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openServiceCombobox}
-                      className="w-full justify-between"
-                    >
-                      {selectedServiceIds.length > 0
-                        ? `${selectedServiceIds.length} serviço(s) selecionado(s)`
-                        : "Selecione os serviços"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput placeholder="Buscar serviço..." />
-                      <CommandEmpty>Nenhum serviço encontrado.</CommandEmpty>
-                      <CommandList>
-                        <CommandGroup>
-                          {services.map((service) => (
-                            <CommandItem
-                              key={service.id}
-                              value={service.description || ""}
-                              onSelect={() => toggleService(service.id)}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  selectedServiceIds.includes(service.id)
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {service.description} - R$
-                              {Number(service.price || 0).toFixed(2)}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                {selectedServiceIds.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {selectedServices.map((service) => (
-                      <Badge
-                        key={service.id}
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        {service.description}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-4 w-4 p-0 hover:bg-transparent"
-                          onClick={() => toggleService(service.id)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-
-                {selectedServiceIds.length > 0 && (
-                  <div className="mt-3 text-sm font-medium">
-                    Valor total: R$
-                    {selectedServices
-                      .reduce((sum, service) => sum + service.price, 0)
-                      .toFixed(2)}
-                  </div>
-                )}
-              </div>
-            )}
+                  <X className="h-3 w-3" />
+                </Button>
+              </Badge>
+            ))}
           </div>
-
-          <Button className="w-full mt-4" onClick={handleSend} disabled={!selectedVehicleId || isLoading || !selectedHour || !selectedUserId}>
-            {isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "AGENDAR"}
-          </Button>
+          <div className="text-lg font-medium">
+            Valor total: R${" "}
+            {selectedServices
+              .reduce((sum, service) => sum + service.price, 0)
+              .toFixed(2)}
+          </div>
         </div>
+      )}
+
+      {/* Corpo Principal - Calendário e Seletor de Horas */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Calendário */}
+        <div className="w-full md:w-2/3">
+          <Label className="text-xl font-medium block mb-3">
+            Selecione a data
+          </Label>
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(newDate) => {
+              setDate(newDate);
+              setSelectedHour(null);
+            }}
+            className="rounded-lg border shadow w-full"
+            captionLayout="dropdown"
+            disabled={[
+              ...disabledDays,
+              { dayOfWeek: [6] },
+              { before: new Date() },
+            ]}
+            locale={ptBR}
+            classNames={{ disabled: "text-gray-600" }}
+          />
+        </div>
+
+        {/* Seletor de Horas */}
+        <div className="w-full md:w-1/3">
+          <Label className="text-xl font-medium block mb-3">
+            Selecione o horário
+          </Label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-2">
+            {Array.from({ length: 13 }, (_, i) => i + 6).map((hour) => (
+              <Button
+                key={hour}
+                variant="outline"
+                className={cn(
+                  "py-2",
+                  selectedHour === hour && "bg-primary text-primary-foreground",
+                  isHourDisabled(hour) && "opacity-50 cursor-not-allowed"
+                )}
+                onClick={() => !isHourDisabled(hour) && setSelectedHour(hour)}
+                disabled={isHourDisabled(hour)}
+              >
+                {hour}:00
+              </Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Botão de Agendamento */}
+      <div className="mt-8">
+        <Button
+          className="w-full py-6 text-lg"
+          onClick={handleSend}
+          disabled={
+            !selectedVehicleId ||
+            isLoading ||
+            !selectedHour ||
+            !selectedUserId ||
+            selectedServiceIds.length === 0
+          }
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center gap-2">
+              <span>Agendando</span>
+              <CircularProgress size={20} />
+            </div>
+          ) : (
+            "AGENDAR SERVIÇO"
+          )}
+        </Button>
       </div>
 
       <Toaster position="top-center" richColors />
