@@ -1,5 +1,4 @@
 "use client"
-import { ChartRadialShape } from "@/features/chars/charRadial";
 import { ChartTooltipIndicatorLine } from "@/features/chars/charTooltip"; 
 import { ChartAreaInteractive } from "@/features/chars/charMain"; 
 import { Prisma, Revenue } from "@prisma/client";

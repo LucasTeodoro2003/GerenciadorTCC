@@ -151,6 +151,7 @@ model ServiceVehicleService {
   finished         Boolean              @default(false)
   message          String?
   sendMessage      Boolean @default(false)
+  pay             Boolean @default(false)
 
   @@unique([serviceVehicleId, serviceId])
   createdAt  DateTime               @default(now())

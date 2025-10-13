@@ -49,6 +49,10 @@ import {
 } from "@/shared/ui/components/dialog";
 import { Input } from "@/shared/ui/components/input";
 import { updateMessageService } from "@/shared/lib/actionUpdateMessageService";
+import { Badge } from "@/shared/ui/components/badge";
+import { BadgeAlertIcon, BadgeCheckIcon } from "lucide-react";
+import { updatePayment } from "@/shared/lib/actionsUpdatePayment";
+import { AlertPay } from "./paymentconfirm";
 
 interface TableMessageProps {
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
@@ -95,6 +99,8 @@ export function TableMessage({
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
   const [message, setMessage] = useState(user.message || "");
+  const [open, setOpen] = useState(false);
+  const [idPayment, setIdPayment] = useState("");
 
   useEffect(() => {
     setIsClient(true);
@@ -139,7 +145,6 @@ export function TableMessage({
     setIsDialogOpen(true);
   };
 
-
   const confirmServiceCompletion = async () => {
     if (pendingServiceId) {
       setFinishedService(true);
@@ -152,12 +157,12 @@ export function TableMessage({
         const formMessageService = new FormData();
         formMessageService.append("serviceid", pendingServiceId);
         formMessageService.append("message", message);
-        try{
-          await updateMessageService(formMessageService)
-        }catch(error){
-          toast.error("Erro ao salvar Mensagem no Banco")
+        try {
+          await updateMessageService(formMessageService);
+        } catch (error) {
+          toast.error("Erro ao salvar Mensagem no Banco");
         }
-        
+
         //logica da api de enviar mensagem para o cliente falando que terminou
 
         toast.success(`Serviço finalizado com sucesso!`);
@@ -219,20 +224,27 @@ export function TableMessage({
     }
   };
 
+  const payment = async (id:string) => {
+    setIdPayment(id)
+    setOpen(true);
+  };
+
   return (
     <>
+      <AlertPay open={open} setOpen={setOpen} id={idPayment}/>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-20">Foto</TableHead>
-            <TableHead className="w-36">Nome</TableHead>
+            <TableHead className="w-20">Nome</TableHead>
             <TableHead className="w-40">Número</TableHead>
-            <TableHead className="w-28">Placa</TableHead>
-            <TableHead className="w-48">Veículo</TableHead>
+            <TableHead className="w-32">Placa</TableHead>
+            <TableHead className="w-44">Veículo</TableHead>
             <TableHead className="w-56">Serviço Realizado</TableHead>
-            <TableHead className="w-24">Data Agenda</TableHead>
-            <TableHead className="w-24">Finalizar</TableHead>
-            <TableHead className="w-24">Data Finalização</TableHead>
+            <TableHead className="w-20">Data Agenda</TableHead>
+            <TableHead className="w-16">Finalizar</TableHead>
+            <TableHead className="w-20">Data Finalização</TableHead>
+            <TableHead className="w-24">Pagamento</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -302,6 +314,27 @@ export function TableMessage({
                       ? formatDate(serviceItem.updatedAt)
                       : " - "}
                   </TableCell>
+                  <TableCell
+                    className="justify-center"
+                    onClick={() => payment(serviceItem.id)}
+                  >
+                    {serviceItem.pay ? (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-lg bg-green-500 items-center gap-1"
+                      >
+                        <BadgeCheckIcon />
+                        Pago
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-lg bg-red-500 items-center gap-1"
+                      >
+                        <BadgeAlertIcon />
+                      </Badge>
+                    )}
+                  </TableCell>
                 </TableRow>
               );
             })
@@ -315,10 +348,11 @@ export function TableMessage({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={8}>Total de Serviços</TableCell>
-            <TableCell className="w-40">
+            <TableCell colSpan={9}>Total de Serviços</TableCell>
+            <TableCell className="w-32">
               {serviceTableMessage ? serviceTableMessage.length : 0}
             </TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableFooter>
       </Table>
