@@ -54,7 +54,7 @@ const data = !dataUserPage ? {
           title: "Home",
           page: "",
         },
-                {
+        {
           title: "Calendário",
           page: "calendar",
         },
@@ -76,10 +76,23 @@ const data = !dataUserPage ? {
       title: "Clientes",
       page: "table",
       icon: Bot,
+      isActive: true,
       items: [
         {
           title: "Agendar",
           page: "create",
+        },
+      ],
+    },
+    {
+      title: "Criar",
+      page: "create",
+      icon: CogIcon,
+      isActive: true,
+      items: [
+        {
+          title: "Clientes",
+          page: "clients",
         },
       ],
     },
