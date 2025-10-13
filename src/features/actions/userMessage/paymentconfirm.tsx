@@ -22,7 +22,6 @@ interface AlertPayProps {
 
 export function AlertPay({ open, setOpen, id }: AlertPayProps) {
     const [pay, setPay] = useState(false)
-    console.log(id)
   const payment = async () => {
     setPay(true)
     try{

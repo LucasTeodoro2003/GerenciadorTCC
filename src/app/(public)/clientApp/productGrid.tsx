@@ -62,7 +62,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
       "selectedServiceIds",
       JSON.stringify(selectedServiceIds)
     );
-    console.log("Serviços salvos:", selectedServiceIds);
     router.push("/clientApp/calendarApp")
     setLoading(false);
   };

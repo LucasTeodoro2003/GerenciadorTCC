@@ -143,10 +143,8 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       formData.append("image", serviceImage || "");
       if (serviceImage) {
         await updateServiceImage(formData);
-        console.log("Com Image");
       } else {
         await updateService(formData);
-        console.log("Sem Imagem");
       }
       toast.success("Serviço atualizado com sucesso!");
       setServicePrice("");

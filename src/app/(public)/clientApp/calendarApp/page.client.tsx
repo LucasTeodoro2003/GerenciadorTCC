@@ -67,7 +67,6 @@ export default function CalendarClient({
         const parsedIds = JSON.parse(savedServiceIds);
         if (Array.isArray(parsedIds)) {
           setSelectedServiceIds(parsedIds);
-          console.log("AQUI: ", parsedIds);
         }
       }
     } catch (error) {
