@@ -25,11 +25,13 @@ import { Toaster } from "@/shared/ui/components/sonner";
 import { Tabs, TabsContent } from "@/shared/ui/components/tabs";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { CircularProgress } from "@mui/material";
-import { useSearchParams } from "next/navigation";
+import { HomeIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function TabsLoginClient() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,11 +43,12 @@ export function TabsLoginClient() {
   const [plate, setPlate] = useState("");
   const [year, setYear] = useState("");
   const [user, setUser] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const params = useSearchParams();
+  const [page, setPage] = useState(false)
 
   const handleSend = async () => {
-    setLoading(true)
+    setLoading(true);
     if (newpassword === password) {
       try {
         const formLogin = new FormData();
@@ -56,7 +59,6 @@ export function TabsLoginClient() {
         const response = await createClient(formLogin);
 
         if (response && response.userId) {
-          // Usuário criado com sucesso
           setUser(response.userId);
 
           toast.success("Usuário criado com sucesso!");
@@ -65,19 +67,18 @@ export function TabsLoginClient() {
           setPassword("");
           setNewPassword("");
           setTabs("vehicle");
-          setLoading(false)
+          setLoading(false);
         } else {
           toast.error("Email já cadastrado, logue ou solicite uma nova senha");
-          //redirecionar para login depois
         }
       } catch (err) {
         console.error("Erro ao criar usuário:", err);
         toast.error("Erro ao criar usuário");
-        setLoading(false)
+        setLoading(false);
       }
     } else {
       toast.error("As senhas são diferentes");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -89,14 +90,14 @@ export function TabsLoginClient() {
   }, [params]);
 
   const handleSendVehicle = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const formVehicle = new FormData();
       formVehicle.append("color", color);
       formVehicle.append("model", model);
       formVehicle.append("plate", plate);
       formVehicle.append("type", type);
-      formVehicle.append("yearCar", year);
+      formVehicle.append("year", year);
       formVehicle.append("user", user);
       formVehicle.append("enterpriseId", "1");
 
@@ -109,29 +110,35 @@ export function TabsLoginClient() {
       setType("");
       setYear("");
       setTabs("login");
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
       console.error("Erro ao criar veículo:", err);
       toast.error("Erro ao criar veículo");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   const handleLogin = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const loginForm = new FormData();
       loginForm.append("email", email || "");
       loginForm.append("password", password || "");
       await loginActionClient(loginForm);
+      toast.success("Logado com sucesso!");
       setEmail("");
       setPassword("");
-      setLoading(false)
+      setLoading(false);
+      router.push("/clientApp/userApp");
     } catch (err) {
       console.error("Erro ao logar: ", err);
-      setLoading(false)
+      setLoading(false);
     }
-    toast.success("Logado com sucesso!");
+  };
+
+  const handleHome = () => {
+    setPage(true);
+    router.push("/clientApp");
   };
 
   return (
@@ -142,6 +149,18 @@ export function TabsLoginClient() {
       <div className="flex justify-center items-center w-full h-screen -pt-10">
         <Toaster richColors position="top-center" />
         <div className="flex w-full max-w-sm flex-col gap-6">
+        <div className="flex justify-center">
+          <Button
+            className="bg-transparent hover:bg-gray-300 dark:hover:bg-gray-500"
+            onClick={() => handleHome()}
+          >
+            {!page ? (
+              <HomeIcon className="text-black dark:text-white" />
+            ) : (
+              <CircularProgress size={20} />
+            )}
+          </Button>
+        </div>
           <Tabs value={tabs}>
             {/* <Tabs value="login"> */}
             <TabsContent value="account">
@@ -210,10 +229,11 @@ export function TabsLoginClient() {
                       password.length < 8 ||
                       !name ||
                       newpassword.length < 8 ||
-                      newpassword != password || loading
+                      newpassword != password ||
+                      loading
                     }
                   >
-                    {!loading ? "Criar conta" : <CircularProgress size={20}/>}
+                    {!loading ? "Criar conta" : <CircularProgress size={20} />}
                   </Button>
                 </CardFooter>
               </Card>
@@ -292,9 +312,11 @@ export function TabsLoginClient() {
                     onClick={() => {
                       handleSendVehicle();
                     }}
-                    disabled={!model || !plate || !year || !type || !color || loading}
+                    disabled={
+                      !model || !plate || !year || !type || !color || loading
+                    }
                   >
-                    {!loading ? "Salvar" : <CircularProgress size={20}/>}
+                    {!loading ? "Salvar" : <CircularProgress size={20} />}
                   </Button>
                 </CardFooter>
               </Card>
@@ -341,7 +363,7 @@ export function TabsLoginClient() {
                     }}
                     disabled={!email || password.length < 8 || loading}
                   >
-                    {!loading ? "Entrar" : <CircularProgress size={20}/>}
+                    {!loading ? "Entrar" : <CircularProgress size={20} />}
                   </Button>
                 </CardFooter>
               </Card>

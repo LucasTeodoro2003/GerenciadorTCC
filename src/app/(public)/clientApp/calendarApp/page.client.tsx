@@ -29,6 +29,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/ui/components/tooltip";
+import { useRouter } from "next/navigation";
 
 export interface CalendarClientProps {
   disableDate: ServiceVehicle[];
@@ -48,13 +49,16 @@ export default function CalendarClient({
   const maxCarDay = 20;
   const maxCarHour = 2;
 
+
+  const router = useRouter()
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string>(user.id);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>("");
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [exit, setExit] = useState(false)
+  const [exit, setExit] = useState(false);
+  const [page, setPage] = useState(false);
 
   useEffect(() => {
     try {
@@ -196,14 +200,19 @@ export default function CalendarClient({
     );
   };
 
-  const handleExit = async() => {
-    setExit(true)
-    try{
-      await signOutFunction()
-    }catch(err){
-      console.error("Erro ao sair: ", err)
+  const handleExit = async () => {
+    setExit(true);
+    try {
+      await signOutFunction();
+    } catch (err) {
+      console.error("Erro ao sair: ", err);
     }
-  }
+  };
+
+  const handleHome = () => {
+    setPage(true)
+    router.push("/clientApp")
+  };
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -211,13 +220,20 @@ export default function CalendarClient({
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-4">
             <TooltipProvider>
-              <Tooltip >
+              <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200" onClick={() => handleExit()}>
-                    {!exit? <ExitToAppIcon
-                      className="text-black dark:text-white"
-                      fontSize="large"
-                    /> : <CircularProgress size={20}/>}
+                  <Button
+                    className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200"
+                    onClick={() => handleExit()}
+                  >
+                    {!exit ? (
+                      <ExitToAppIcon
+                        className="text-black dark:text-white"
+                        fontSize="large"
+                      />
+                    ) : (
+                      <CircularProgress size={20} />
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -262,12 +278,21 @@ export default function CalendarClient({
         </div>
       </div>
 
-      {/* Serviços Selecionados */}
       {selectedServiceIds.length > 0 && (
         <div className="mb-8 p-4 border rounded-lg bg-background shadow-sm">
-          <Label className="text-xl font-medium block mb-3">
-            Serviços Selecionados
-          </Label>
+          <div className="flex flex-row items-center mb-3 gap-4">
+            <h2 className="text-xl font-medium">Serviços Selecionados</h2>
+            <Button
+              className="dark:hover:bg-neutral-600 hover:bg-neutral-400"
+              onClick={() => handleHome()}
+            >
+              {!page ? (
+                "Home / Selecionar mais serviços"
+              ) : (
+                <CircularProgress size={20} />
+              )}
+            </Button>
+          </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {selectedServices.map((service) => (
               <Badge

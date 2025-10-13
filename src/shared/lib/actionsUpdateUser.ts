@@ -25,6 +25,8 @@ export async function updateUser2(userId: string, formData: FormData) {
         emailVerified: new Date() || "",
         name: formData.get("name")?.toString() || "",
         image: await fileToBase64(formData.get("image") as File) || "",
+        email: formData.get("email")?.toString() || "",
+        phone: formData.get("phone")?.toString() || "",
         updatedAt: new Date()
       },
     });

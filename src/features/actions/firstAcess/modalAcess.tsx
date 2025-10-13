@@ -25,7 +25,6 @@ export default function ModalClient({
   user,
 }: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const firtsAcess = !user.emailVerified;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

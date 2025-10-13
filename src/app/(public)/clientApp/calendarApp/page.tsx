@@ -7,7 +7,7 @@ export default async function Home() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
-    redirect("/clientApp")
+    redirect("/clientApp/loginApp")
   }
   const user = await db.user.findUnique({
     where: { id: userId },

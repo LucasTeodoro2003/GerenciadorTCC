@@ -30,7 +30,7 @@ import { CircularProgress } from "@mui/material";
 import { MapPin } from "lucide-react";
 import { SheetPassword } from "@/features/Modal/passwordUser/user";
 import { updatePerfilUserPage } from "@/shared/lib/actionUpdateUser";
-import { updateAddress } from "@/shared/lib/actionUpdateAdress";
+import { updateAddress } from "@/shared/lib/actionUpdateAddress";
 import { updatePerfilUserPageNoImage } from "@/shared/lib/actionUpdateUserNoImage";
 import imageCompression from "browser-image-compression";
 import { createAddress } from "@/shared/lib/actionCreateAddress";
