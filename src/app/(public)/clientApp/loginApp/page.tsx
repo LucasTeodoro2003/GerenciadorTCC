@@ -1,10 +1,11 @@
+"use server"
 import { auth } from "@/shared/lib/auth";
 import { TabsLoginClient } from "./page_client";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
   const session = await auth();
-  if (session) redirect("/clientApp/calendarApp");
+  if (session) redirect("/clientApp");
 
   return <TabsLoginClient />;
 }

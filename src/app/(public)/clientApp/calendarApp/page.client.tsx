@@ -54,6 +54,7 @@ export default function CalendarClient({
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>("");
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [exit, setExit] = useState(false)
 
   useEffect(() => {
     try {
@@ -195,20 +196,28 @@ export default function CalendarClient({
     );
   };
 
+  const handleExit = async() => {
+    setExit(true)
+    try{
+      await signOutFunction()
+    }catch(err){
+      console.error("Erro ao sair: ", err)
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-4">
-      {/* Header com Nome do Cliente, Seletor de Veículo e Botão de Sair */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-4">
             <TooltipProvider>
               <Tooltip >
                 <TooltipTrigger asChild>
-                  <Button className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200">
-                    <ExitToAppIcon
+                  <Button className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200" onClick={() => handleExit()}>
+                    {!exit? <ExitToAppIcon
                       className="text-black dark:text-white"
                       fontSize="large"
-                    />
+                    /> : <CircularProgress size={20}/>}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>

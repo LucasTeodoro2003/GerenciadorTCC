@@ -129,7 +129,6 @@ export function TabsLoginClient() {
       setLoading(false)
     } catch (err) {
       console.error("Erro ao logar: ", err);
-      toast.error("Erro ao logar");
       setLoading(false)
     }
     toast.success("Logado com sucesso!");
