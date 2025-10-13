@@ -4,6 +4,8 @@ import { Button } from "@/shared/ui/components/button";
 import { Enterprise, Services } from "@prisma/client";
 import { ServiceCard } from "./productCard";
 import { formatCurrency } from "@/shared/lib/utils";
+import { useRouter } from "next/navigation";
+import { CircularProgress } from "@mui/material";
 
 interface ServiceGridProps {
   services: Services[];
@@ -11,7 +13,9 @@ interface ServiceGridProps {
 }
 
 export function ServiceGrid({ services, enterprise }: ServiceGridProps) {
+  const router = useRouter()
   const [selectedServices, setSelectedServices] = useState<Services[]>([]);
+  const [loading, setLoading] = useState(false)
 
   const handleToggleService = (service: Services) => {
     setSelectedServices(prev => {
@@ -29,6 +33,13 @@ export function ServiceGrid({ services, enterprise }: ServiceGridProps) {
     const price = typeof service.price === 'string' ? parseFloat(service.price) : service.price;
     return total + price;
   }, 0);
+
+
+  const handlescheduleService = () => {
+    setLoading(true)
+    console.log(selectedServices.find((s)=>s.id)?.id)
+    router.push("/clientApp/loginApp")
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -53,8 +64,8 @@ export function ServiceGrid({ services, enterprise }: ServiceGridProps) {
               </span>
               <span className="text-xl font-bold">{formatCurrency(totalPrice)}</span>
             </div>
-            <Button size="lg" className="w-full sm:w-auto">
-              Agendar serviços
+            <Button size="lg" className="w-full sm:w-auto" onClick={()=>handlescheduleService()}>
+              {!loading ? "Criar conta" : <CircularProgress size={20}/>}
             </Button>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { auth } from "@/shared/lib/auth";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
-import ThemeToggle from "@/shared/ui/darkOrWhiteDown";
 import { LoginForm } from "@/shared/ui/login-form";
 import { redirect } from "next/navigation";
 
