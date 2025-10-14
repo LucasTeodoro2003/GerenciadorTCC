@@ -63,7 +63,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
       JSON.stringify(selectedServiceIds)
     );
     router.push("/clientApp/calendarApp")
-    setLoading(false);
   };
 
   const handleLogar = () => {
