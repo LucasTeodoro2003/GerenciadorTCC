@@ -1,28 +1,14 @@
 {
-  "background_color": "#ffffff",
-  "description": "SOLUÇÃO DIGITAL PARA GESTÃO OPERACIONAL DE ESTETICA AUTOMOTIVA",
+  "background_color": "#ffbf00",
   "dir": "ltr",
   "display": "standalone",
-  "name": "lucasteodorotcc.vercel",
+  "name": "EstetiCAR",
   "orientation": "any",
   "scope": "/",
-  "short_name": "lucasteodorotcc.vercel",
-  "start_url": "/lucasteodorotcc.vercel.app/clientApp",
-  "theme_color": "#ffffff",
+  "short_name": "EstetiCAR",
+  "start_url": "/clientApp",
+  "theme_color": "#000000",
   "icons": [
-    {
-      "src": "https://lucasteodorotcc.vercel.app/favicon.ico",
-      "type": "image/x-icon",
-      "sizes": "256x256",
-      "isSquare": true,
-      "isPng": false,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 256,
-      "is512x512": false,
-      "is256x256": true,
-      "is192x192": false
-    },
     {
       "src": "https://lucasteodorotcc.vercel.app/favicon.ico",
       "type": "image/x-icon",
