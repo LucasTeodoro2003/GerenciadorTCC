@@ -1,13 +1,13 @@
 {
   "background_color": "#ffffff",
   "description": "SOLUÇÃO DIGITAL PARA GESTÃO OPERACIONAL DE ESTETICA AUTOMOTIVA",
-  "dir": "auto",
+  "dir": "ltr",
   "display": "standalone",
   "name": "lucasteodorotcc.vercel",
   "orientation": "any",
-  "scope": "/teodorotcc.vercel.app",
+  "scope": "/",
   "short_name": "lucasteodorotcc.vercel",
-  "start_url": "/teodorotcc.vercel.app",
+  "start_url": "/lucasteodorotcc.vercel.app/clientApp",
   "theme_color": "#ffffff",
   "icons": [
     {
@@ -35,6 +35,5 @@
       "is256x256": false,
       "is192x192": false
     }
-  ],
-  "lang": "pt"
+  ]
 }
