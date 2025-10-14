@@ -1,0 +1,40 @@
+{
+  "background_color": "#ffffff",
+  "description": "SOLUÇÃO DIGITAL PARA GESTÃO OPERACIONAL DE ESTETICA AUTOMOTIVA",
+  "dir": "auto",
+  "display": "standalone",
+  "name": "lucasteodorotcc.vercel",
+  "orientation": "any",
+  "scope": "/teodorotcc.vercel.app",
+  "short_name": "lucasteodorotcc.vercel",
+  "start_url": "/teodorotcc.vercel.app",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://lucasteodorotcc.vercel.app/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "256x256",
+      "isSquare": true,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 256,
+      "is512x512": false,
+      "is256x256": true,
+      "is192x192": false
+    },
+    {
+      "src": "https://lucasteodorotcc.vercel.app/favicon.ico",
+      "type": "image/x-icon",
+      "isSquare": false,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 0,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ],
+  "lang": "pt"
+}
