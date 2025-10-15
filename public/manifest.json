@@ -21,7 +21,17 @@
       "is256x256": false,
       "is192x192": false
     },
-    {"src": "https://lucasteodorotcc.vercel.app/logo.png"
+    {"src": "https://lucasteodorotcc.vercel.app/logo.png",
+    "type": "image/png",
+    "sizes": "512x512"
+    },
+    {"src": "https://lucasteodorotcc.vercel.app/androidLogo.png",
+    "type": "image/png",
+    "sizes": "512x512"
+    },
+    {"src": "https://lucasteodorotcc.vercel.app/logoMenor.png",
+    "type": "image/png",
+    "sizes": "192x192"
     }
   ]
 }
