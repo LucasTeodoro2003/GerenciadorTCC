@@ -632,7 +632,7 @@ export default function CalendarIcons({
 
                   <div>
                     <p className="text-xs text-muted-foreground">
-                      Data Finalização
+                      Data Agendamento Cliente
                     </p>
                     <p className="text-sm">
                       {selectedEvent.extendedProps.updatedAt

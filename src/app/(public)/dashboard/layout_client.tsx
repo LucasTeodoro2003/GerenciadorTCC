@@ -105,7 +105,7 @@ export default function LayoutClient({
               try {
                 const phoneNumber =
                   serviceItem.serviceVehicle.vehicle.user.phone || "";
-                const message = serviceItem.serviceVehicle.vehicle.user.message || "";
+                const message = serviceItem.message || "";
                 if (!phoneNumber) {
                   throw new Error("Número de telefone não encontrado");
                 }

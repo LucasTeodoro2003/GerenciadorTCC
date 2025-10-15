@@ -194,9 +194,10 @@ export default function CalendarClient({
       setSelectedVehicleId("");
       setSelectedServiceIds([]);
       setIsLoading(false);
+      router.push("/clientApp")
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
-      toast.error("Erro ao criar agendamento. Tente novamente.");
+      toast.error("Erro ao criar agendamento. Tente novamente mais tarde!.");
       setIsLoading(false);
     }
   };

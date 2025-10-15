@@ -384,7 +384,6 @@ export function TableMessage({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* <AlertDialog open={openProducts}> */}
       <Dialog open={openProducts}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
