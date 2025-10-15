@@ -1,37 +1,80 @@
 {
-  "background_color": "#ffbf00",
+  "id": "/",
   "dir": "ltr",
-  "display": "standalone",
+  "lang": "pt-BR",
   "name": "EstetiCAR",
-  "orientation": "any",
-  "scope": "/",
   "short_name": "EstetiCAR",
+  "description": "Gerencie sua estética automotiva com o EstetiCAR. Controle de clientes, serviços e agendamentos em um só lugar.",
   "start_url": "/clientApp",
+  "scope": "/clientApp/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "orientation": "any",
+  "background_color": "#ffbf00",
   "theme_color": "#000000",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "https://lucasteodorotcc.vercel.app/favicon.ico",
+      "sizes": "64x64",
       "type": "image/x-icon",
-      "isSquare": false,
-      "isPng": false,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 0,
-      "is512x512": false,
-      "is256x256": false,
-      "is192x192": false
+      "purpose": "any"
     },
-    {"src": "https://lucasteodorotcc.vercel.app/logo.png",
-    "type": "image/png",
-    "sizes": "512x512"
+    {
+      "src": "https://lucasteodorotcc.vercel.app/logoMenor.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
-    {"src": "https://lucasteodorotcc.vercel.app/androidLogo.png",
-    "type": "image/png",
-    "sizes": "512x512"
+    {
+      "src": "https://lucasteodorotcc.vercel.app/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     },
-    {"src": "https://lucasteodorotcc.vercel.app/logoMenor.png",
-    "type": "image/png",
-    "sizes": "192x192"
+    {
+      "src": "https://lucasteodorotcc.vercel.app/androidLogo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "business",
+    "utilities"
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "shortcuts": [
+    {
+      "name": "Novo Agendamento",
+      "short_name": "Agendar",
+      "description": "Agende um Horário",
+      "url": "/clientApp",
+      "icons": [
+        {
+          "src": "https://lucasteodorotcc.vercel.app/logoMenor.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "short_name": "Login",
+      "description": "Faça Login",
+      "url": "/clientApp/userApp?tabs=login",
+      "icons": [
+        {
+          "src": "https://lucasteodorotcc.vercel.app/logoMenor.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
