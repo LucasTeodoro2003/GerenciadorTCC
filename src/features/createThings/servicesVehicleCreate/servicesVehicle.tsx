@@ -32,11 +32,12 @@ import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 import { CircularProgress } from "@mui/material";
+import SendMessage from "@/shared/lib/actionSendMessageAdm";
 
 export interface CreateServiceVehiclePageProps {
   disableDate: ServiceVehicle[];
   users: Prisma.UserGetPayload<{
-    include: { vehicle: { include: { serviceVehicle: {} } } };
+    include: { vehicle: { include: { serviceVehicle: {} } }; addresses: {} };
   }>[];
   services: Services[];
 }
@@ -117,8 +118,6 @@ export default function CreateServiceVehiclePage({
     return disabledHours.get(dayKey)?.has(hour) || false;
   };
 
-
-
   const handleSend = async () => {
     setIsLoading(true);
     if (
@@ -159,6 +158,20 @@ export default function CreateServiceVehiclePage({
         )} para o veículo ${plateCar}.
       Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
       });
+
+      const addressTrue = users.find((u) => u.id === selectedUserId)?.addresses;
+      const selectAddress = addressTrue?.find((a) => a.isPrimary === true);
+      const address = `Rua: ${selectAddress?.street}, nº:${selectAddress?.number} - Bairro: ${selectAddress?.district} // obs: ${selectAddress?.complement}`;
+
+      try {
+        await SendMessage(
+          address,
+          servicesText,
+          formattedDate.toLocaleString("pt-BR")
+        );
+      } catch (err) {
+        console.error("Erro ao enviar mensagem para o proprietario: ", err);
+      }
 
       setDate(new Date());
       setSelectedHour(null);
@@ -402,8 +415,24 @@ export default function CreateServiceVehiclePage({
             )}
           </div>
 
-          <Button className="w-full mt-4" onClick={handleSend} disabled={!selectedVehicleId || isLoading || !selectedHour || !selectedUserId}>
-            {isLoading ? (<> Agendando <CircularProgress size={20}/></>) : "AGENDAR"}
+          <Button
+            className="w-full mt-4"
+            onClick={handleSend}
+            disabled={
+              !selectedVehicleId ||
+              isLoading ||
+              !selectedHour ||
+              !selectedUserId
+            }
+          >
+            {isLoading ? (
+              <>
+                {" "}
+                Agendando <CircularProgress size={20} />
+              </>
+            ) : (
+              "AGENDAR"
+            )}
           </Button>
         </div>
       </div>

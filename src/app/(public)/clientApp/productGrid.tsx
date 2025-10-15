@@ -84,7 +84,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
   return (
     <>
       <div className="container mx-auto px-4 py-6 md:py-8">
-        {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-center md:text-left order-2 md:order-1 w-full md:w-auto">
             {enterprise.name}
@@ -137,7 +136,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
           </div>
         </div>
 
-        {/* Alert Section - Made responsive */}
         <div className="pb-6 w-full max-w-3xl mx-auto">
           <Alert variant="default">
             <Car className="mr-2 h-4 w-4 shrink-0" />
@@ -154,7 +152,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
           </Alert>
         </div>
 
-        {/* Services Grid - Already responsive with grid-cols */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-24">
           {services.map((service) => (
             <ServiceCard
@@ -166,7 +163,6 @@ export function ServiceGrid({ services, enterprise, user }: ServiceGridProps) {
           ))}
         </div>
 
-        {/* Bottom Action Bar */}
         {selectedServices.length > 0 && (
           <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg p-3 md:p-4 z-10">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">

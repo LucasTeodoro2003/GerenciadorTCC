@@ -22,6 +22,7 @@ export default async function Page(){
           serviceVehicle: {},
         },
       },
+      addresses:{}
     },
   });
     const services = await db.services.findMany();

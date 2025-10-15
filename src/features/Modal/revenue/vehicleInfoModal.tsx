@@ -162,7 +162,6 @@ export function VehicleInfoModal({
                 </ul>
               </div>
 
-              {/* Resumo financeiro */}
               {(discounts > 0 || addValue > 0) && (
                 <div className="mt-3 text-sm space-y-1">
                   {discounts > 0 && (

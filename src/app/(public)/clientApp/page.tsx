@@ -1,4 +1,4 @@
-// HomePage - Arquivo server component
+"use server"
 import db from "@/shared/lib/prisma";
 import Home from "./page_client";
 import { Enterprise, User } from "@prisma/client";

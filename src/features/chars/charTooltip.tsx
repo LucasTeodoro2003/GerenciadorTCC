@@ -68,7 +68,7 @@ export function ChartTooltipIndicatorLine({
               key,
               {
                 label: key,
-                color: `var(--chart-${(i % 5) + 1})`, // gera cores automáticas
+                color: `var(--chart-${(i % 5) + 1})`,
               },
             ])
           )}

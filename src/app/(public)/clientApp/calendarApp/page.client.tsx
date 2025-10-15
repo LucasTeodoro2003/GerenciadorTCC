@@ -30,6 +30,7 @@ import {
   TooltipTrigger,
 } from "@/shared/ui/components/tooltip";
 import { useRouter } from "next/navigation";
+import SendMessage from "@/shared/lib/actionSendMessageAdm";
 
 export interface CalendarClientProps {
   disableDate: ServiceVehicle[];
@@ -37,7 +38,7 @@ export interface CalendarClientProps {
     include: { vehicle: { include: { serviceVehicle: {} } } };
   }>[];
   services: Services[];
-  user: User;
+  user: Prisma.UserGetPayload<{ include: { addresses: {} } }>;
 }
 
 export default function CalendarClient({
@@ -49,8 +50,7 @@ export default function CalendarClient({
   const maxCarDay = 20;
   const maxCarHour = 2;
 
-
-  const router = useRouter()
+  const router = useRouter();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string>(user.id);
@@ -174,8 +174,18 @@ export default function CalendarClient({
         )} para o veículo ${plateCar}.
       Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
       });
+      const addressTrue = user.addresses.find((a) => a.isPrimary === true);
+      const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} // obs: ${addressTrue?.complement}`;
 
-      // Limpar o localStorage após agendamento bem-sucedido
+      try {
+        await SendMessage(
+          address,
+          servicesText,
+          formattedDate.toLocaleString("pt-BR")
+        );
+      } catch (err) {
+        console.error("Erro ao enviar mensagem para o proprietario: ", err);
+      }
       localStorage.removeItem("selectedServiceIds");
 
       setDate(new Date());
@@ -209,8 +219,8 @@ export default function CalendarClient({
   };
 
   const handleHome = () => {
-    setPage(true)
-    router.push("/clientApp")
+    setPage(true);
+    router.push("/clientApp");
   };
 
   return (
@@ -244,7 +254,6 @@ export default function CalendarClient({
           </div>
           <ThemeToggleV2 />
         </div>
-        {/* Seletor de Veículo ao lado do nome */}
         <div className="flex flex-col md:flex-row gap-4 items-center md:items-end mt-2">
           <div className="w-full md:w-1/2">
             <Label className="text-md font-medium block mb-1">
@@ -278,51 +287,64 @@ export default function CalendarClient({
       </div>
 
       {selectedServiceIds.length > 0 && (
-        <div className="mb-8 p-4 border rounded-lg bg-background shadow-sm">
-          <div className="flex flex-row items-center mb-3 gap-4">
-            <h2 className="text-xl font-medium">Serviços Selecionados</h2>
+        <div className="mb-8 p-6 border rounded-xl bg-background shadow-sm">
+          <div className="flex flex-wrap items-center justify-between mb-4 gap-3">
+            <h2 className="text-xl font-semibold">Serviços Selecionados</h2>
             <Button
-              className="dark:hover:bg-neutral-600 hover:bg-neutral-400"
-              onClick={() => handleHome()}
+              variant="outline"
+              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-400 transition"
+              onClick={handleHome}
+              disabled={!!page}
             >
               {!page ? (
-                "Home / Selecionar mais serviços"
+                <>
+                  <span className="dark:text-black text-white">
+                    Home / Selecionar mais serviços
+                  </span>
+                </>
               ) : (
                 <CircularProgress size={20} />
               )}
             </Button>
           </div>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {selectedServices.map((service) => (
-              <Badge
-                key={service.id}
-                variant="secondary"
-                className="flex items-center gap-1 text-sm py-2 px-3"
-              >
-                {service.description || "Sem descrição"}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-4 w-4 p-0 hover:bg-transparent"
-                  onClick={() => toggleService(service.id)}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {selectedServices.length > 0 ? (
+              selectedServices.map((service) => (
+                <Badge
+                  key={service.id}
+                  variant="secondary"
+                  className="flex items-center gap-2 text-sm py-2 px-3"
                 >
-                  <X className="h-3 w-3" />
-                </Button>
-              </Badge>
-            ))}
+                  <span>{service.description || "Sem descrição"}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 p-0 text-muted-foreground hover:text-destructive hover:bg-transparent"
+                    onClick={() => toggleService(service.id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </Badge>
+              ))
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                Nenhum serviço selecionado ainda.
+              </p>
+            )}
           </div>
-          <div className="text-lg font-medium">
-            Valor total: R${" "}
-            {selectedServices
-              .reduce((sum, service) => sum + service.price, 0)
-              .toFixed(2)}
+          <div className="text-lg font-semibold text-right">
+            Valor total:{" "}
+            <span className="text-primary">
+              R${" "}
+              {selectedServices
+                .reduce((sum, service) => sum + service.price, 0)
+                .toFixed(2)}
+            </span>
           </div>
         </div>
       )}
 
-      {/* Corpo Principal - Calendário e Seletor de Horas */}
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Calendário */}
         <div className="w-full md:w-2/3">
           <Label className="text-xl font-medium block mb-3">
             Selecione a data
@@ -346,7 +368,6 @@ export default function CalendarClient({
           />
         </div>
 
-        {/* Seletor de Horas */}
         <div className="w-full md:w-1/3">
           <Label className="text-xl font-medium block mb-3">
             Selecione o horário
@@ -371,7 +392,6 @@ export default function CalendarClient({
         </div>
       </div>
 
-      {/* Botão de Agendamento */}
       <div className="mt-8">
         <Button
           className="w-full py-6 text-lg"

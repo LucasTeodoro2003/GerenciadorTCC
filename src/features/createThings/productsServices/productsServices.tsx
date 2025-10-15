@@ -96,15 +96,6 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
     }
   };
 
-  // useEffect(() => {
-  //   return () => {
-  //     if (serviceImage) {
-  //       URL.revokeObjectURL(URL.createObjectURL(serviceImage));
-  //     }
-  //   };
-  // }, [serviceImage]);
-
-
   const handleCreateService = async () => {
     try {
       if (!servicePrice || !serviceDescription) {

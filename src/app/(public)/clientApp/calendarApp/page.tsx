@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import CalendarClient from "./page.client";
 import db from "@/shared/lib/prisma";
 import { auth } from "@/shared/lib/auth";
@@ -11,7 +11,8 @@ export default async function Home() {
   }
   const user = await db.user.findUnique({
     where: { id: userId },
-  }) as User
+    include:{addresses:{}}
+  }) as Prisma.UserGetPayload<{include:{addresses:{}}}>
 
   const enterprise = user?.enterpriseId;
   const disableDate = await db.serviceVehicle.findMany({

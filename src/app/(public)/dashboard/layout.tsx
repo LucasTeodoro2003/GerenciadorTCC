@@ -44,7 +44,8 @@ export default async function Layout({
   })
 
   const services = await db.serviceVehicleService.findMany({
-    where: {service: {enterpriseId: user.enterpriseId}}
+    where: {service: {enterpriseId: user.enterpriseId}},
+    include:{serviceVehicle:{include:{vehicle:{include:{user:{}}}}}}
   })
 
 

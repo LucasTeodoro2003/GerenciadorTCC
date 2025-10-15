@@ -69,7 +69,6 @@ export default function PageUsers({ users }: { users: User[] }) {
 
   return (
     <div className="p-4 bg-white dark:bg-gray-300 dark:bg-opacity-10 rounded-lg shadow-md transition-all max-w-xl mx-auto">
-      {/* Header com título e busca */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           Gerenciador de Usuários
