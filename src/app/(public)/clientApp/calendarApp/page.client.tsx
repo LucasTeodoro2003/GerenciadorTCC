@@ -178,11 +178,13 @@ export default function CalendarClient({
       const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} // obs: ${addressTrue?.complement}`;
 
       try {
-        await SendMessage(
+        const message = await SendMessage(
           address,
           servicesText,
           formattedDate.toLocaleString("pt-BR")
         );
+        console.log("Mensagem enviada para o proprietario");
+        console.log(message);
       } catch (err) {
         console.error("Erro ao enviar mensagem para o proprietario: ", err);
       }
