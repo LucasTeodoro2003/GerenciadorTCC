@@ -12,7 +12,7 @@ export default async function SendMessage30(number: string, message: string) {
       },
       body: JSON.stringify({
         to: `55${number}`,
-        text: message,
+        text: `${message}`,
       }),
     });
     revalidatePath("/dashboard");

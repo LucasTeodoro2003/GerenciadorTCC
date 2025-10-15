@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 import { CircularProgress } from "@mui/material";
 import SendMessage from "@/shared/lib/actionSendMessageAdm";
+import SendMessageClient from "@/shared/lib/actionSendMessageClient";
 
 export interface CreateServiceVehiclePageProps {
   disableDate: ServiceVehicle[];
@@ -158,17 +159,35 @@ export default function CreateServiceVehiclePage({
         )} para o veículo ${plateCar}.
       Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
       });
-
+      const user = users.find((u) => u.id === selectedUserId);
+      if (!user) {
+        toast.error("Usuário não encontrado para enviar a mensagem.");
+        setIsLoading(false);
+        return;
+      }
       const addressTrue = users.find((u) => u.id === selectedUserId)?.addresses;
       const selectAddress = addressTrue?.find((a) => a.isPrimary === true);
-      const address = `Rua: ${selectAddress?.street}, nº:${selectAddress?.number} - Bairro: ${selectAddress?.district} // obs: ${selectAddress?.complement}`;
+      const address = `Rua: ${selectAddress?.street}, nº:${selectAddress?.number} - Bairro: ${selectAddress?.district} -  (${selectAddress?.complement})`;
 
       try {
         await SendMessage(
           address,
           servicesText,
-          formattedDate.toLocaleString("pt-BR")
+          formattedDate.toLocaleString("pt-BR"),
+          user.name || "Cliente",
+          plateCar,
+          user.phone || "Não informado"
         );
+        console.log("Mensagem enviada para o administrador com sucesso.");
+        await SendMessageClient(
+          address,
+          servicesText,
+          formattedDate.toLocaleString("pt-BR"),
+          user.name || "Cliente",
+          plateCar,
+          user.phone || "Não informado"
+        );
+        console.log("Mensagem enviada para o cliente com sucesso.");
       } catch (err) {
         console.error("Erro ao enviar mensagem para o proprietario: ", err);
       }

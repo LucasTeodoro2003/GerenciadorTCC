@@ -31,6 +31,7 @@ import {
 } from "@/shared/ui/components/tooltip";
 import { useRouter } from "next/navigation";
 import SendMessage from "@/shared/lib/actionSendMessageAdm";
+import SendMessageClient from "@/shared/lib/actionSendMessageClient";
 
 export interface CalendarClientProps {
   disableDate: ServiceVehicle[];
@@ -175,19 +176,27 @@ export default function CalendarClient({
       Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
       });
       const addressTrue = user.addresses.find((a) => a.isPrimary === true);
-      const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} // obs: ${addressTrue?.complement}`;
+      const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} -  (${addressTrue?.complement})`;
 
-      try {
-        const message = await SendMessage(
-          address,
-          servicesText,
-          formattedDate.toLocaleString("pt-BR")
-        );
-        console.log("Mensagem enviada para o proprietario");
-        console.log(message);
-      } catch (err) {
-        console.error("Erro ao enviar mensagem para o proprietario: ", err);
-      }
+      await SendMessage(
+        address,
+        servicesText,
+        formattedDate.toLocaleString("pt-BR"),
+        user.name || "Cliente",
+        plateCar,
+        user.phone || "Não informado"
+      );
+      console.log("Mensagem enviada para o administrador.");
+
+      await SendMessageClient(
+        address,
+        servicesText,
+        formattedDate.toLocaleString("pt-BR"),
+        user.name || "Cliente",
+        plateCar,
+        user.phone || "Não informado"
+      );
+      console.log("Mensagem enviada para o cliente.");
       localStorage.removeItem("selectedServiceIds");
 
       setDate(new Date());
@@ -196,7 +205,7 @@ export default function CalendarClient({
       setSelectedVehicleId("");
       setSelectedServiceIds([]);
       setIsLoading(false);
-      router.push("/clientApp")
+      router.push("/clientApp");
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
       toast.error("Erro ao criar agendamento. Tente novamente mais tarde!.");
@@ -256,36 +265,6 @@ export default function CalendarClient({
             <h1 className="text-3xl font-bold">{user.name || "Cliente"}</h1>
           </div>
           <ThemeToggleV2 />
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 items-center md:items-end mt-2">
-          <div className="w-full md:w-1/2">
-            <Label className="text-md font-medium block mb-1">
-              Selecione seu veículo
-            </Label>
-            <Select
-              value={selectedVehicleId}
-              onValueChange={(value) => {
-                setSelectedVehicleId(value);
-              }}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Escolha um veículo para agendamento" />
-              </SelectTrigger>
-              <SelectContent>
-                {userVehicles.length > 0 ? (
-                  userVehicles.map((vehicle) => (
-                    <SelectItem key={vehicle.id} value={vehicle.id}>
-                      {vehicle.type} - {vehicle.plate}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="no-vehicles" disabled>
-                    Nenhum veículo cadastrado
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
       </div>
 
@@ -347,7 +326,7 @@ export default function CalendarClient({
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6 mb-6">
         <div className="w-full md:w-2/3">
           <Label className="text-xl font-medium block mb-3">
             Selecione a data
@@ -395,7 +374,36 @@ export default function CalendarClient({
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mb-6">
+        <Label className="text-xl font-medium block mb-3">
+          Selecione seu veículo
+        </Label>
+        <Select
+          value={selectedVehicleId}
+          onValueChange={(value) => {
+            setSelectedVehicleId(value);
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Escolha um veículo para agendamento" />
+          </SelectTrigger>
+          <SelectContent>
+            {userVehicles.length > 0 ? (
+              userVehicles.map((vehicle) => (
+                <SelectItem key={vehicle.id} value={vehicle.id}>
+                  {vehicle.type} - {vehicle.plate}
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem value="no-vehicles" disabled>
+                Nenhum veículo cadastrado
+              </SelectItem>
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="mb-6">
         <Button
           className="w-full py-6 text-lg"
           onClick={handleSend}
