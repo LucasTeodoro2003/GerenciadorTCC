@@ -251,7 +251,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
     <Button 
       className="w-full flex items-center justify-center" 
       onClick={!typeTable ? handleCreateVehicle : handleEdityVehicle}
-      disabled={isSubmittingVehicle || !vehicleOwner || !vehiclePlate || !vehicleType}
+      disabled={isSubmittingVehicle || !vehicleOwner || !vehiclePlate || !vehicleType || !vehicleColor || !vehicleModel || !vehicleYear}
     >
       {isSubmittingVehicle 
       ? <CircularProgress size={20} /> 
@@ -570,7 +570,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="model">Modelo</Label>
+                  <Label htmlFor="model">Modelo <span className="text-red-500">*</span></Label>
                   <Input 
                     id="model" 
                     placeholder="Ex: Onix, Gol, Fiesta" 
@@ -580,7 +580,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="year">Ano</Label>
+                  <Label htmlFor="year">Ano <span className="text-red-500">*</span></Label>
                   <Input 
                     id="year" 
                     placeholder="Ex: 2022" 
@@ -590,7 +590,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="color">Cor</Label>
+                  <Label htmlFor="color">Cor <span className="text-red-500">*</span></Label>
                   <Input 
                     id="color" 
                     placeholder="Ex: Preto, Branco, Prata" 

@@ -18,7 +18,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/components/select";
@@ -54,7 +56,6 @@ import imageCompression from "browser-image-compression";
 import { updateServiceImage } from "@/shared/lib/actionUpdateServiceImage";
 import GetImage from "@/shared/lib/actionGetImage";
 
-
 interface CreateServiceProps {
   users: User[];
 }
@@ -75,11 +76,31 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
   const [openExpenseDateCalendar, setOpenExpenseDateCalendar] = useState(false);
   const [isSubmittingService, setIsSubmittingService] = useState(false);
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
-  const [serviceImage, setServiceImage] = useState<File | null>(null)
+  const [serviceImage, setServiceImage] = useState<File | null>(null);
+  const [serviceTime, setServiceTime] = useState("");
+  const [customTimeValue, setCustomTimeValue] = useState<string>("");
+  const [customTimeUnit, setCustomTimeUnit] = useState("horas");
+  const [serviceTimeOption, setServiceTimeOption] = useState("");
+  const [serviceTimeMinutes, setServiceTimeMinutes] = useState(0);
   const params = useSearchParams();
   const router = useRouter();
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const formatTimeForDisplay = (minutes: number) => {
+    if (minutes === 0) return "Não definido";
+
+    const dias = Math.floor(minutes / (24 * 60));
+    const horas = Math.floor((minutes % (24 * 60)) / 60);
+    const mins = minutes % 60;
+
+    let resultado = [];
+    if (dias > 0) resultado.push(`${dias} dia${dias > 1 ? "s" : ""}`);
+    if (horas > 0) resultado.push(`${horas} hora${horas > 1 ? "s" : ""}`);
+    if (mins > 0) resultado.push(`${mins} minuto${mins > 1 ? "s" : ""}`);
+
+    return resultado.join(" e ");
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       try {
@@ -107,10 +128,13 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       formData.append("price", servicePrice.replace(",", "."));
       formData.append("description", serviceDescription);
       formData.append("enterpriseId", users[0].enterpriseId || "");
+      formData.append("image", serviceImage || "");
+      formData.append("minService", serviceTimeMinutes.toString());
       await createService(formData);
       toast.success("Serviço cadastrado com sucesso!");
       setServicePrice("");
       setServiceDescription("");
+      setServiceImage(null);
     } catch (error) {
       console.error("Erro ao criar serviço:", error);
       toast.error("Ocorreu um erro ao cadastrar o serviço");
@@ -140,7 +164,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       toast.success("Serviço atualizado com sucesso!");
       setServicePrice("");
       setServiceDescription("");
-      setServiceImage(null)
+      setServiceImage(null);
       router.replace("/dashboard/enterprise");
     } catch (error) {
       console.error("Erro ao editar serviço:", error);
@@ -307,52 +331,52 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
     : "service";
   const typeTable = params.get("description") ? true : false;
 
-useEffect(() => {
-  const fetchData = async () => {
-    if (typeTable) {
-      if (defaultTable === "product") {
-        const desc = params.get("description");
-        const price = params.get("price");
-        const amount = params.get("amount");
-        const minAmount = params.get("minAmount");
+  useEffect(() => {
+    const fetchData = async () => {
+      if (typeTable) {
+        if (defaultTable === "product") {
+          const desc = params.get("description");
+          const price = params.get("price");
+          const amount = params.get("amount");
+          const minAmount = params.get("minAmount");
 
-        if (desc) setProductDescription(desc);
-        if (price) setProductPrice(price);
-        if (amount) setProductAmount(amount);
-        if (minAmount) setProductMinAmount(minAmount);
-      } else {
-        const desc = params.get("description");
-        const price = params.get("price");
-        const id = params.get("id");
-        
-        if (desc) setServiceDescription(desc);
-        if (price) setServicePrice(price);
-        
-        try {
-          const image = await GetImage(id || "");
-          if (image?.image) {
-            try {
-              const response = await fetch(image.image);
-              const blob = await response.blob();
-              const file = new File([blob], "image.jpg", { type: blob.type });
-              setServiceImage(file);
-            } catch (error) {
-              console.error("Erro ao converter imagem:", error);
+          if (desc) setProductDescription(desc);
+          if (price) setProductPrice(price);
+          if (amount) setProductAmount(amount);
+          if (minAmount) setProductMinAmount(minAmount);
+        } else {
+          const desc = params.get("description");
+          const price = params.get("price");
+          const id = params.get("id");
+
+          if (desc) setServiceDescription(desc);
+          if (price) setServicePrice(price);
+
+          try {
+            const image = await GetImage(id || "");
+            if (image?.image) {
+              try {
+                const response = await fetch(image.image);
+                const blob = await response.blob();
+                const file = new File([blob], "image.jpg", { type: blob.type });
+                setServiceImage(file);
+              } catch (error) {
+                console.error("Erro ao converter imagem:", error);
+                setServiceImage(null);
+              }
+            } else {
               setServiceImage(null);
             }
-          } else {
+          } catch (error) {
+            console.error("Erro ao buscar imagem:", error);
             setServiceImage(null);
           }
-        } catch (error) {
-          console.error("Erro ao buscar imagem:", error);
-          setServiceImage(null);
         }
       }
-    }
-  };
-  
-  fetchData();
-}, [params, typeTable, defaultTable]);
+    };
+
+    fetchData();
+  }, [params, typeTable, defaultTable]);
 
   return (
     <div className="w-full h-full p-4">
@@ -402,6 +426,125 @@ useEffect(() => {
                     }}
                   />
                   <p className="text-sm text-gray-500">Digite o valor</p>
+                  <div className="space-y-2">
+                    <Label htmlFor="service-time">Tempo para Finalização</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Select
+                          value={serviceTimeOption}
+                          onValueChange={(value) => {
+                            setServiceTimeOption(value);
+                            // Converter a opção selecionada para minutos automaticamente
+                            if (value !== "personalizado") {
+                              const minutesMap = {
+                                "30min": 30,
+                                "1h": 60,
+                                "1h30min": 90,
+                                "2h": 120,
+                                "3h": 180,
+                                "4h": 240,
+                                "5h": 300,
+                                "6h": 360,
+                                "1dia": 1440,
+                                "2dias": 2880,
+                              };
+                              setServiceTimeMinutes(
+                                minutesMap[value as keyof typeof minutesMap] ||
+                                  0
+                              );
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o tempo estimado" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Tempo estimado</SelectLabel>
+                              <SelectItem value="30min">30 minutos</SelectItem>
+                              <SelectItem value="1h">1 hora</SelectItem>
+                              <SelectItem value="1h30min">
+                                1 hora e 30 minutos
+                              </SelectItem>
+                              <SelectItem value="2h">2 horas</SelectItem>
+                              <SelectItem value="3h">3 horas</SelectItem>
+                              <SelectItem value="4h">4 horas</SelectItem>
+                              <SelectItem value="5h">5 horas</SelectItem>
+                              <SelectItem value="6h">6 horas</SelectItem>
+                              <SelectItem value="1dia">1 dia</SelectItem>
+                              <SelectItem value="2dias">2 dias</SelectItem>
+                              <SelectItem value="personalizado">
+                                Personalizado
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+
+                        {/* Campo personalizado que aparece apenas se "personalizado" for selecionado */}
+                        {serviceTimeOption === "personalizado" && (
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <Input
+                              id="custom-time-value"
+                              type="number"
+                              placeholder="Quantidade"
+                              value={customTimeValue}
+                              onChange={(e) => {
+                                const inputValue = e.target.value; // Mantenha o valor como string para o input
+                                setCustomTimeValue(inputValue); // Use o valor de string diretamente
+
+                                // Converter para minutos automaticamente (usando parseFloat para permitir decimais)
+                                const numericValue =
+                                  parseFloat(inputValue) || 0;
+                                if (customTimeUnit === "minutos") {
+                                  setServiceTimeMinutes(numericValue);
+                                } else if (customTimeUnit === "horas") {
+                                  setServiceTimeMinutes(numericValue * 60);
+                                } else if (customTimeUnit === "dias") {
+                                  setServiceTimeMinutes(numericValue * 24 * 60);
+                                }
+                              }}
+                              min="1"
+                            />
+                            <Select
+                              value={customTimeUnit}
+                              onValueChange={(value) => {
+                                setCustomTimeUnit(value);
+
+                                // Reconverter o valor para minutos quando a unidade muda
+                                if (value === "minutos") {
+                                  setServiceTimeMinutes(
+                                    parseInt(customTimeValue) || 0
+                                  );
+                                } else if (value === "horas") {
+                                  setServiceTimeMinutes(
+                                    (parseInt(customTimeValue) || 0) * 60
+                                  );
+                                } else if (value === "dias") {
+                                  setServiceTimeMinutes(
+                                    (parseInt(customTimeValue) || 0) * 24 * 60
+                                  );
+                                }
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Unidade" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="minutos">Minutos</SelectItem>
+                                <SelectItem value="horas">Horas</SelectItem>
+                                <SelectItem value="dias">Dias</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+
+                        <p className="text-sm text-gray-500">
+                          Tempo estimado:{" "}
+                          {formatTimeForDisplay(serviceTimeMinutes)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="service-image">Imagem do Serviço</Label>
@@ -501,7 +644,7 @@ useEffect(() => {
 
                   <div className="space-y-2">
                     <Label htmlFor="product-min-amount">
-                      Quantidade Mínima
+                      Quantidade Mínima <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="product-min-amount"

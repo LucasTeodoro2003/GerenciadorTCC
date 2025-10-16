@@ -28,7 +28,7 @@ export default function TableServicePage({services}: TableServicePageProps) {
               variant="outline"
               className="bg-transparent rounded-full p-2 flex items-center justify-center"
               onClick={() => {
-                router.push("/dashboard/enterprise?table=products");
+                router.push("/dashboard/enterprise?table=service");
               }}
               >
             <AddCircleOutlineIcon />
