@@ -9,3 +9,14 @@ youtube = https://www.youtube.com/watch?v=0NTUIdUljwM
 
 
 Sincronizar banco: npx prisma migrate dev --name init
+
+
+ADICIONAR AO MEU .env(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+ADICIONAR AO MEU .env NO VERCEL (
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)

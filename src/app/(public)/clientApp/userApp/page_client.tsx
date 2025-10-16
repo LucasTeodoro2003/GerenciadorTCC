@@ -43,6 +43,7 @@ import { deleteCarClient } from "@/shared/lib/actionDeleteCarClient";
 import { createVehicleClient } from "@/shared/lib/actionCreateVehicleClient";
 import { HomeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { SheetPasswordClient } from "@/features/Modal/passwordUserClient/user";
 
 interface TabsUserProps {
   user: User;
@@ -83,6 +84,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
   }
   const router = useRouter()
   const [page, setPage] = useState(false)
+  const [alterPassword, setAlterPassword] = useState(false)
 
   const brazilianStates = [
     "AC",
@@ -292,6 +294,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
       <div className="absolute top-6 right-6">
         <ThemeToggleV2 />
       </div>
+      <SheetPasswordClient userId={user.id} alterPassword={alterPassword} setAlterPassword={setAlterPassword}/>
       <div className="flex justify-center items-center w-full h-screen -pt-10">
         <Toaster richColors position="top-center" />
         <div className="flex w-full max-w-sm flex-col gap-6">
@@ -318,6 +321,9 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                 }}
               >
                 Veículos
+              </TabsTrigger>
+              <TabsTrigger value="password" onClick={() => setAlterPassword(true)}>
+                Alterar Senha
               </TabsTrigger>
             </TabsList>
             <TabsContent value="user">
