@@ -14,6 +14,8 @@ import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
 import { User } from "@prisma/client";
 import { useState } from "react";
+import imageCompression from "browser-image-compression";
+
 
 interface ModalClientPromp {
   openModal: boolean;
@@ -25,12 +27,38 @@ export default function ModalClient({
   user,
 }: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        try {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+          };
+          const compressedFile = await imageCompression(file, options);
+          setImage(compressedFile);
+        } catch (error) {
+          console.error("Erro ao comprimir imagem:", error);
+        }
+      }
+    };
+  
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
       const formData = new FormData(e.currentTarget);
+      
+      if (image) {
+        formData.set("image", image);
+      }
+
       const file = formData.get("image");
 
       if (!file || (file instanceof File && file.size === 0)) {
@@ -104,7 +132,7 @@ export default function ModalClient({
               <Label htmlFor="image" className="text-center">
                 Selecione Nova Foto
               </Label>
-              <Input id="image" type="file" name="image" />
+              <Input id="image" type="file" name="image" onChange={handleFileChange}/>
             </div>
           </div>
           <DialogFooter>
