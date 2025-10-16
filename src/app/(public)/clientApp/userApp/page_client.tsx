@@ -1,8 +1,4 @@
 "use client";
-import { LoginErrorMessage } from "@/features/actions/login/errorMensagens";
-import { createVehicle } from "@/shared/lib/actionCreateVehicle";
-import { loginActionClient } from "@/shared/lib/actionLoginClient";
-import { createClient } from "@/shared/lib/actionsCreateClient";
 import { Button } from "@/shared/ui/components/button";
 import {
   Card,
@@ -85,6 +81,10 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
   const router = useRouter()
   const [page, setPage] = useState(false)
   const [alterPassword, setAlterPassword] = useState(false)
+  router.prefetch("/clientApp")
+  router.prefetch("/clientApp/calendarApp")
+  router.prefetch("/clientApp/userApp")
+  router.prefetch("/clientApp/loginApp")
 
   const brazilianStates = [
     "AC",

@@ -48,6 +48,10 @@ export function TabsLoginClient() {
   const [loading, setLoading] = useState(false);
   const params = useSearchParams();
   const [page, setPage] = useState(false);
+  router.prefetch("/clientApp")
+  router.prefetch("/clientApp/calendarApp")
+  router.prefetch("/clientApp/userApp")
+  router.prefetch("/clientApp/loginApp")
 
   const handleSend = async () => {
     setLoading(true);

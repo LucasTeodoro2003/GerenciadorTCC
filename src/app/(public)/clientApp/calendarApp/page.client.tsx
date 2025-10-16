@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/components/select";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
@@ -60,6 +60,10 @@ export default function CalendarClient({
   const [isLoading, setIsLoading] = useState(false);
   const [exit, setExit] = useState(false);
   const [page, setPage] = useState(false);
+  router.prefetch("/clientApp")
+  router.prefetch("/clientApp/calendarApp")
+  router.prefetch("/clientApp/userApp")
+  router.prefetch("/clientApp/loginApp")
 
   useEffect(() => {
     try {
@@ -262,7 +266,7 @@ export default function CalendarClient({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <h1 className="text-3xl font-bold">{user.name || "Cliente"}</h1>
+            <h1 className="text-3xl font-bold">{user.name?.split(" ")[0] || "Cliente"}</h1>
           </div>
           <ThemeToggleV2 />
         </div>
@@ -274,15 +278,13 @@ export default function CalendarClient({
             <h2 className="text-xl font-semibold">Serviços Selecionados</h2>
             <Button
               variant="outline"
-              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-400 transition"
+              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-100 transition rounded-full h-10 w-10 p-0 justify-center"
               onClick={handleHome}
               disabled={!!page}
             >
               {!page ? (
                 <>
-                  <span className="dark:text-black text-white">
-                    Home / Selecionar mais serviços
-                  </span>
+                <Plus className="h-4 w-4 dark:text-black text-white" />
                 </>
               ) : (
                 <CircularProgress size={20} />
