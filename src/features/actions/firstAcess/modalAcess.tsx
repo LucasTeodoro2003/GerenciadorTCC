@@ -16,45 +16,52 @@ import { User } from "@prisma/client";
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
 
-
 interface ModalClientPromp {
   openModal: boolean;
   user: User;
 }
 
-export default function ModalClient({
-  openModal,
-  user,
-}: ModalClientPromp) {
+export default function ModalClient({ openModal, user }: ModalClientPromp) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [image, setImage] = useState<File | null>(null);
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const options = {
+          maxSizeMB: 0.9,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        };
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        try {
-          const options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1024,
+        let compressedFile = await imageCompression(file, options);
+
+        if (compressedFile.size > 900000) {
+          const tougherOptions = {
+            maxSizeMB: 0.8,
+            maxWidthOrHeight: 600,
             useWebWorker: true,
           };
-          const compressedFile = await imageCompression(file, options);
-          setImage(compressedFile);
-        } catch (error) {
-          console.error("Erro ao comprimir imagem:", error);
+          compressedFile = await imageCompression(
+            compressedFile,
+            tougherOptions
+          );
         }
-      }
-    };
-  
 
+        setImage(compressedFile);
+      } catch (error) {
+        console.error("Erro ao comprimir imagem:", error);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
       const formData = new FormData(e.currentTarget);
-      
+
       if (image) {
         formData.set("image", image);
       }
@@ -62,6 +69,7 @@ export default function ModalClient({
       const file = formData.get("image");
 
       if (!file || (file instanceof File && file.size === 0)) {
+        console.log(formData);
         await updateUserNoImage(user.id || "", formData);
       } else {
         await updateUser2(user.id || "", formData);
@@ -132,11 +140,16 @@ export default function ModalClient({
               <Label htmlFor="image" className="text-center">
                 Selecione Nova Foto
               </Label>
-              <Input id="image" type="file" name="image" onChange={handleFileChange}/>
+              <Input
+                id="image"
+                type="file"
+                name="image"
+                onChange={handleFileChange}
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">
+            <Button type="submit" disabled={!image}>
               {isSubmitting ? "Atualizando..." : "Atualizar"}
             </Button>
           </DialogFooter>
