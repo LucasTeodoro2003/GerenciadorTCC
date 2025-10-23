@@ -27,7 +27,7 @@ import {
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
 import { CircularProgress } from "@mui/material";
 import { Address, User, Vehicle } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import imageCompression from "browser-image-compression";
 import { updatePerfilUserPageNoImage } from "@/shared/lib/actionUpdateUserNoImage";
@@ -38,7 +38,7 @@ import { createAddressClient } from "@/shared/lib/actionCreateAddressClient";
 import { deleteCarClient } from "@/shared/lib/actionDeleteCarClient";
 import { createVehicleClient } from "@/shared/lib/actionCreateVehicleClient";
 import { HomeIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SheetPasswordClient } from "@/features/Modal/passwordUserClient/user";
 
 interface TabsUserProps {
@@ -61,30 +61,27 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(
     user?.image || null
   );
-  const [street, setStreet] = useState(address?.street || "Sem rua");
-  const [city, setCity] = useState(address?.city || "Sem cidade");
-  const [complement, setComplement] = useState(
-    address?.complement || "Sem complemento"
-  );
-  const [district, setDistrict] = useState(address?.district || "Sem bairro");
-  const [number, setNumber] = useState(address?.number || "0");
-  const [postalCode, setPostalCode] = useState(
-    address?.postalCode || "00000000"
-  );
-  const [state, setState] = useState(address?.state || "MG");
+  const [street, setStreet] = useState(address?.street || "");
+  const [city, setCity] = useState(address?.city || "");
+  const [complement, setComplement] = useState(address?.complement || "");
+  const [district, setDistrict] = useState(address?.district || "");
+  const [number, setNumber] = useState(address?.number || "");
+  const [postalCode, setPostalCode] = useState(address?.postalCode || "");
+  const [state, setState] = useState(address?.state || "");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedVehicleId, setSelectedVehicleId] = useState("");
-  const firtAcess = address?.isPrimary
-  if(!firtAcess){
-    toast.info("Adicione um endereço")
+  const firtAcess = address?.isPrimary;
+  if (!firtAcess) {
+    toast.info("Adicione um endereço");
   }
-  const router = useRouter()
-  const [page, setPage] = useState(false)
-  const [alterPassword, setAlterPassword] = useState(false)
-  router.prefetch("/clientApp")
-  router.prefetch("/clientApp/calendarApp")
-  router.prefetch("/clientApp/userApp")
-  router.prefetch("/clientApp/loginApp")
+  const router = useRouter();
+  const [page, setPage] = useState(false);
+  const [alterPassword, setAlterPassword] = useState(false);
+  const params = useSearchParams();
+  router.prefetch("/clientApp");
+  router.prefetch("/clientApp/calendarApp");
+  router.prefetch("/clientApp/userApp");
+  router.prefetch("/clientApp/loginApp");
 
   const brazilianStates = [
     "AC",
@@ -197,13 +194,13 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
       const addressForm = new FormData();
       addressForm.append("street", street);
       addressForm.append("id", address?.id || "");
-      addressForm.append("number", number);
-      addressForm.append("complement", complement);
-      addressForm.append("district", district);
-      addressForm.append("city", city);
-      addressForm.append("state", state);
-      addressForm.append("postalCode", state);
-      addressForm.append("userId", user.id || "");
+      addressForm.append("number", number || "");
+      addressForm.append("complement", complement || "");
+      addressForm.append("district", district || "");
+      addressForm.append("city", city || "");
+      addressForm.append("state", state || "");
+      addressForm.append("postalCode", postalCode || "");
+      addressForm.append("userId", user?.id || "");
       if (address?.id) {
         await updateAddressClient(addressForm);
       } else {
@@ -253,7 +250,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
     }
   };
 
-    const handleEdityVehicle = async () => {
+  const handleEdityVehicle = async () => {
     setLoading(true);
     try {
       const formVehicle = new FormData();
@@ -282,24 +279,45 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
     }
   };
 
-  const handleHome = () =>{
-    setPage(true)
-    router.push("/clientApp")
-  } 
+  const handleHome = () => {
+    setPage(true);
+    router.push("/clientApp");
+  };
 
-
+  useEffect(() => {
+    const tablesNew = params.get("tabs");
+    if (tablesNew) {
+      setTabs(tablesNew);
+      const newParams = new URLSearchParams(params.toString());
+      newParams.delete("tabs");
+      router.push(`/clientApp/userApp?${newParams.toString()}`);
+    }
+  }, [params]);
 
   return (
     <>
       <div className="absolute top-6 right-6">
         <ThemeToggleV2 />
       </div>
-      <SheetPasswordClient userId={user.id} alterPassword={alterPassword} setAlterPassword={setAlterPassword}/>
+      <SheetPasswordClient
+        userId={user.id}
+        alterPassword={alterPassword}
+        setAlterPassword={setAlterPassword}
+      />
       <div className="flex justify-center items-center w-full h-screen -pt-10">
         <Toaster richColors position="top-center" />
         <div className="flex w-full max-w-sm flex-col gap-6">
           <div className="flex justify-center">
-            <Button className="bg-transparent hover:bg-gray-300 dark:hover:bg-gray-500" onClick={()=>handleHome()}>{!page? <HomeIcon className="text-black dark:text-white"/> : <CircularProgress size={20}/>}</Button>
+            <Button
+              className="bg-transparent hover:bg-gray-300 dark:hover:bg-gray-500"
+              onClick={() => handleHome()}
+            >
+              {!page ? (
+                <HomeIcon className="text-black dark:text-white" />
+              ) : (
+                <CircularProgress size={20} />
+              )}
+            </Button>
           </div>
           <Tabs value={tabs}>
             <TabsList>
@@ -322,7 +340,10 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
               >
                 Veículos
               </TabsTrigger>
-              <TabsTrigger value="password" onClick={() => setAlterPassword(true)}>
+              <TabsTrigger
+                value="password"
+                onClick={() => setAlterPassword(true)}
+              >
                 Alterar Senha
               </TabsTrigger>
             </TabsList>
@@ -640,7 +661,9 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                                 Excluir Veículo
                               </Button>
                               <Button
-                                onClick={()=>{handleEdityVehicle()}}
+                                onClick={() => {
+                                  handleEdityVehicle();
+                                }}
                                 disabled={
                                   !model ||
                                   !plate ||
@@ -690,7 +713,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       <Input
                         id="street"
                         placeholder="Rua"
-                        defaultValue={street || "Sem Rua"}
+                        defaultValue={street}
                         onChange={(e) => setStreet(e.target.value)}
                       />
                     </div>
@@ -699,7 +722,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       <Input
                         id="number"
                         placeholder="Número da Casa"
-                        defaultValue={number || "Sem Número"}
+                        defaultValue={number}
                         onChange={(e) => setNumber(e.target.value)}
                       />
                     </div>
@@ -710,7 +733,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       <Input
                         id="district"
                         placeholder="Bairro"
-                        defaultValue={district || "Sem bairro"}
+                        defaultValue={district}
                         onChange={(e) => setDistrict(e.target.value)}
                       />
                     </div>
@@ -719,7 +742,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       <Input
                         id="complement"
                         placeholder="Complemento"
-                        defaultValue={complement || ""}
+                        defaultValue={complement}
                         onChange={(e) => setComplement(e.target.value)}
                       />
                     </div>
@@ -730,8 +753,8 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       <Input
                         id="city"
                         placeholder="Cidade"
-                        defaultValue={city || ""}
-                        onChange={(e) => setName(e.target.value)}
+                        defaultValue={city}
+                        onChange={(e) => setCity(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -757,8 +780,14 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                     <Input
                       id="postalCode"
                       placeholder="CEP"
-                      defaultValue={postalCode || ""}
+                      defaultValue={postalCode}
                       onChange={(e) => setPostalCode(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (!/[0-9]/.test(e.key)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      maxLength={8}
                     />
                   </div>
                 </CardContent>

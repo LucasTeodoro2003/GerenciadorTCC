@@ -15,7 +15,7 @@ export async function updateAddressClient(formData: FormData) {
         city: formData.get("city")?.toString(),
         state: formData.get("state")?.toString(),
         postalCode: formData.get("postalCode")?.toString(),
-        isPrimary: formData.get("isPrimary") === "true",
+        isPrimary: true,
         updatedAt: new Date()
       },
     });

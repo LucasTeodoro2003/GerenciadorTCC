@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/components/select";
-import { Plus, X } from "lucide-react";
+import { Plus, Redo2, X } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
@@ -60,10 +60,11 @@ export default function CalendarClient({
   const [isLoading, setIsLoading] = useState(false);
   const [exit, setExit] = useState(false);
   const [page, setPage] = useState(false);
-  router.prefetch("/clientApp")
-  router.prefetch("/clientApp/calendarApp")
-  router.prefetch("/clientApp/userApp")
-  router.prefetch("/clientApp/loginApp")
+  const [pageVehicle, setPageVehicle] = useState(false);
+  router.prefetch("/clientApp");
+  router.prefetch("/clientApp/calendarApp");
+  router.prefetch("/clientApp/userApp");
+  router.prefetch("/clientApp/loginApp");
 
   useEffect(() => {
     try {
@@ -227,16 +228,17 @@ export default function CalendarClient({
 
   const handleExit = async () => {
     setExit(true);
-    try {
-      await signOutFunction();
-    } catch (err) {
-      console.error("Erro ao sair: ", err);
-    }
+    router.push("/clientApp");
   };
 
   const handleHome = () => {
     setPage(true);
     router.push("/clientApp");
+  };
+
+  const handleVehicle = () => {
+    setPageVehicle(true);
+    router.push("/clientApp/userApp?tabs=vehicle");
   };
 
   return (
@@ -248,13 +250,12 @@ export default function CalendarClient({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    className="bg-transparent w-10 h-10 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200"
+                    className="bg-transparent w-12 h-12 rounded-full flex items-center justify-center p-0 dark:hover:bg-gray-600 hover:bg-gray-200"
                     onClick={() => handleExit()}
                   >
                     {!exit ? (
-                      <ExitToAppIcon
-                        className="text-black dark:text-white"
-                        fontSize="large"
+                      <Redo2
+                        className="text-black dark:text-white rotate-180 w-12 h-12"
                       />
                     ) : (
                       <CircularProgress size={20} />
@@ -262,11 +263,13 @@ export default function CalendarClient({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Sair</p>
+                  <p>Pagina Inicial</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <h1 className="text-3xl font-bold">{user.name?.split(" ")[0] || "Cliente"}</h1>
+            <h1 className="text-3xl font-bold">
+              {user.name?.split(" ")[0] || "Cliente"}
+            </h1>
           </div>
           <ThemeToggleV2 />
         </div>
@@ -284,7 +287,7 @@ export default function CalendarClient({
             >
               {!page ? (
                 <>
-                <Plus className="h-4 w-4 dark:text-black text-white" />
+                  <Plus className="h-4 w-4 dark:text-black text-white" />
                 </>
               ) : (
                 <CircularProgress size={20} />
@@ -377,9 +380,28 @@ export default function CalendarClient({
       </div>
 
       <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
         <Label className="text-xl font-medium block mb-3">
           Selecione seu veículo
         </Label>
+        <div className="mb-4">
+          <Button
+              variant="outline"
+              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-500 
+               transition rounded-full w-36 p-0 justify-center"
+              onClick={handleVehicle}
+              disabled={!!pageVehicle}
+            >
+              {!pageVehicle ? (
+                <>
+                  <span className="dark:text-black text-white">Criar Novo</span> <Plus className="h-6 w-6 dark:text-black dark:border-white text-white " />
+                </>
+              ) : (
+                <CircularProgress size={20} />
+              )}
+            </Button>
+        </div>
+          </div>
         <Select
           value={selectedVehicleId}
           onValueChange={(value) => {

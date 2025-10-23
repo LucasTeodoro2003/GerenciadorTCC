@@ -116,8 +116,9 @@ model Services {
   price          String
   description    String?
   serviceVehicle ServiceVehicleService[]
-  image            String? 
+  image          String? 
   enterpriseId   String?
+  minService     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
