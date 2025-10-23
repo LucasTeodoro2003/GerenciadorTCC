@@ -43,7 +43,7 @@ export function ServiceCard({ service, isSelected, onToggleSelect }: ServiceCard
             <CardTitle className="text-xl">{service.description || "Serviço"}</CardTitle>
           </div>
           <div>
-            <CardTitle className="text-xl">{service.minService + " minutos" || "Indefinido"}</CardTitle>
+            <CardTitle className="text-sm items-center justify-center dark:text-red-500 text-red-600">Tempo mínimo: {service.minService ? (service.minService + " minutos") : "Indefinido"}</CardTitle>
           </div>
         </div>
         <div className="mt-2">
