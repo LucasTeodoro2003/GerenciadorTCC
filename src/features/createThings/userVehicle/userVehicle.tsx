@@ -251,12 +251,12 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
   const VehicleSubmitButton = () => (
     <Button 
       className="w-full flex items-center justify-center" 
-      onClick={!typeTable ? handleCreateVehicle : handleEdityVehicle}
+      onClick={!idvehicle ? handleCreateVehicle : handleEdityVehicle}
       disabled={isSubmittingVehicle || !vehicleOwner || !vehiclePlate || !vehicleType || !vehicleColor || !vehicleModel || !vehicleYear}
     >
       {isSubmittingVehicle 
       ? <CircularProgress size={20} /> 
-      : typeTable 
+      : idvehicle 
         ? "Editar Veículo" 
         : "Cadastrar Veículo"}
     </Button>
@@ -492,9 +492,9 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
         <TabsContent value="car" className="w-full">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>{typeTable ? "Editar Veículo" : "Cadastrar Veículo"}</CardTitle>
+              <CardTitle>{idvehicle ? "Editar Veículo" : "Cadastrar Veículo"}</CardTitle>
               <CardDescription>
-                Preencha os dados para {typeTable ? "editar um veículo" : "cadastrar um novo veículo"}
+                Preencha os dados para {idvehicle ? "editar um veículo" : "cadastrar um novo veículo"}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">
