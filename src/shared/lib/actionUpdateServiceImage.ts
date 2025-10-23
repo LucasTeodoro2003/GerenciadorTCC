@@ -36,6 +36,7 @@ export async function updateServiceImage(formData: FormData) {
         description: formData.get("description")?.toString() || "",
         price: formData.get("price")?.toString() || "",
         image: await fileToBase64(formData.get("image") as File) || "",
+        minService: formData.get("minService")?.toString() || "",
         updatedAt: new Date(),
       },
     });

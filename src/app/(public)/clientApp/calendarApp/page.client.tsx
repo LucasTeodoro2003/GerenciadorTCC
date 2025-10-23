@@ -3,7 +3,7 @@ import { Button } from "@/shared/ui/components/button";
 import { Calendar } from "@/shared/ui/components/calendar";
 import { Label } from "@/shared/ui/components/label";
 import { Toaster } from "@/shared/ui/components/sonner";
-import { Prisma, Services, ServiceVehicle, User } from "@prisma/client";
+import { Prisma, Services, ServiceVehicle } from "@prisma/client";
 import { ptBR } from "date-fns/locale";
 import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
@@ -20,9 +20,7 @@ import { Badge } from "@/shared/ui/components/badge";
 import { format } from "date-fns";
 import { createServiceVehicle } from "@/shared/lib/actionCreateServiceVehicle";
 import { CircularProgress } from "@mui/material";
-import signOutFunction from "@/shared/ui/signOut";
 import ThemeToggleV2 from "@/shared/ui/components/toggleDarkMode";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {
   Tooltip,
   TooltipContent,
@@ -32,6 +30,7 @@ import {
 import { useRouter } from "next/navigation";
 import SendMessage from "@/shared/lib/actionSendMessageAdm";
 import SendMessageClient from "@/shared/lib/actionSendMessageClient";
+import { CalculeDistance } from "@/features/Modal/calculeDistance/distance";
 
 export interface CalendarClientProps {
   disableDate: ServiceVehicle[];
@@ -61,6 +60,11 @@ export default function CalendarClient({
   const [exit, setExit] = useState(false);
   const [page, setPage] = useState(false);
   const [pageVehicle, setPageVehicle] = useState(false);
+  const [wantsSearchService, setWantsSearchService] = useState(false);
+  const [addValue, setAddValue] = useState<number>(1);
+  const [openModalDistance, setOpenModalDistance] = useState(false);
+  const [disable, setDisable] = useState(false);
+
   router.prefetch("/clientApp");
   router.prefetch("/clientApp/calendarApp");
   router.prefetch("/clientApp/userApp");
@@ -174,12 +178,6 @@ export default function CalendarClient({
 
       await createServiceVehicle(formData);
 
-      toast.success("Enviado com Sucesso", {
-        description: `Data Marcada: ${formattedDate.toLocaleString(
-          "pt-BR"
-        )} para o veículo ${plateCar}.
-      Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
-      });
       const addressTrue = user.addresses.find((a) => a.isPrimary === true);
       const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} -  (${addressTrue?.complement})`;
 
@@ -189,7 +187,8 @@ export default function CalendarClient({
         formattedDate.toLocaleString("pt-BR"),
         user.name || "Cliente",
         plateCar,
-        user.phone || "Não informado"
+        user.phone || "Não informado",
+        wantsSearchService
       );
       console.log("Mensagem enviada para o administrador.");
 
@@ -199,9 +198,15 @@ export default function CalendarClient({
         formattedDate.toLocaleString("pt-BR"),
         user.name || "Cliente",
         plateCar,
-        user.phone || "Não informado"
+        user.phone || "Não informado",
+        wantsSearchService
       );
-      console.log("Mensagem enviada para o cliente.");
+      toast.success("Marcado com Sucesso", {
+        description: `Data Marcada: ${formattedDate.toLocaleString(
+          "pt-BR"
+        )} para o veículo ${plateCar}.
+      Serviços: ${servicesText}. Valor total: R$${totalValue.toFixed(2)}`,
+      });
       localStorage.removeItem("selectedServiceIds");
 
       setDate(new Date());
@@ -210,6 +215,7 @@ export default function CalendarClient({
       setSelectedVehicleId("");
       setSelectedServiceIds([]);
       setIsLoading(false);
+
       router.push("/clientApp");
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
@@ -241,6 +247,25 @@ export default function CalendarClient({
     router.push("/clientApp/userApp?tabs=vehicle");
   };
 
+  const handleDistance = async () => {
+    if (
+      user.addresses[0].postalCode &&
+      user.addresses[0].postalCode.length === 8
+    ) {
+      setOpenModalDistance(true);
+    } else {
+      toast.error(
+        "Por favor, cadastre um endereço com CEP válido para continuar."
+      );
+    }
+  };
+
+  const handleDistanceFalse = () => {
+    setWantsSearchService(false);
+    setDisable(true);
+    setAddValue(1);
+  };
+
   return (
     <div className="container mx-auto px-4 py-4">
       <div className="mb-6">
@@ -254,9 +279,7 @@ export default function CalendarClient({
                     onClick={() => handleExit()}
                   >
                     {!exit ? (
-                      <Redo2
-                        className="text-black dark:text-white rotate-180 w-12 h-12"
-                      />
+                      <Redo2 className="text-black dark:text-white rotate-180 w-12 h-12" />
                     ) : (
                       <CircularProgress size={20} />
                     )}
@@ -323,9 +346,12 @@ export default function CalendarClient({
             Valor total:{" "}
             <span className="text-primary">
               R${" "}
-              {selectedServices
-                .reduce((sum, service) => sum + service.price, 0)
-                .toFixed(2)}
+              {Number(
+                selectedServices.reduce(
+                  (sum, service) => sum + service.price,
+                  0
+                ) * addValue
+              ).toFixed(2)}
             </span>
           </div>
         </div>
@@ -381,27 +407,28 @@ export default function CalendarClient({
 
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-        <Label className="text-xl font-medium block mb-3">
-          Selecione seu veículo
-        </Label>
-        <div className="mb-4">
-          <Button
+          <Label className="text-xl font-medium block mb-3">
+            Selecione seu veículo
+          </Label>
+          <div className="mb-4">
+            <Button
               variant="outline"
-              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-500 
+              className="flex items-center gap-2 dark:hover:bg-neutral-200 hover:bg-neutral-500 bg-neutral-700 dark:bg-neutral-300 
                transition rounded-full w-36 p-0 justify-center"
               onClick={handleVehicle}
               disabled={!!pageVehicle}
             >
               {!pageVehicle ? (
                 <>
-                  <span className="dark:text-black text-white">Criar Novo</span> <Plus className="h-6 w-6 dark:text-black dark:border-white text-white " />
+                  <span className="dark:text-black text-white">Criar Novo</span>{" "}
+                  <Plus className="h-6 w-6 dark:text-black dark:border-white text-white " />
                 </>
               ) : (
                 <CircularProgress size={20} />
               )}
             </Button>
-        </div>
           </div>
+        </div>
         <Select
           value={selectedVehicleId}
           onValueChange={(value) => {
@@ -427,6 +454,42 @@ export default function CalendarClient({
         </Select>
       </div>
 
+      <div className="w-full mb-10 md:mb-8">
+        <CalculeDistance
+          open={openModalDistance}
+          onOpenChange={setOpenModalDistance}
+          setWantsSearchService={setWantsSearchService}
+          setAddValue={setAddValue}
+          postalCode={user.addresses[0]?.postalCode || ""}
+          setDisable={setDisable}
+        />
+        <Label className="text-xl font-medium block mb-3 text-center">
+          Deseja solicitar o serviço de busca do veículo?
+        </Label>
+        <div className="flex items-center justify-center gap-4">
+          <Badge
+            className={`py-2 px-4 ${
+              wantsSearchService
+                ? "bg-green-500 ring-2 ring-green-700"
+                : "bg-transparent border border-gray-500"
+            } text-black dark:text-white cursor-pointer transition-colors`}
+            onClick={() => handleDistance()}
+          >
+            Sim, desejo.
+          </Badge>
+          <Badge
+            className={`py-2 px-4 ${
+              !wantsSearchService
+                ? "bg-red-500 ring-2 ring-red-700"
+                : "bg-transparent border border-gray-500"
+            } text-black dark:text-white cursor-pointer transition-colors`}
+            onClick={() => handleDistanceFalse()}
+          >
+            Não, levarei.
+          </Badge>
+        </div>
+      </div>
+
       <div className="mb-6">
         <Button
           className="w-full py-6 text-lg"
@@ -436,7 +499,8 @@ export default function CalendarClient({
             isLoading ||
             !selectedHour ||
             !selectedUserId ||
-            selectedServiceIds.length === 0
+            selectedServiceIds.length === 0 ||
+            disable
           }
         >
           {isLoading ? (

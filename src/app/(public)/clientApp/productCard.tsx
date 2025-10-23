@@ -42,6 +42,9 @@ export function ServiceCard({ service, isSelected, onToggleSelect }: ServiceCard
           <div>
             <CardTitle className="text-xl">{service.description || "Serviço"}</CardTitle>
           </div>
+          <div>
+            <CardTitle className="text-xl">{service.minService || "Indefinido"}</CardTitle>
+          </div>
         </div>
         <div className="mt-2">
           <Badge variant="secondary" className="mb-2">{service.description?.split(" ")[0]}</Badge>

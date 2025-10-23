@@ -33,6 +33,7 @@ export async function createService(formData: FormData) {
         price: formData.get("price")?.toString() || "",
         description: formData.get("description")?.toString() || "",
         enterpriseId: formData.get("enterpriseId")?.toString() || "",
+        minService: formData.get("minService")?.toString() || "",
         image: imageUrl || "",
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -10,6 +10,7 @@ export async function updateService(formData: FormData) {
       data: {
         description: formData.get("description")?.toString() || "",
         price: formData.get("price")?.toString() || "",
+        minService: formData.get("minService")?.toString() || "",
         updatedAt: new Date(),
       },
     });

@@ -77,7 +77,6 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
   const [isSubmittingService, setIsSubmittingService] = useState(false);
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
   const [serviceImage, setServiceImage] = useState<File | null>(null);
-  const [serviceTime, setServiceTime] = useState("");
   const [customTimeValue, setCustomTimeValue] = useState<string>("");
   const [customTimeUnit, setCustomTimeUnit] = useState("horas");
   const [serviceTimeOption, setServiceTimeOption] = useState("");
@@ -156,6 +155,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       formData.append("description", serviceDescription);
       formData.append("enterpriseId", users[0].enterpriseId || "");
       formData.append("image", serviceImage || "");
+      formData.append("minService", serviceTimeMinutes.toString());
       if (serviceImage) {
         await updateServiceImage(formData);
       } else {
