@@ -8,7 +8,8 @@ export default async function SendMessageClient(
   user: string,
   plate: string,
   phone: string,
-  wantsSearchService: boolean
+  wantsSearchService: boolean,
+  totalTime: number
 ) {
   if (wantsSearchService) {
     try {
@@ -21,7 +22,7 @@ export default async function SendMessageClient(
         },
         body: JSON.stringify({
           to: `55${phone}`,
-          text: `✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n🏎️ *ALVORADA ESTÉTICA AUTOMOTIVA* 🏎️\n\nOlá! Seu serviço foi agendado com sucesso! 🎉\n\n📋 *DETALHES DO AGENDAMENTO*:\n📍 *Endereço*: ${address}\n📅 *Data*: ${data}\n👤 *Cliente*: ${user}\n📞 *Telefone*: ${phone}\n🚗 *Veículo - Placa*: ${plate}\n🔧 *Serviço(s)*: ${service}\n\n🙏 Agradecemos pela preferência! Estamos ansiosos para recebê-lo(a)!\n\n🔔 *ALVORADA ESTÉTICA AUTOMOTIVA* - Cuidando do seu veículo com excelência! 🌟\n\n\nℹ️*EM BREVE SEU VEÍCULO SERÁ BUSCADO* ℹ️`,
+          text: `✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n🏎️ *ALVORADA ESTÉTICA AUTOMOTIVA* 🏎️\n\nOlá! Seu serviço foi agendado com sucesso! 🎉\n\n📋 *DETALHES DO AGENDAMENTO*:\n📍 *Endereço*: ${address}\n📅 *Data*: ${data}\n👤 *Cliente*: ${user}\n📞 *Telefone*: ${phone}\n🚗 *Veículo - Placa*: ${plate}\n🔧 *Serviço(s)*: ${service}\n*Tempo Total Estimado*: ${totalTime} minutos\n\n🙏 Agradecemos pela preferência! Estamos ansiosos para recebê-lo(a)!\n\n🔔 *ALVORADA ESTÉTICA AUTOMOTIVA* - Cuidando do seu veículo com excelência! 🌟\n\n\nℹ️*EM BREVE SEU VEÍCULO SERÁ BUSCADO* ℹ️`,
         }),
       });
       revalidatePath("/");
@@ -40,7 +41,7 @@ export default async function SendMessageClient(
         },
         body: JSON.stringify({
           to: `55${phone}`,
-          text: `✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n🏎️ *ALVORADA ESTÉTICA AUTOMOTIVA* 🏎️\n\nOlá! Seu serviço foi agendado com sucesso! 🎉\n\n📋 *DETALHES DO AGENDAMENTO*:\n📍 *Endereço*: ${address}\n📅 *Data*: ${data}\n👤 *Cliente*: ${user}\n📞 *Telefone*: ${phone}\n🚗 *Veículo - Placa*: ${plate}\n🔧 *Serviço(s)*: ${service}\n\n🙏 Agradecemos pela preferência! Estamos ansiosos para recebê-lo(a)!\n\n🔔 *ALVORADA ESTÉTICA AUTOMOTIVA* - Cuidando do seu veículo com excelência! 🌟`,
+          text: `✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n🏎️ *ALVORADA ESTÉTICA AUTOMOTIVA* 🏎️\n\nOlá! Seu serviço foi agendado com sucesso! 🎉\n\n📋 *DETALHES DO AGENDAMENTO*:\n📍 *Endereço*: ${address}\n📅 *Data*: ${data}\n👤 *Cliente*: ${user}\n📞 *Telefone*: ${phone}\n🚗 *Veículo - Placa*: ${plate}\n🔧 *Serviço(s)*: ${service}\n*Tempo Total Estimado*: ${totalTime} minutos\n\n🙏 Agradecemos pela preferência! Estamos ansiosos para recebê-lo(a)!\n\n🔔 *ALVORADA ESTÉTICA AUTOMOTIVA* - Cuidando do seu veículo com excelência! 🌟`,
         }),
       });
       revalidatePath("/");

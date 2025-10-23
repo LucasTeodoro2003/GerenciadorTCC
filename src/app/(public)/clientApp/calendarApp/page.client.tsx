@@ -180,6 +180,10 @@ export default function CalendarClient({
 
       const addressTrue = user.addresses.find((a) => a.isPrimary === true);
       const address = `Rua: ${addressTrue?.street}, nº:${addressTrue?.number} - Bairro: ${addressTrue?.district} -  (${addressTrue?.complement})`;
+      const totalTime = selectedServices.reduce(
+        (sum, service) => sum + Number(service.minService),
+        0
+      );  
 
       await SendMessage(
         address,
@@ -188,7 +192,8 @@ export default function CalendarClient({
         user.name || "Cliente",
         plateCar,
         user.phone || "Não informado",
-        wantsSearchService
+        wantsSearchService,
+        totalTime
       );
       console.log("Mensagem enviada para o administrador.");
 
@@ -199,7 +204,8 @@ export default function CalendarClient({
         user.name || "Cliente",
         plateCar,
         user.phone || "Não informado",
-        wantsSearchService
+        wantsSearchService,
+        totalTime
       );
       toast.success("Marcado com Sucesso", {
         description: `Data Marcada: ${formattedDate.toLocaleString(

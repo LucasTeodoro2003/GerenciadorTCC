@@ -8,7 +8,8 @@ export default async function SendMessage(
   user: string,
   plate: string,
   phone: string,
-  wantsSearchService: boolean
+  wantsSearchService: boolean,
+  totalTime: number
 ) {
   // const phoneEnterprise = "5534992117868";
   const phoneEnterprise = "5534998795116";
@@ -23,7 +24,7 @@ export default async function SendMessage(
         },
         body: JSON.stringify({
           to: phoneEnterprise,
-          text: `Serviço Agendado - ${service} - *PLACA: ${plate}* \n\n✅*DESEJA QUE BUSQUE* ✅\n\nEndereço: ${address} \n*Data*: ${data} \n*Usuário*: ${user} \n*Telefone*: ${phone}`,
+          text: `Serviço Agendado - ${service} - *PLACA: ${plate}* \n\n✅*DESEJA QUE BUSQUE* ✅\n\nEndereço: ${address} \n*Data*: ${data} \n*Usuário*: ${user} \n*Telefone*: ${phone}\n\n*Tempo Total Estimado*: ${totalTime} minutos`,
         }),
       });
       revalidatePath("/");
@@ -42,7 +43,7 @@ export default async function SendMessage(
         },
         body: JSON.stringify({
           to: phoneEnterprise,
-          text: `Serviço Agendado - ${service} - *PLACA: ${plate}* \n\n*Data*: ${data} \n*Usuário*: ${user} \n*Telefone*: ${phone}`,
+          text: `Serviço Agendado - ${service} - *PLACA: ${plate}* \n\n*Data*: ${data} \n*Usuário*: ${user} \n*Telefone*: ${phone}\n\n*Tempo Total Estimado*: ${totalTime} minutos`,
         }),
       });
       revalidatePath("/");
