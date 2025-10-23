@@ -2,7 +2,6 @@
 
 import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { fileToBase64 } from "./convertImage";
 import { supabase } from "./supabaseServer";
 
 export async function updateServiceImage(formData: FormData) {
@@ -35,7 +34,7 @@ export async function updateServiceImage(formData: FormData) {
       data: {
         description: formData.get("description")?.toString() || "",
         price: formData.get("price")?.toString() || "",
-        image: await fileToBase64(formData.get("image") as File) || "",
+        image: imageUrl,
         minService: formData.get("minService")?.toString() || "",
         updatedAt: new Date(),
       },

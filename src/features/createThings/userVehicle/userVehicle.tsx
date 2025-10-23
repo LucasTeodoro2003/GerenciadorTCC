@@ -265,29 +265,26 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
   const defaultTable = params.get("table") ? (params.get("table") === "vehicles" ? "car" : "user") : "user";
   const typeTable = params.get("idvehicle") ? true : false
 
-  {typeTable ? (
-    defaultTable === "car" ? (
-    useEffect(() => {
-        const plate = params.get("plate")
-        const type = params.get("type")
-        const model = params.get("model")
-        const color = params.get("color")
-        const year = params.get("yearCar")
-        const userVehicle = params.get("userid")
-        const idvehicle = params.get("idvehicle")
-        
-        if (userVehicle) setVehicleOwner(userVehicle)
-        if (plate) setVehiclePlate(plate)
-        if (type) setVehicleType(type)
-        if (model) setVehicleModel(model)
-        if (color) setVehicleColor(color)
-        if (year) setVehicleYear(year)
-        if (idvehicle) setidVehicle(idvehicle)
-        router.replace("/dashboard/clients?table=vehicles");
-      }, [params])
-    ) : (null)
-  ): (null)
+  useEffect(() => {
+  if (typeTable && defaultTable === "car") {
+    const plate = params.get("plate")
+    const type = params.get("type")
+    const model = params.get("model")
+    const color = params.get("color")
+    const year = params.get("yearCar")
+    const userVehicle = params.get("userid")
+    const idvehicle = params.get("idvehicle")
+    
+    if (userVehicle) setVehicleOwner(userVehicle)
+    if (plate) setVehiclePlate(plate)
+    if (type) setVehicleType(type)
+    if (model) setVehicleModel(model)
+    if (color) setVehicleColor(color)
+    if (year) setVehicleYear(year)
+    if (idvehicle) setidVehicle(idvehicle)
+    router.replace("/dashboard/clients");
   }
+}, [params, typeTable, defaultTable])
 
   return (
     <div className="w-full h-full p-4">

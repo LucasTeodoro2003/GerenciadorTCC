@@ -291,10 +291,10 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
   const ServiceSubmitButton = () => (
     <Button
       className="w-full flex items-center justify-center"
-      onClick={!typeTable ? handleCreateService : handleEdityService}
+      onClick={!idservice ? handleCreateService : handleEdityService}
       disabled={isSubmittingService || !servicePrice || !serviceDescription}
     >
-      {!typeTable ? (
+      {!idservice ? (
         <>
           {" "}
           {isSubmittingService ? (
@@ -318,7 +318,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
   const ProductSubmitButton = () => (
     <Button
       className="w-full flex items-center justify-center"
-      onClick={!typeTable ? handleCreateProduct : handleEdityProduct}
+      onClick={!idproduct ? handleCreateProduct : handleEdityProduct}
       disabled={
         isSubmittingProduct ||
         !productPrice ||
@@ -329,10 +329,10 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       }
     >
       {isSubmittingProduct
-        ? typeTable
+        ? idproduct
           ? "Editando Produto..."
           : "Cadastrando Produto..."
-        : typeTable
+        : idproduct
         ? `Editar Produto${productAsExpense ? " e Registrar Despesa" : ""}`
         : `Cadastrar Produto${productAsExpense ? " e Registrar Despesa" : ""}`}
     </Button>
@@ -409,11 +409,11 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
           <Card className="w-full">
             <CardHeader>
               <CardTitle>
-                {typeTable ? "Editar Serviço" : "Cadastrar Serviço"}
+                {idservice ? "Editar Serviço" : "Cadastrar Serviço"}
               </CardTitle>
               <CardDescription>
                 Preencha os dados para{" "}
-                {typeTable
+                {idservice
                   ? "editar um serviço"
                   : "cadastrar um novo tipo de serviço"}
               </CardDescription>
@@ -602,11 +602,11 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
           <Card className="w-full">
             <CardHeader>
               <CardTitle>
-                {typeTable ? "Editar Produto" : "Cadastrar Produto"}
+                {idproduct ? "Editar Produto" : "Cadastrar Produto"}
               </CardTitle>
               <CardDescription>
                 Preencha os dados para{" "}
-                {typeTable ? "editar um produto" : "cadastrar um novo produto"}{" "}
+                {idproduct ? "editar um produto" : "cadastrar um novo produto"}{" "}
                 no estoque.
               </CardDescription>
             </CardHeader>
@@ -673,7 +673,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                   </div>
                 </div>
               </div>
-              {!typeTable ? (
+              {!idproduct ? (
                 <div className="border-t pt-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <input

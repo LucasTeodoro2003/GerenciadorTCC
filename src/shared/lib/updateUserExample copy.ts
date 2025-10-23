@@ -2,7 +2,6 @@
 
 import db from "@/shared/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { fileToBase64 } from "./convertImage";
 
 export async function updateNameUser(userid: string, formData: FormData) {
   try {
