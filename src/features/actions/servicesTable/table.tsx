@@ -66,6 +66,21 @@ export const columns: ColumnDef<Services>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("price")}</div>,
   },
   {
+    accessorKey: "minService",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tempo minimo do Serviço (min)
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("minService")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -74,7 +89,7 @@ export const columns: ColumnDef<Services>[] = [
       const router = useRouter();
       const [loading, setLoading] = React.useState(false);
       const handleSubmitService = async () => {
-          router.push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}`)
+          router.push(`/dashboard/enterprise?table=services&description=${service.description}&price=${service.price}&id=${service.id}&min=${service.minService}`)
       };
       const handleDeleteService = async () => {
         try {

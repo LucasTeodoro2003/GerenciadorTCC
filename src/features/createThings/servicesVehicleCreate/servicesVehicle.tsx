@@ -59,6 +59,7 @@ export default function CreateServiceVehiclePage({
   const [openUserCombobox, setOpenUserCombobox] = useState(false);
   const [openServiceCombobox, setOpenServiceCombobox] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [wantsSearchService, setWantsSearchService] = useState(false);
 
   const userVehicles = selectedUserId
     ? users.find((user) => user.id === selectedUserId)?.vehicle || []
@@ -150,6 +151,8 @@ export default function CreateServiceVehiclePage({
       formData.append("totalValue", totalValue.toFixed(2));
       formData.append("serviceIds", JSON.stringify(selectedServiceIds));
       formData.append("enterpriseId", users[0].enterpriseId || "");
+      formData.append("wantsSearchService", wantsSearchService.toString());
+
 
       await createServiceVehicle(formData);
 
@@ -176,7 +179,12 @@ export default function CreateServiceVehiclePage({
           formattedDate.toLocaleString("pt-BR"),
           user.name || "Cliente",
           plateCar,
-          user.phone || "Não informado"
+          user.phone || "Não informado",
+          wantsSearchService,
+          selectedServices.reduce(
+            (sum, service) => sum + Number(service.minService || 0),
+            0
+          )
         );
         console.log("Mensagem enviada para o administrador com sucesso.");
         await SendMessageClient(
@@ -185,7 +193,12 @@ export default function CreateServiceVehiclePage({
           formattedDate.toLocaleString("pt-BR"),
           user.name || "Cliente",
           plateCar,
-          user.phone || "Não informado"
+          user.phone || "Não informado",
+          wantsSearchService,
+          selectedServices.reduce(
+            (sum, service) => sum + Number(service.minService || 0),
+            0
+          )
         );
         console.log("Mensagem enviada para o cliente com sucesso.");
       } catch (err) {
@@ -428,6 +441,40 @@ export default function CreateServiceVehiclePage({
                     {selectedServices
                       .reduce((sum, service) => sum + service.price, 0)
                       .toFixed(2)}
+                  </div>
+                )}
+
+                {selectedServiceIds.length > 0 && (
+                  <div className="mt-4">
+                    <Label className="block mb-2 font-medium">
+                      Tipo de serviço
+                    </Label>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={wantsSearchService ? "outline" : "default"}
+                        className={cn(
+                          "flex-1",
+                          !wantsSearchService &&
+                            "bg-primary text-primary-foreground"
+                        )}
+                        onClick={() => setWantsSearchService(false)}
+                      >
+                        Cliente Busca
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={wantsSearchService ? "default" : "outline"}
+                        className={cn(
+                          "flex-1",
+                          wantsSearchService &&
+                            "bg-primary text-primary-foreground"
+                        )}
+                        onClick={() => setWantsSearchService(true)}
+                      >
+                        Nós Buscamos
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

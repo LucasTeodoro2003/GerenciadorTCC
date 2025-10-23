@@ -58,6 +58,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
   const [vehicleColor, setVehicleColor] = useState("")
   const [isSubmittingUser, setIsSubmittingUser] = useState(false)
   const [isSubmittingVehicle, setIsSubmittingVehicle] = useState(false)
+  const [idvehicle, setidVehicle] = useState("")
   const brazilianStates = [
     "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", 
     "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
@@ -207,7 +208,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       }
       setIsSubmittingVehicle(true);
       const formDate = new FormData();
-      formDate.append("idvehicle", params.get("idvehicle") || "")
+      formDate.append("idvehicle", idvehicle)
       formDate.append("plate", vehiclePlate)
       formDate.append("type", vehicleType)
       formDate.append("color", vehicleColor)
@@ -273,13 +274,16 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
         const color = params.get("color")
         const year = params.get("yearCar")
         const userVehicle = params.get("userid")
-    
+        const idvehicle = params.get("idvehicle")
+        
         if (userVehicle) setVehicleOwner(userVehicle)
         if (plate) setVehiclePlate(plate)
         if (type) setVehicleType(type)
         if (model) setVehicleModel(model)
         if (color) setVehicleColor(color)
         if (year) setVehicleYear(year)
+        if (idvehicle) setidVehicle(idvehicle)
+        router.replace("/dashboard/clients?table=vehicles");
       }, [params])
     ) : (null)
   ): (null)

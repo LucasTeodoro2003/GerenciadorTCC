@@ -53,6 +53,7 @@ import { Badge } from "@/shared/ui/components/badge";
 import { BadgeAlertIcon, BadgeCheckIcon } from "lucide-react";
 import { updatePayment } from "@/shared/lib/actionsUpdatePayment";
 import { AlertPay } from "./paymentconfirm";
+import SendMessageFinaly from "@/shared/lib/actionFinalyService";
 
 interface TableMessageProps {
   serviceTableMessage: Prisma.ServiceVehicleServiceGetPayload<{
@@ -162,9 +163,7 @@ export function TableMessage({
         } catch (error) {
           toast.error("Erro ao salvar Mensagem no Banco");
         }
-
-        //logica da api de enviar mensagem para o cliente falando que terminou
-
+        await SendMessageFinaly(user.name || "", user.phone || "")
         toast.success(`Serviço finalizado com sucesso!`);
         setOpenProducts(true);
       } catch (error) {

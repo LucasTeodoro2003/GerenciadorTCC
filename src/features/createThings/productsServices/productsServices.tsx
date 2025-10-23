@@ -81,6 +81,8 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
   const [customTimeUnit, setCustomTimeUnit] = useState("horas");
   const [serviceTimeOption, setServiceTimeOption] = useState("");
   const [serviceTimeMinutes, setServiceTimeMinutes] = useState(0);
+  const [idproduct, setIdproduct] = useState("");
+  const [idservice, setIdservice] = useState("");
   const params = useSearchParams();
   const router = useRouter();
 
@@ -122,6 +124,10 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
         toast.error("Preencha todos os campos obrigatórios");
         return;
       }
+      if(serviceTimeMinutes === 0){
+        toast.error("Defina o tempo mínimo do serviço");
+        return;
+      }
       setIsSubmittingService(true);
       const formData = new FormData();
       formData.append("price", servicePrice.replace(",", "."));
@@ -134,6 +140,8 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       setServicePrice("");
       setServiceDescription("");
       setServiceImage(null);
+      setServiceTimeMinutes(0);
+      setServiceDescription("");
     } catch (error) {
       console.error("Erro ao criar serviço:", error);
       toast.error("Ocorreu um erro ao cadastrar o serviço");
@@ -148,9 +156,13 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
         toast.error("Preencha todos os campos obrigatórios");
         return;
       }
+      if(serviceTimeMinutes === 0){
+        toast.error("Defina o tempo mínimo do serviço");
+        return;
+      }
       setIsSubmittingService(true);
       const formData = new FormData();
-      formData.append("idservice", params.get("id") || "");
+      formData.append("idservice", idservice);
       formData.append("price", servicePrice.replace(",", "."));
       formData.append("description", serviceDescription);
       formData.append("enterpriseId", users[0].enterpriseId || "");
@@ -165,6 +177,8 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       setServicePrice("");
       setServiceDescription("");
       setServiceImage(null);
+      setServiceTimeMinutes(0);
+      setServiceDescription("");
       router.replace("/dashboard/enterprise");
     } catch (error) {
       console.error("Erro ao editar serviço:", error);
@@ -244,7 +258,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
       }
       setIsSubmittingProduct(true);
       const formDate = new FormData();
-      formDate.append("idproduct", params.get("id") || "");
+      formDate.append("idproduct", idproduct);
       formDate.append("price", productPrice);
       formDate.append("description", productDescription);
       formDate.append("amount", productAmount);
@@ -339,19 +353,24 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
           const price = params.get("price");
           const amount = params.get("amount");
           const minAmount = params.get("minAmount");
+          const id = params.get("id");
 
           if (desc) setProductDescription(desc);
           if (price) setProductPrice(price);
           if (amount) setProductAmount(amount);
           if (minAmount) setProductMinAmount(minAmount);
+          if (id) setIdproduct(id);
+          router.replace("/dashboard/enterprise");
         } else {
           const desc = params.get("description");
           const price = params.get("price");
           const id = params.get("id");
-
+          
           if (desc) setServiceDescription(desc);
           if (price) setServicePrice(price);
-
+          if (id) setIdservice(id);
+          router.replace("/dashboard/enterprise");
+          
           try {
             const image = await GetImage(id || "");
             if (image?.image) {
@@ -434,7 +453,6 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                           value={serviceTimeOption}
                           onValueChange={(value) => {
                             setServiceTimeOption(value);
-                            // Converter a opção selecionada para minutos automaticamente
                             if (value !== "personalizado") {
                               const minutesMap = {
                                 "30min": 30,
@@ -480,7 +498,6 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                           </SelectContent>
                         </Select>
 
-                        {/* Campo personalizado que aparece apenas se "personalizado" for selecionado */}
                         {serviceTimeOption === "personalizado" && (
                           <div className="mt-2 grid grid-cols-2 gap-2">
                             <Input
@@ -489,10 +506,8 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                               placeholder="Quantidade"
                               value={customTimeValue}
                               onChange={(e) => {
-                                const inputValue = e.target.value; // Mantenha o valor como string para o input
-                                setCustomTimeValue(inputValue); // Use o valor de string diretamente
-
-                                // Converter para minutos automaticamente (usando parseFloat para permitir decimais)
+                                const inputValue = e.target.value;
+                                setCustomTimeValue(inputValue);
                                 const numericValue =
                                   parseFloat(inputValue) || 0;
                                 if (customTimeUnit === "minutos") {
