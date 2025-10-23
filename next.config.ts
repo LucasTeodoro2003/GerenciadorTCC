@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
       ],
     },
   },
+  images:{
+    domains: ['fnyyupkfdmpoemcudpsl.supabase.co', 'localhost:3000', '*.app.github.dev']
+  }
 };
 
 export default nextConfig;

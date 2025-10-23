@@ -12,6 +12,7 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, isSelected, onToggleSelect }: ServiceCardProps) {
+  console.log("Service image URL:", service.image);
   return (
     <Card className={`relative transition-all ${isSelected ? 'border-primary ring-2 ring-primary' : ''}`}>
       <div className="absolute right-3 top-3 z-10">
