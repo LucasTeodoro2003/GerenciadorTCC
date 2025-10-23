@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.lucasteodorotcc.twa",
+        "sha256_cert_fingerprints": ["F9:58:96:D1:F0:B2:76:87:67:48:BC:E2:B6:21:9C:87:C3:87:A4:51:16:2D:D8:F7:84:94:28:28:F4:09:F9:A0"]
+      }
+    }]
