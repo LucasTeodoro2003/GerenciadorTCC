@@ -84,18 +84,6 @@ const data = !dataUserPage ? {
         },
       ],
     },
-    {
-      title: "Criar",
-      page: "create",
-      icon: CogIcon,
-      isActive: true,
-      items: [
-        {
-          title: "Clientes",
-          page: "clients",
-        },
-      ],
-    },
   ],
 }
 :
