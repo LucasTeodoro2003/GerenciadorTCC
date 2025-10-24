@@ -69,7 +69,6 @@ export default function ModalClient({ openModal, user }: ModalClientPromp) {
       const file = formData.get("image");
 
       if (!file || (file instanceof File && file.size === 0)) {
-        console.log(formData);
         await updateUserNoImage(user.id || "", formData);
       } else {
         await updateUser2(user.id || "", formData);

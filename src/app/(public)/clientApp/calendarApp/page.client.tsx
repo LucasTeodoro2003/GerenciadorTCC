@@ -195,7 +195,6 @@ export default function CalendarClient({
         wantsSearchService,
         totalTime
       );
-      console.log("Mensagem enviada para o administrador.");
 
       await SendMessageClient(
         address,

@@ -36,7 +36,6 @@ export function LoginPasswordReset({
         formLogin.append("email", email);
         await LoginWithLink(formLogin);
     } catch (error:any) {
-      console.log(error)
       if(error.message === "Erro ao enviar email de recuperação"){
         toast.success("Email de recuperação enviado com sucesso!");
       } else {

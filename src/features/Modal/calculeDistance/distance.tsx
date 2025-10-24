@@ -55,7 +55,7 @@ export function CalculeDistance({
       setDisable(true);
       setWantsSearchService(true);
     } catch (error) {
-      console.log("Erro ao calcular distância:", error);
+      console.error("Erro ao calcular distância:", error);
       toast.error(
         "Erro ao calcular a distância. Por favor, verifique o CEP do endereço e tente novamente."
       );

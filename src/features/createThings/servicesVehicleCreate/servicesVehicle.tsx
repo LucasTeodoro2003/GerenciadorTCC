@@ -186,7 +186,6 @@ export default function CreateServiceVehiclePage({
             0
           )
         );
-        console.log("Mensagem enviada para o administrador com sucesso.");
         await SendMessageClient(
           address,
           servicesText,
@@ -200,7 +199,6 @@ export default function CreateServiceVehiclePage({
             0
           )
         );
-        console.log("Mensagem enviada para o cliente com sucesso.");
       } catch (err) {
         console.error("Erro ao enviar mensagem para o proprietario: ", err);
       }
