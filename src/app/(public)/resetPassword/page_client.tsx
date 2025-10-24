@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Card } from "@/shared/ui/components/card";
 import { Input } from "@/shared/ui/components/input";
 import { Button } from "@/shared/ui/components/button";
@@ -9,7 +9,8 @@ import VerifyToken from "@/shared/lib/actionVeryToken";
 import { toast, Toaster } from "sonner";
 import { useSearchParams } from "next/navigation";
 
-export default function ResetPasswordPage() {
+// Componente que usa useSearchParams
+function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
@@ -26,6 +27,7 @@ export default function ResetPasswordPage() {
     try {
       const emailverify = await VerifyToken(token, email);
       const id = emailverify.userid;
+      console.log("ID do usuário verificado:", id);
       await alterPasswordEmail(id, formData.get("password")?.toString() || "");
       toast.success("Senha alterada com sucesso!");
       setAlter(true);
@@ -126,5 +128,22 @@ export default function ResetPasswordPage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+// Componente principal com Suspense
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Card className="w-full max-w-md p-6">
+            <div className="text-center">Carregando...</div>
+          </Card>
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
