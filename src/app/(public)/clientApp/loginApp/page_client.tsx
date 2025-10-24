@@ -2,6 +2,7 @@
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
 import { SignUpGoogle } from "@/app/api/auth/callback/google";
 import { LoginErrorMessage } from "@/features/actions/login/errorMensagens";
+import { LoginPasswordReset } from "@/features/Modal/loginPassword/login";
 import { createVehicle } from "@/shared/lib/actionCreateVehicle";
 import { loginActionClient } from "@/shared/lib/actionLoginClient";
 import { createClient } from "@/shared/lib/actionsCreateClient";
@@ -48,10 +49,12 @@ export function TabsLoginClient() {
   const [loading, setLoading] = useState(false);
   const params = useSearchParams();
   const [page, setPage] = useState(false);
-  router.prefetch("/clientApp")
-  router.prefetch("/clientApp/calendarApp")
-  router.prefetch("/clientApp/userApp")
-  router.prefetch("/clientApp/loginApp")
+  const [open, setOpen] = useState(false);
+
+  router.prefetch("/clientApp");
+  router.prefetch("/clientApp/calendarApp");
+  router.prefetch("/clientApp/userApp");
+  router.prefetch("/clientApp/loginApp");
 
   const handleSend = async () => {
     setLoading(true);
@@ -154,6 +157,7 @@ export function TabsLoginClient() {
       </div>
       <div className="flex justify-center items-center w-full h-screen -pt-10">
         <Toaster richColors position="top-center" />
+        <LoginPasswordReset open={open} onOpenChange={setOpen} />
         <div className="flex w-full max-w-sm flex-col gap-6">
           <div className="flex justify-center">
             <Button
@@ -427,6 +431,14 @@ export function TabsLoginClient() {
                         setPassword(e.target.value);
                       }}
                     />
+                    <div>
+                      <span
+                        className="flex justify-end hover:cursor-pointer hover:underline hover:text-yellow-500 text-xs"
+                        onClick={() => setOpen(true)}
+                      >
+                        Esqueceu a senha?
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
                 <CardFooter>

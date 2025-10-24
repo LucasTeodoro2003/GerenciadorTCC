@@ -63,10 +63,12 @@ export function LoginPasswordReset({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Deseja solicitar que sua senha seja resetada?
+            Deseja resetar sua senha?
           </AlertDialogTitle>
           <AlertDialogHeader className="gap-4">
-            Será solicitado ao administrador, que sua senha seja resetada.
+            Sua nova senha será enviada para o email cadastrado.
+          </AlertDialogHeader>
+          <AlertDialogHeader className="flex flex-col gap-2 mt-4">
             <Input
               type="email"
               placeholder="Seu email"
@@ -75,10 +77,9 @@ export function LoginPasswordReset({
               required
             />
           </AlertDialogHeader>
-          {/* <AlertDialogDescription>
-            Obs: Você receberá por whatsApp sua nova senha, assim que receber a
-            confirmação do administrador.
-          </AlertDialogDescription> */}
+          <AlertDialogDescription>
+            Obs: Você precisará acessar seu email para alterar a senha.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleClose}>Cancelar</AlertDialogCancel>
