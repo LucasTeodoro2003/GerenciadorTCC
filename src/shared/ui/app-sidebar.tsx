@@ -46,14 +46,10 @@ const data = !dataUserPage ? {
   navMain: [
     {
       title: "Pagina Inicial",
-      page: "",
+      page: "calendar",
       icon: Home,
       isActive: true,
       items: [
-        {
-          title: "Home",
-          page: "",
-        },
         {
           title: "Calendário",
           page: "calendar",
@@ -155,7 +151,7 @@ const data = !dataUserPage ? {
     },
     {
       title: "Criar",
-      page: "create",
+      page: "enterprise",
       icon: CogIcon,
       isActive: true,
       items: [

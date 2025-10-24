@@ -218,9 +218,7 @@ export default function TableRevenue({
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Próximo Mês</span>
           </Button>
-        </div>
 
-        <div className="flex items-center space-x-2">
           <Button
             variant={showAllMonths ? "default" : "outline"}
             size="sm"
@@ -230,6 +228,7 @@ export default function TableRevenue({
             <ListFilter className="h-4 w-4" />
             {showAllMonths ? "Filtrar por Mês" : "Ver Tudo"}
           </Button>
+        </div>
 
           {!showAllMonths && (
             <Button
@@ -246,7 +245,6 @@ export default function TableRevenue({
             </Button>
           )}
         </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow">

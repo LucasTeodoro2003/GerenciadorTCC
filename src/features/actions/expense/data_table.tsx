@@ -31,6 +31,7 @@ import {
 import { Button } from "@/shared/ui/components/button";
 import { useState } from "react";
 import { Badge } from "@/shared/ui/components/badge";
+import { Input } from "@/shared/ui/components/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,9 +50,11 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  
-  const uniqueCategories = [...new Set(data.map((item: any) => item.category))].sort();
-  
+
+  const uniqueCategories = [
+    ...new Set(data.map((item: any) => item.category)),
+  ].sort();
+
   const handleStatusFilter = (status: string | null) => {
     if (status === statusFilter) {
       setStatusFilter(null);
@@ -61,7 +64,7 @@ export function DataTable<TData, TValue>({
       table.getColumn("status")?.setFilterValue(status);
     }
   };
-  
+
   const handleCategoryFilter = (category: string | null) => {
     if (category === categoryFilter) {
       setCategoryFilter(null);
@@ -95,33 +98,51 @@ export function DataTable<TData, TValue>({
         <div className="space-y-4 mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">Status:</span>
-            <Button 
-              variant={statusFilter === "Pago" ? "default" : "outline"} 
+            <Button
+              variant={statusFilter === "Pago" ? "default" : "outline"}
               size="sm"
               onClick={() => handleStatusFilter("Pago")}
-              className={statusFilter === "Pago" ? "bg-green-500 hover:bg-green-600" : ""}
+              className={
+                statusFilter === "Pago" ? "bg-green-500 hover:bg-green-600" : ""
+              }
             >
               Pago
             </Button>
-            <Button 
-              variant={statusFilter === "Pendente" ? "default" : "outline"} 
+            <Button
+              variant={statusFilter === "Pendente" ? "default" : "outline"}
               size="sm"
               onClick={() => handleStatusFilter("Pendente")}
-              className={statusFilter === "Pendente" ? "bg-amber-500 hover:bg-amber-600" : ""}
+              className={
+                statusFilter === "Pendente"
+                ? "bg-amber-500 hover:bg-amber-600"
+                : ""
+              }
             >
               Pendente
             </Button>
-            <Button 
-              variant={statusFilter === "Atrasado" ? "default" : "outline"} 
+            <Button
+              variant={statusFilter === "Atrasado" ? "default" : "outline"}
               size="sm"
               onClick={() => handleStatusFilter("Atrasado")}
-              className={statusFilter === "Atrasado" ? "bg-red-500 hover:bg-red-600" : ""}
+              className={
+                statusFilter === "Atrasado" ? "bg-red-500 hover:bg-red-600" : ""
+              }
             >
               Atrasado
             </Button>
+              <Input
+                placeholder="Filtrar por descrição..."
+                value={
+                  (table.getColumn("description")?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table.getColumn("description")?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
+              />
             {statusFilter && (
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => handleStatusFilter(null)}
               >
@@ -129,13 +150,13 @@ export function DataTable<TData, TValue>({
               </Button>
             )}
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">Categoria:</span>
-            {uniqueCategories.map(category => (
-              <Button 
+            {uniqueCategories.map((category) => (
+              <Button
                 key={category}
-                variant={categoryFilter === category ? "default" : "outline"} 
+                variant={categoryFilter === category ? "default" : "outline"}
                 size="sm"
                 onClick={() => handleCategoryFilter(category)}
               >
@@ -143,8 +164,8 @@ export function DataTable<TData, TValue>({
               </Button>
             ))}
             {categoryFilter && (
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => handleCategoryFilter(null)}
               >
@@ -152,7 +173,7 @@ export function DataTable<TData, TValue>({
               </Button>
             )}
           </div>
-          
+
           {(statusFilter || categoryFilter) && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium">Filtros ativos:</span>
@@ -169,7 +190,7 @@ export function DataTable<TData, TValue>({
             </div>
           )}
         </div>
-        
+
         <div className="overflow-auto">
           <Table>
             <TableHeader>

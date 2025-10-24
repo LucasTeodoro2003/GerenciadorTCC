@@ -11,9 +11,13 @@ export default async function Page() {
   if (!userId) {
     redirect("/login");
   }
+  
   const user = await db.user.findUnique({
     where: {id: userId}
   }) 
+  if(user?.permission === 2){
+    redirect("/dashboard/calendar");
+  }
   const enterprise = user?.enterpriseId
   const revenue = await db.revenue.findMany({
     where: {user:{enterpriseId:enterprise}},

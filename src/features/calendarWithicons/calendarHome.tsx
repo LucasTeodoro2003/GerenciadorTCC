@@ -258,7 +258,6 @@ export default function CalendarIcons({
         editMode ? "w-full" : "w-full md:w-7/12"
       } flex-col md:flex-row gap-4`}
     >
-      <Toaster richColors />
       <Card
         className={`border shadow-md ${
           editMode ? "w-full md:w-8/12" : "w-full"
@@ -658,6 +657,7 @@ export default function CalendarIcons({
                   variant="default"
                   className="w-full"
                   onClick={handleEditService}
+                  disabled={user.permission !== 1}
                 >
                   Editar Serviço
                 </Button>
