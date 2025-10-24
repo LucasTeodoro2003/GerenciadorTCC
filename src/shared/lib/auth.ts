@@ -7,6 +7,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { schema } from "./schema";
 import { v4 as uuid } from "uuid";
 import { encode } from "@auth/core/jwt";
+import Resend from "next-auth/providers/resend";
 import bcrypt from "bcryptjs";
 
 const adapter = PrismaAdapter(db);
@@ -32,11 +33,73 @@ export const { handlers, auth, signIn } = NextAuth({
         if (!user || !user.password) {
           throw new CredentialsSignin("Usuário não encontrado!");
         }
-        const valid = bcrypt.compareSync(validateCredentials.password, user.password);
+        const valid = bcrypt.compareSync(
+          validateCredentials.password,
+          user.password
+        );
         if (!valid) {
           throw new CredentialsSignin("Senha incorreta!");
         }
         return user;
+      },
+    }),
+    Resend({
+      apiKey: process.env.AUTH_RESEND_KEY,
+      from: "EstetiCar <noreply@resend.dev>",
+      async sendVerificationRequest({ identifier, url, token }) {
+        const resetUrl = new URL("/resetPassword", url);
+        resetUrl.searchParams.set("token", token);
+        resetUrl.searchParams.set("email", identifier);
+
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "EstetiCar <noreply@resend.dev>",
+            to: identifier,
+            subject: "Redefinir sua senha",
+            html: `
+              <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 40px 0; text-align: center;">
+                <div style="max-width: 480px; background-color: #ffffff; margin: 0 auto; padding: 30px; border-radius: 8px; border: 1px solid #e0e0e0;">
+                  <h2 style="color: #111111; font-size: 22px; margin-bottom: 20px;">Redefinir senha</h2>
+                  <p style="color: #333333; font-size: 15px; margin-bottom: 30px;">
+                    Olá <strong>${identifier}</strong>,<br />
+                    Clique no botão abaixo para redefinir sua senha:
+                  </p>
+                  <a
+                    href="${resetUrl}"
+                    style="
+                      display: inline-block;
+                      background-color: #000000;
+                      color: #ffffff;
+                      padding: 12px 24px;
+                      border-radius: 6px;
+                      text-decoration: none;
+                      font-weight: bold;
+                      font-size: 14px;
+                      transition: background-color 0.2s ease;
+                    "
+                  >
+                    Redefinir senha
+                  </a>
+                  <p style="color: #555555; font-size: 13px; margin-top: 25px;">
+                    Ou copie e cole este link no navegador:<br />
+                    <a href="${resetUrl}" style="color: #1a73e8; word-break: break-all;">${resetUrl}</a>
+                  </p>
+                  <p style="color: #666666; font-size: 12px; margin-top: 30px;">
+                    Se você não solicitou a redefinição de senha, ignore este email.
+                  </p>
+                </div>
+                <p style="color: #999999; font-size: 12px; margin-top: 20px;">
+                  © ${new Date().getFullYear()} — Todos os direitos reservados
+                </p>
+              </div>
+            `,
+          }),
+        });
       },
     }),
   ],
@@ -73,8 +136,12 @@ export const { handlers, auth, signIn } = NextAuth({
           user.id = existingUser.id;
         }
       }
+      if (account?.provider === "resend") {
+        return true;
+      }
       return true;
     },
+    
     async jwt({ token, account }) {
       if (account?.provider === "credentials") {
         token.credentials = true;

@@ -7,15 +7,18 @@ import { Label } from "@/shared/ui/components/label";
 import { SignUpGitHub } from "@/app/api/auth/callback/github";
 import { loginAction } from "@/features/actions/login/loginAction";
 import { LoginErrorMessage } from "@/features/actions/login/errorMensagens";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { SignUpGoogle } from "@/app/api/auth/callback/google";
 import CircularProgress from "@mui/material/CircularProgress";
+import { LoginPasswordReset } from "@/features/Modal/loginPassword/login";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [open, setOpen] = useState(false);
+
   function SumitButton() {
     const { pending } = useFormStatus();
 
@@ -32,6 +35,7 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <LoginPasswordReset open={open} onOpenChange={setOpen} />
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" action={loginAction}>
@@ -57,6 +61,7 @@ export function LoginForm({
                   <Label htmlFor="password">Senha</Label>
                 </div>
                 <Input id="password" name="password" type="password" required />
+                <span className="flex justify-end hover:cursor-pointer hover:underline hover:text-yellow-500 text-xs" onClick={() => setOpen(true)}>Esqueceu a senha?</span>
               </div>
               <SumitButton />
               <div className="text-center">
