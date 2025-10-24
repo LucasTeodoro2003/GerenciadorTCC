@@ -524,8 +524,6 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                               value={customTimeUnit}
                               onValueChange={(value) => {
                                 setCustomTimeUnit(value);
-
-                                // Reconverter o valor para minutos quando a unidade muda
                                 if (value === "minutos") {
                                   setServiceTimeMinutes(
                                     parseInt(customTimeValue) || 0

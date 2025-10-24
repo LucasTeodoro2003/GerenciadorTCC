@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: [
-        'localhost:3000', // For local development
-        '*.app.github.dev', // Wildcard for Codespaces domains
+        'localhost:3000',
+        '*.app.github.dev',
       ],
     },
   },
