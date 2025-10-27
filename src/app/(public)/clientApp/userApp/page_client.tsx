@@ -47,6 +47,7 @@ interface TabsUserProps {
   vehicles: Vehicle[];
 }
 export function TabsUser({ user, address, vehicles }: TabsUserProps) {
+  console.log(address);
   const [name, setName] = useState(user.name || "Nome não definido");
   const [email, setEmail] = useState(user.email || "Email não definido");
   const [phone, setPhone] = useState(user.phone || "Telefone não definido");
@@ -70,8 +71,9 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
   const [state, setState] = useState(address?.state || "");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedVehicleId, setSelectedVehicleId] = useState("");
-  const firtAcess = address?.isPrimary;
-  if (!firtAcess) {
+  
+  const firstAccess = address?.userId === user.id;
+  if (!firstAccess) {
     toast.info("Adicione um endereço");
   }
   const router = useRouter();
@@ -206,13 +208,6 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
       } else {
         await createAddressClient(addressForm);
       }
-      setStreet("");
-      setNumber("");
-      setComplement("");
-      setDistrict("");
-      setCity("");
-      setState("");
-      setPostalCode("");
       setLoading(false);
       toast.success("Atualizado com sucesso");
     } catch (err) {

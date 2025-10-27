@@ -51,7 +51,7 @@ export default function CalendarClient({
   const maxCarHour = 2;
 
   const router = useRouter();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>();
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string>(user.id);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>("");
@@ -254,8 +254,8 @@ export default function CalendarClient({
 
   const handleDistance = async () => {
     if (
-      user.addresses[0].postalCode &&
-      user.addresses[0].postalCode.length === 8
+      user.addresses[0]?.postalCode &&
+      user.addresses[0]?.postalCode.length === 8
     ) {
       setOpenModalDistance(true);
     } else {

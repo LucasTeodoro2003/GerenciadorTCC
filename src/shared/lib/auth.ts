@@ -45,7 +45,7 @@ export const { handlers, auth, signIn } = NextAuth({
     }),
     Resend({
       apiKey: process.env.AUTH_RESEND_KEY,
-      from: "EstetiCar <noreply@resend.dev>",
+      from: "EstetiCar <esteticar@vocalloop.com>",
       async sendVerificationRequest({ identifier, url, token }) {
         const resetUrl = new URL("/resetPassword", url);
         resetUrl.searchParams.set("token", token);
