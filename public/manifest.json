@@ -7,8 +7,7 @@
   "description": "Gerencie sua estética automotiva com o EstetiCAR. Controle de clientes, serviços e agendamentos em um só lugar.",
   "start_url": "/clientApp",
   "scope": "/clientApp/",
-
-  "display_override": ["minimal-ui", "browser"],
+  "display_override": ["fullscreen", "standalone", "minimal-ui", "browser"],
   "orientation": "any",
   "background_color": "#ffbf00",
   "theme_color": "#000000",
