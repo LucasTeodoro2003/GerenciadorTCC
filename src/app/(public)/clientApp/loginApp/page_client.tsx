@@ -104,7 +104,7 @@ export function TabsLoginClient() {
       const formVehicle = new FormData();
       formVehicle.append("color", color);
       formVehicle.append("model", model);
-      formVehicle.append("plate", plate);
+      formVehicle.append("plate", plate.toLocaleUpperCase());
       formVehicle.append("type", type);
       formVehicle.append("year", year);
       formVehicle.append("user", user);
@@ -179,9 +179,12 @@ export function TabsLoginClient() {
                   <CardDescription>
                     Para prosseguir e agendar os serviços, crie uma conta
                   </CardDescription>
+                  <CardDescription className="justify-center flex">
+                    Crie com sua conta de rede social favorita
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-6">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 -mt-5">
                     <Button
                       variant="outline"
                       className="w-full"
@@ -215,7 +218,10 @@ export function TabsLoginClient() {
                       <span className="sr-only">Google</span>
                     </Button>
                   </div>
-                  <div className="grid gap-3">
+                    <CardDescription className="justify-center flex -mt-3">
+                      Ou crie com um email e senha
+                    </CardDescription>
+                  <div className="grid gap-3 -mt-5">
                     <Label htmlFor="name">Nome</Label>
                     <Input
                       id="name"

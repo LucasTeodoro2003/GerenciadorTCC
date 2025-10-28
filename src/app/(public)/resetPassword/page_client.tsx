@@ -27,7 +27,6 @@ function ResetPasswordForm() {
     try {
       const emailverify = await VerifyToken(token, email);
       const id = emailverify.userid;
-      console.log("ID do usuário verificado:", id);
       await alterPasswordEmail(id, formData.get("password")?.toString() || "");
       toast.success("Senha alterada com sucesso!");
       setAlter(true);

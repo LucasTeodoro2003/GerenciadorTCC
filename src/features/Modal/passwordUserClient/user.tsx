@@ -65,6 +65,14 @@ export function SheetPasswordClient({ userId, alterPassword, setAlterPassword }:
     </Button>
   );
 
+  const alterShowPassword = () =>{
+    if(showOldPassword){
+      setShowOldPassword(false)
+    } else {
+      setShowOldPassword(true)
+    }
+  }
+
   return (
     <Sheet open={alterPassword} onOpenChange={setAlterPassword}>
       <Toaster position="top-center" richColors />
@@ -92,12 +100,10 @@ export function SheetPasswordClient({ userId, alterPassword, setAlterPassword }:
                 type="button"
                 tabIndex={-1}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                onMouseDown={() => setShowOldPassword(true)}
-                onMouseUp={() => setShowOldPassword(false)}
-                onMouseLeave={() => setShowOldPassword(false)}
+                onClick={()=>alterShowPassword()}
                 aria-label={showOldPassword ? "Esconder senha" : "Mostrar senha"}
               >
-                {showOldPassword ? <VisibilityOffIcon className="text-cyan-500"/> : <VisibilityIcon />}
+                {showOldPassword ? <VisibilityOffIcon className="text-yellow-500"/> : <VisibilityIcon />}
               </button>
             </div>
           </div>
@@ -111,7 +117,7 @@ export function SheetPasswordClient({ userId, alterPassword, setAlterPassword }:
             <SheetFooter>Minimo 8 caracteres</SheetFooter>
           </div>
         </div>
-        <SheetFooter className="mt-4">
+        <SheetFooter className="mt-4 gap-4">
           <UserSubmitButton />
           <SheetClose asChild>
             <Button variant="outline">Fechar</Button>

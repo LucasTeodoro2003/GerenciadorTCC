@@ -11,7 +11,7 @@ export async function updateServiceImage(formData: FormData) {
           if (file && file.size > 0) {
           const fileBuffer = Buffer.from(await file.arrayBuffer());
           const fileExtension = file.name.split('.').pop() || 'png';
-          const filePath = `${formData.get("idservice")}/${Date.now()}.${fileExtension}`;
+          const filePath = `Service-${formData.get("idservice")}/${Date.now()}.${fileExtension}`;
     
           const { error: uploadError } = await supabase.storage
             .from("usersImages") 

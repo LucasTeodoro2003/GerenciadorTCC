@@ -177,7 +177,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       }
       setIsSubmittingVehicle(true);
       const formDate = new FormData();
-      formDate.append("plate", vehiclePlate)
+      formDate.append("plate", vehiclePlate.toUpperCase())
       formDate.append("type", vehicleType)
       formDate.append("color", vehicleColor)
       formDate.append("year", vehicleYear)
@@ -209,7 +209,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
       setIsSubmittingVehicle(true);
       const formDate = new FormData();
       formDate.append("idvehicle", idvehicle)
-      formDate.append("plate", vehiclePlate)
+      formDate.append("plate", vehiclePlate.toUpperCase())
       formDate.append("type", vehicleType)
       formDate.append("color", vehicleColor)
       formDate.append("year", vehicleYear)
@@ -329,7 +329,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
+                    <Label htmlFor="phone">Telefone <span className="text-red-500">*</span></Label>
                     <Input 
                       id="phone" 
                       placeholder="Ex: 34999999999"
@@ -340,7 +340,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="permission">Permissão</Label>
+                    <Label htmlFor="permission">Permissão <span className="text-red-500">*</span></Label>
                     <Select 
                       value={userPermission} 
                       onValueChange={setUserPermission}
@@ -390,7 +390,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                       
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                          <Label htmlFor="number">Número</Label>
+                          <Label htmlFor="number">Número <span className="text-red-500">*</span></Label>
                           <Input 
                             id="number" 
                             placeholder="Ex: 123" 
@@ -400,7 +400,7 @@ export function CreateUserSomeVehicle({users}:CreateServiceProps) {
                         </div>
                         
                         <div className="space-y-2">
-                          <Label htmlFor="complement">Complemento</Label>
+                          <Label htmlFor="complement">Complemento <span className="text-red-500">*</span></Label>
                           <Input 
                             id="complement" 
                             placeholder="Ex: Apto 101" 

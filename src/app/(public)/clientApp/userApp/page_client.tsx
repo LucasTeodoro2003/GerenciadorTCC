@@ -47,7 +47,6 @@ interface TabsUserProps {
   vehicles: Vehicle[];
 }
 export function TabsUser({ user, address, vehicles }: TabsUserProps) {
-  console.log(address);
   const [name, setName] = useState(user.name || "Nome não definido");
   const [email, setEmail] = useState(user.email || "Email não definido");
   const [phone, setPhone] = useState(user.phone || "Telefone não definido");
@@ -223,7 +222,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
       const formVehicle = new FormData();
       formVehicle.append("color", color);
       formVehicle.append("model", model);
-      formVehicle.append("plate", plate);
+      formVehicle.append("plate", plate.toLocaleUpperCase());
       formVehicle.append("type", type);
       formVehicle.append("year", year);
       formVehicle.append("user", user.id || "");
@@ -251,7 +250,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
       const formVehicle = new FormData();
       formVehicle.append("color", color);
       formVehicle.append("model", model);
-      formVehicle.append("plate", plate);
+      formVehicle.append("plate", plate.toLocaleUpperCase());
       formVehicle.append("type", type);
       formVehicle.append("year", year);
       formVehicle.append("user", user.id || "");

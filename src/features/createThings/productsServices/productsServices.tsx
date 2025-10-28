@@ -422,7 +422,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="service-description">
-                    Descrição do Serviço
+                    Descrição do Serviço <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="service-description"
@@ -433,7 +433,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="service-price">Preço (R$)</Label>
+                  <Label htmlFor="service-price">Preço (R$) <span className="text-red-500">*</span></Label>
                   <Input
                     id="service-price"
                     placeholder="Ex: 120.00"
@@ -446,7 +446,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                   />
                   <p className="text-sm text-gray-500">Digite o valor</p>
                   <div className="space-y-2">
-                    <Label htmlFor="service-time">Tempo para Finalização</Label>
+                    <Label htmlFor="service-time">Tempo para Finalização <span className="text-red-500">*</span></Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Select
@@ -560,7 +560,7 @@ export function CreateServiceSomeProducts({ users }: CreateServiceProps) {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="service-image">Imagem do Serviço</Label>
+                  <Label htmlFor="service-image">Imagem do Serviço <span className="text-red-500">*</span></Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                     <div className="space-y-2">
                       <Input

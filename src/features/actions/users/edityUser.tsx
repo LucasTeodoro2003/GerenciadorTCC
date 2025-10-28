@@ -275,7 +275,7 @@ export function EdityUser({ user }: EdityUserProps) {
                 </div>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
+                    <Label htmlFor="phone">Telefone <span className="text-red-500">*</span></Label>
                     <Input
                       id="phone"
                       placeholder="Ex: 34999999999"
@@ -338,7 +338,7 @@ export function EdityUser({ user }: EdityUserProps) {
 
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                          <Label htmlFor="number">Número</Label>
+                          <Label htmlFor="number">Número <span className="text-red-500">*</span></Label>
                           <Input
                             id="number"
                             placeholder="Ex: 123"
@@ -348,7 +348,7 @@ export function EdityUser({ user }: EdityUserProps) {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="complement">Complemento</Label>
+                          <Label htmlFor="complement">Complemento <span className="text-red-500">*</span></Label>
                           <Input
                             id="complement"
                             placeholder="Ex: Apto 101"
