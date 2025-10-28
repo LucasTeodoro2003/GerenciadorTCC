@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "app.vercel.lucasteodorotcc.twa",
-        "sha256_cert_fingerprints": ["F9:58:96:D1:F0:B2:76:87:67:48:BC:E2:B6:21:9C:87:C3:87:A4:51:16:2D:D8:F7:84:94:28:28:F4:09:F9:A0"]
+        "sha256_cert_fingerprints": ["7A:00:8F:05:1C:A1:84:EF:2D:4B:D5:EF:AF:8F:2B:F2:CF:58:65:C3:2E:A9:B2:10:A1:0F:EC:A8:6B:E7:CB:E4"]
       }
     }]
