@@ -58,7 +58,7 @@ export const { handlers, auth, signIn } = NextAuth({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "EstetiCar <noreply@resend.dev>",
+            from: "EstetiCar <esteticar@vocalloop.com>",
             to: identifier,
             subject: "Redefinir sua senha",
             html: `
@@ -85,10 +85,6 @@ export const { handlers, auth, signIn } = NextAuth({
                   >
                     Redefinir senha
                   </a>
-                  <p style="color: #555555; font-size: 13px; margin-top: 25px;">
-                    Ou copie e cole este link no navegador:<br />
-                    <a href="${resetUrl}" style="color: #1a73e8; word-break: break-all;">${resetUrl}</a>
-                  </p>
                   <p style="color: #666666; font-size: 12px; margin-top: 30px;">
                     Se você não solicitou a redefinição de senha, ignore este email.
                   </p>
