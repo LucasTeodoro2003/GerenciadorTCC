@@ -467,7 +467,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                     <div className="grid gap-6">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
-                          <Label htmlFor="plate">Placa *</Label>
+                          <Label htmlFor="plate">Placa <span className="text-red-500">*</span></Label>
                           <Input
                             id="plate"
                             maxLength={7}
@@ -477,7 +477,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                           />
                         </div>
                         <div className="grid gap-3">
-                          <Label htmlFor="model">Modelo *</Label>
+                          <Label htmlFor="model">Modelo <span className="text-red-500">*</span></Label>
                           <Input
                             id="model"
                             placeholder="Digite o modelo do seu veículo"
@@ -489,7 +489,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
-                          <Label htmlFor="type">Tipo *</Label>
+                          <Label htmlFor="type">Tipo <span className="text-red-500">*</span></Label>
                           <Select
                             onValueChange={(e) => setType(e)}
                             value={type}
@@ -510,7 +510,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                           </Select>
                         </div>
                         <div className="grid gap-3">
-                          <Label htmlFor="cor">Cor *</Label>
+                          <Label htmlFor="cor">Cor <span className="text-red-500">*</span></Label>
                           <Input
                             id="cor"
                             placeholder="Digite a cor do seu veículo"
@@ -521,7 +521,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       </div>
 
                       <div className="grid gap-3">
-                        <Label htmlFor="year">Ano *</Label>
+                        <Label htmlFor="year">Ano <span className="text-red-500">*</span></Label>
                         <Input
                           id="year"
                           placeholder="Digite o ano do seu veículo"
@@ -576,7 +576,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                           <div className="border rounded-lg p-4 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                               <div className="grid gap-3">
-                                <Label htmlFor="edit-plate">Placa *</Label>
+                                <Label htmlFor="edit-plate">Placa <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="edit-plate"
                                   maxLength={7}
@@ -586,7 +586,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                                 />
                               </div>
                               <div className="grid gap-3">
-                                <Label htmlFor="edit-model">Modelo *</Label>
+                                <Label htmlFor="edit-model">Modelo <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="edit-model"
                                   placeholder="Digite o modelo do seu veículo"
@@ -598,7 +598,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
 
                             <div className="grid grid-cols-2 gap-4">
                               <div className="grid gap-3">
-                                <Label htmlFor="edit-type">Tipo *</Label>
+                                <Label htmlFor="edit-type">Tipo <span className="text-red-500">*</span></Label>
                                 <Select
                                   onValueChange={(e) => setType(e)}
                                   value={type}
@@ -625,7 +625,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                                 </Select>
                               </div>
                               <div className="grid gap-3">
-                                <Label htmlFor="edit-cor">Cor *</Label>
+                                <Label htmlFor="edit-cor">Cor <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="edit-cor"
                                   placeholder="Digite a cor do seu veículo"
@@ -636,7 +636,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                             </div>
 
                             <div className="grid gap-3">
-                              <Label htmlFor="edit-year">Ano *</Label>
+                              <Label htmlFor="edit-year">Ano <span className="text-red-500">*</span></Label>
                               <Input
                                 id="edit-year"
                                 placeholder="Digite o ano do seu veículo"
@@ -703,7 +703,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                 <CardContent className="grid gap-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-3">
-                      <Label htmlFor="street">Nome da Rua</Label>
+                      <Label htmlFor="street">Nome da Rua <span className="text-red-500">*</span></Label>
                       <Input
                         id="street"
                         placeholder="Rua"
@@ -712,7 +712,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       />
                     </div>
                     <div className="grid gap-3">
-                      <Label htmlFor="number">Número</Label>
+                      <Label htmlFor="number">Número <span className="text-red-500">*</span></Label>
                       <Input
                         id="number"
                         placeholder="Número da Casa"
@@ -723,7 +723,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-3">
-                      <Label htmlFor="district">Bairro</Label>
+                      <Label htmlFor="district">Bairro <span className="text-red-500">*</span></Label>
                       <Input
                         id="district"
                         placeholder="Bairro"
@@ -732,7 +732,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                       />
                     </div>
                     <div className="grid gap-3">
-                      <Label htmlFor="complement">Complemento</Label>
+                      <Label htmlFor="complement">Complemento <span className="text-red-500">*</span></Label>
                       <Input
                         id="complement"
                         placeholder="Complemento"
@@ -743,7 +743,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-3">
-                      <Label htmlFor="city">Cidade</Label>
+                      <Label htmlFor="city">Cidade <span className="text-red-500">*</span></Label>
                       <Input
                         id="city"
                         placeholder="Cidade"
@@ -770,7 +770,7 @@ export function TabsUser({ user, address, vehicles }: TabsUserProps) {
                     </div>
                   </div>
                   <div className="grid gap-3">
-                    <Label htmlFor="postalCode">CEP</Label>
+                    <Label htmlFor="postalCode">CEP <span className="text-red-500">*</span></Label>
                     <Input
                       id="postalCode"
                       placeholder="CEP"
