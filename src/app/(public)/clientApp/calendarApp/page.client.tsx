@@ -183,7 +183,7 @@ export default function CalendarClient({
       const totalTime = selectedServices.reduce(
         (sum, service) => sum + Number(service.minService),
         0
-      );  
+      );
 
       await SendMessage(
         address,
@@ -253,15 +253,20 @@ export default function CalendarClient({
   };
 
   const handleDistance = async () => {
-    if (
-      user.addresses[0]?.postalCode &&
-      user.addresses[0]?.postalCode.length === 8
-    ) {
-      setOpenModalDistance(true);
+    if (wantsSearchService) {
+      toast.info("Você já selecionou este serviço.");
     } else {
-      toast.error(
-        "Por favor, cadastre um endereço com CEP válido para continuar."
-      );
+      if (
+        user.addresses[0]?.postalCode &&
+        user.addresses[0]?.postalCode.length === 8 &&
+        !wantsSearchService
+      ) {
+        setOpenModalDistance(true);
+      } else {
+        toast.error(
+          "Por favor, cadastre um endereço com CEP válido para continuar."
+        );
+      }
     }
   };
 
@@ -270,6 +275,21 @@ export default function CalendarClient({
     setDisable(true);
     setAddValue(1);
   };
+
+  console.log(
+    "Itens teste: \nVehicleId:",
+    selectedVehicleId,
+    "\nHour:",
+    selectedHour,
+    "\nUserId:",
+    selectedUserId,
+    "\nServiceIds:",
+    selectedServiceIds,
+    "\nDisable:",
+    disable,
+    "\nIsLoading:",
+    isLoading
+  );
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -475,8 +495,8 @@ export default function CalendarClient({
           <Badge
             className={`py-2 px-4 ${
               wantsSearchService
-                ? "bg-green-500 ring-2 ring-green-700"
-                : "bg-transparent border border-gray-500"
+                ? "bg-green-500 ring-2 ring-green-700 transition-colors"
+                : "bg-transparent border border-gray-500 transition-colors"
             } text-black dark:text-white cursor-pointer transition-colors`}
             onClick={() => handleDistance()}
           >
@@ -485,8 +505,8 @@ export default function CalendarClient({
           <Badge
             className={`py-2 px-4 ${
               !wantsSearchService
-                ? "bg-red-500 ring-2 ring-red-700"
-                : "bg-transparent border border-gray-500"
+                ? "bg-red-500 ring-2 ring-red-700 transition-colors"
+                : "bg-transparent border border-gray-500 transition-colors"
             } text-black dark:text-white cursor-pointer transition-colors`}
             onClick={() => handleDistanceFalse()}
           >
@@ -505,7 +525,7 @@ export default function CalendarClient({
             !selectedHour ||
             !selectedUserId ||
             selectedServiceIds.length === 0 ||
-            disable
+            !disable
           }
         >
           {isLoading ? (
