@@ -85,6 +85,10 @@ export default function CreateServiceVehiclePage({
     const hourCounter = new Map<string, number>();
     const disabledHoursMap = new Map<string, Set<number>>();
 
+    const now = new Date();
+    const currentDayKey = format(now, "yyyy-MM-dd");
+    const currentHour = now.getHours();
+
     allDates.forEach((dateTime) => {
       const dayKey = format(dateTime, "yyyy-MM-dd");
       const hour = dateTime.getHours();
@@ -100,6 +104,13 @@ export default function CreateServiceVehiclePage({
         disabledHoursMap.get(dayKey)?.add(hour);
       }
     });
+
+    if (!disabledHoursMap.has(currentDayKey)) {
+      disabledHoursMap.set(currentDayKey, new Set<number>());
+    }
+    for (let h = 0; h <= currentHour; h++) {
+      disabledHoursMap.get(currentDayKey)?.add(h);
+    }
 
     const disabledDays = Array.from(dayCounter.entries())
       .filter(([_, count]) => count >= maxCarDay)

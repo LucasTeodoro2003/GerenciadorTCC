@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/components/dialog";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import { Input } from "@/shared/ui/components/input";
 import { Label } from "@/shared/ui/components/label";
 import { Separator } from "@/shared/ui/components/separator";
@@ -39,6 +39,7 @@ import { ScrollArea } from "@/shared/ui/components/scroll-area";
 import { toast, Toaster } from "sonner";
 import { updateServiceVehicle } from "@/shared/lib/actionUpdateServiceVehicle ";
 import { CircularProgress } from "@mui/material";
+import { DelService } from "../Modal/deleteService/delete";
 
 export interface CalendarIconsProps {
   calendar: Prisma.UserGetPayload<{
@@ -68,9 +69,10 @@ export default function CalendarIcons({
   const [editMode, setEditMode] = useState(false);
   const [selectedServices, setSelectedServices] = useState<any[]>([]);
   const [discount, setDiscount] = useState<string>("0");
-  const [addition, setAddition] = useState<string>("0");
+  const [addition, setAddition] = useState<string>("");
   const [showServiceList, setShowServiceList] = useState(false);
   const [serviceToAdd, setServiceToAdd] = useState<string>("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const events = calendar.flatMap((user) =>
     user.vehicle.flatMap((vehicle) =>
@@ -89,6 +91,8 @@ export default function CalendarIcons({
             serviceId: sv.serviceId,
             name: sv.service.description || "Serviço sem nome",
             value: sv.service.price || "0.00",
+            addValue: service.addValue || "0.00",
+            discounts: service.discounts || "0.00",
           }));
 
           return {
@@ -136,6 +140,30 @@ export default function CalendarIcons({
       return "#8B0000";
     } else if (vehicleColor === "Vermelho Claro") {
       return "#FF7F7F";
+    } else if (vehicleColor === "Amarelo") {
+      return "#FFFF00";
+    } else if (vehicleColor === "Amarelo Escuro") {
+      return "#CCCC00";
+    } else if (vehicleColor === "Amarelo Claro") {
+      return "#FFFF99";
+    } else if (vehicleColor === "Verde") {
+      return "#00FF00";
+    } else if (vehicleColor === "Verde Escuro") {
+      return "#006400";
+    } else if (vehicleColor === "Verde Claro") {
+      return "#90EE90";
+    } else if (vehicleColor === "Preto") {
+      return "#000000";
+    } else if (vehicleColor === "Prata") {
+      return "#C0C0C0";
+    } else if (vehicleColor === "Dourado") {
+      return "#FFD700";
+    } else if (vehicleColor === "Marrom") {
+      return "#8B4513";
+    } else if (vehicleColor === "Lilás") {
+      return "#C8A2C8";
+    } else if (vehicleColor === "Bege") {
+      return "#F5F5DC";
     } else {
       return "#00FF29";
     }
@@ -169,6 +197,16 @@ export default function CalendarIcons({
 
   const handleEditService = () => {
     setEditMode(true);
+    const addValue = calendar
+      .flatMap((a) => a.vehicle)
+      .flatMap((v) => v.serviceVehicle)
+      .find(
+        (s) => s.id === selectedEvent.extendedProps.serviceVehicleId
+      )?.addValue;
+    const valueStr = addValue != null ? String(addValue) : "";
+    if (valueStr !== "") {
+      setAddition(valueStr);
+    }
   };
 
   const handleAddService = () => {
@@ -235,8 +273,14 @@ export default function CalendarIcons({
       selectedEvent.extendedProps.serviceVehicleId
     );
     formData.append("idVehicle", selectedEvent.extendedProps.vehicleId);
-    formData.append("discount", String(parseFloat(discount) || 0));
-    formData.append("addition", String(parseFloat(addition) || 0));
+    formData.append(
+      "discount",
+      String(parseFloat(discount.replace(",", ".")) || 0)
+    );
+    formData.append(
+      "addition",
+      String(parseFloat(addition.replace(",", ".")) || 0)
+    );
     formData.append("valueTotal", calculateTotal().toFixed(2));
     formData.append("serviceIds", JSON.stringify(serviceIds));
     formData.append("userId", user.name || "");
@@ -312,6 +356,13 @@ export default function CalendarIcons({
           />
         </CardContent>
       </Card>
+      <Toaster richColors position="top-center" />
+      <DelService
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        setSelectedEvent={setSelectedEvent}
+        deleteId={selectedEvent?.id}
+      />
       {editMode && selectedEvent && (
         <Card className="w-full md:w-4/12 border shadow-md">
           <CardHeader>
@@ -418,16 +469,20 @@ export default function CalendarIcons({
                       className="mt-1"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="addition">Acréscimo (R$)</Label>
                     <Input
                       id="addition"
                       type="number"
-                      value={addition}
+                      value={addition || 0}
                       onChange={(e) => setAddition(e.target.value)}
                       className="mt-1"
                     />
+                    {addition !== "0" ? (
+                      <span className="justify-end flex text-sm dark:text-red-600 text-red-500">
+                        Valor Frete: {addition}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 
@@ -489,8 +544,15 @@ export default function CalendarIcons({
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
+            <DialogTitle className="text-xl font-semibold gap-6 flex">
               Detalhes do Serviço
+              <Button
+                className="bg-transparent border border-red-500 hover:bg-red-500/10 p-2 dark:hover:bg-red-800/80 rounded-md text-red-600"
+                onClick={() => {setDeleteModalOpen(true);}}
+              >
+                <Trash2 className="h-5 w-5 text-red-600" />
+                Cancelar Serviço
+              </Button>
             </DialogTitle>
           </DialogHeader>
 
@@ -583,15 +645,38 @@ export default function CalendarIcons({
                 selectedEvent.extendedProps.services.length > 0 ? (
                   <div className="space-y-2">
                     {selectedEvent.extendedProps.services.map(
-                      (service: any, index: number) => (
-                        <div
-                          key={index}
-                          className="flex justify-between text-sm"
-                        >
-                          <span>{service.name}</span>
-                          <span>{formatCurrency(service.value)}</span>
-                        </div>
-                      )
+                      (service: any, index: number) => {
+                        const hasAddition =
+                          !!service.addValue && Number(service.addValue) !== 0;
+                        const hasDiscount =
+                          !!service.discounts &&
+                          Number(service.discounts) !== 0;
+
+                        return (
+                          <div key={index} className="mb-2 text-sm">
+                            <div className="flex justify-between">
+                              <span>{service.name}</span>
+                              <span>{formatCurrency(service.value)}</span>
+                            </div>
+                            {(hasAddition || hasDiscount) && (
+                              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                {hasAddition && (
+                                  <span className="text-green-600">
+                                    + {formatCurrency(service.addValue)}{" "}
+                                    (acréscimo)
+                                  </span>
+                                )}
+                                {hasDiscount && (
+                                  <span className="text-red-600">
+                                    - {formatCurrency(service.discounts)}{" "}
+                                    (desconto)
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
                     )}
                   </div>
                 ) : (
