@@ -60,7 +60,7 @@ export default function CalendarClient({
   const [exit, setExit] = useState(false);
   const [page, setPage] = useState(false);
   const [pageVehicle, setPageVehicle] = useState(false);
-  const [wantsSearchService, setWantsSearchService] = useState(false);
+  const [wantsSearchService, setWantsSearchService] = useState<boolean | null>(null);
   const [addValue, setAddValue] = useState<number>(1);
   const [openModalDistance, setOpenModalDistance] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -177,8 +177,12 @@ export default function CalendarClient({
     const totalValue = selectedServices.reduce(
       (sum, service) => sum + service.price,
       0
+    ) * addValue;
+    const totalValueCont = selectedServices.reduce(
+      (sum, service) => sum + service.price,
+      0
     );
-
+    const addValueNew = Number(totalValue - totalValueCont);
     try {
       const formData = new FormData();
       formData.append("vehicleId", selectedVehicleId);
@@ -186,8 +190,8 @@ export default function CalendarClient({
       formData.append("totalValue", totalValue.toFixed(2));
       formData.append("serviceIds", JSON.stringify(selectedServiceIds));
       formData.append("enterpriseId", users[0].enterpriseId || "");
-      if (addValue > 1) {
-        formData.append("addValue", addValue.toString().replace(",", "."));
+      if (Number(addValue) > 1) {
+        formData.append("addValue", addValueNew.toString().replace(",", "."));
       }
 
       await createServiceVehicle(formData);
@@ -198,7 +202,13 @@ export default function CalendarClient({
         (sum, service) => sum + Number(service.minService),
         0
       );
-
+      
+      if(wantsSearchService === null){
+        setIsLoading(false);
+        toast.error("Por favor, selecione uma opção para o serviço de busca do veículo.");
+        return;
+      }
+      
       await SendMessage(
         address,
         servicesText,
@@ -289,21 +299,6 @@ export default function CalendarClient({
     setDisable(true);
     setAddValue(1);
   };
-
-  console.log(
-    "Itens teste: \nVehicleId:",
-    selectedVehicleId,
-    "\nHour:",
-    selectedHour,
-    "\nUserId:",
-    selectedUserId,
-    "\nServiceIds:",
-    selectedServiceIds,
-    "\nDisable:",
-    disable,
-    "\nIsLoading:",
-    isLoading
-  );
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -518,7 +513,7 @@ export default function CalendarClient({
           </Badge>
           <Badge
             className={`py-2 px-4 ${
-              !wantsSearchService
+              !wantsSearchService && wantsSearchService !== null
                 ? "bg-red-500 ring-2 ring-red-700 transition-colors"
                 : "bg-transparent border border-gray-500 transition-colors"
             } text-black dark:text-white cursor-pointer transition-colors`}

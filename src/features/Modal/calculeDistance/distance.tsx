@@ -12,6 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/shared/ui/components/alert-dialog";
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface CalculeDistanceProps {
@@ -30,8 +32,10 @@ export function CalculeDistance({
   postalCode,
   setDisable,
 }: CalculeDistanceProps) {
+  const [loading, setLoading] = useState(false);
   
   const calculeDistance = async () => {
+    setLoading(true);
     try {
       const location = await LocationAddress(postalCode);
       const formDistance = new FormData();
@@ -54,11 +58,15 @@ export function CalculeDistance({
       }
       setDisable(true);
       setWantsSearchService(true);
+      setLoading(false);
+      onOpenChange(false);
     } catch (error) {
       console.error("Erro ao calcular distância:", error);
       toast.error(
         "Erro ao calcular a distância. Por favor, verifique o CEP do endereço e tente novamente."
       );
+      setLoading(false);
+      onOpenChange(false);
     }
   };
 
@@ -80,9 +88,9 @@ export function CalculeDistance({
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={calculeDistance}
+            onClick={calculeDistance} disabled={loading}
           >
-            Continuar
+            {loading ? <CircularProgress size={20} /> : "Continuar"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
